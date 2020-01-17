@@ -1,6 +1,15 @@
 # Battlecode 2020 Scaffold
 
+[![Build Status](https://travis-ci.com/battlecode20-team4/battlecode20-scaffold.svg?branch=master)](https://travis-ci.com/battlecode20-team4/battlecode20-scaffold)
+[![License: GPL 3.0](https://img.shields.io/badge/License-GPL--3.0-yellow.svg)](https://github.com/battlecode20-team4/battlecode20-scaffold/blob/master/LICENSE)
+
 This is the Battlecode 2020 scaffold, containing an `examplefuncsplayer`. Read https://2020.battlecode.org/getting-started!
+
+### Project Participants
+- Alexander Saber
+- Daniel Connelly
+- Ronnie Song
+- Sukanya Kothapally
 
 ### Project Structure
 
@@ -25,3 +34,11 @@ This is the Battlecode 2020 scaffold, containing an `examplefuncsplayer`. Read h
 - `gradle/`
     Contains files used by the Gradle wrapper scripts. Can be safely ignored.
 
+## Reference
+
+
+## License
+
+This program is licensed under the "MIT License". Please
+see the file [`LICENSE`](https://github.com/battlecode20-team4/battlecode20-scaffold/blob/master/LICENSE) in the source distribution of this
+software for license terms.
