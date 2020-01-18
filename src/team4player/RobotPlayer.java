@@ -18,6 +18,7 @@ public strictfp class RobotPlayer {
             RobotType.FULFILLMENT_CENTER, RobotType.NET_GUN};
 
     static int turnCount;
+    static MapLocation hqLoc;
 
     /**
      * run() is the method that is called when a robot is instantiated in the Battlecode world.
@@ -68,10 +69,16 @@ public strictfp class RobotPlayer {
     }
 
     static void runMiner() throws GameActionException {
+        if (hqLoc == null) {
+            RobotInfo[] robots = rc.senseNearbyRobots();
+            for (RobotInfo robot: robots) {
+                if (robot.type == RobotType.HQ && robot.team == rc.getTeam()) {
+                    hqLoc = robot.location;
+                }
+            }
+        }
+
         tryBlockchain();
-        tryMove(randomDirection());
-        if (tryMove(randomDirection()))
-            System.out.println("I moved!");
         // tryBuild(randomSpawnedByMiner(), randomDirection());
         for (Direction dir : directions)
             tryBuild(RobotType.FULFILLMENT_CENTER, dir);
@@ -81,6 +88,16 @@ public strictfp class RobotPlayer {
         for (Direction dir : directions)
             if (tryMine(dir))
                 System.out.println("I mined soup! " + rc.getSoupCarrying());
+
+        if(rc.getSoupCarrying() == RobotType.MINER.soupLimit) {
+            System.out.println("at soup limit");
+            Direction dirToHQ = rc.getLocation().directionTo(hqLoc);
+            if(tryMove(dirToHQ)){
+                System.out.println("Toward to HQ!");
+            }
+        } else if (tryMove(randomDirection())){
+            System.out.println("I moved!");
+        }
     }
 
     static void runRefinery() throws GameActionException {
