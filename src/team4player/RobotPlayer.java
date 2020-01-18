@@ -102,11 +102,10 @@ public strictfp class RobotPlayer {
             if(tryMove(dirToHQ)){
                 System.out.println("Toward to HQ!");
             }
+        } else if (tryBuild(RobotType.DESIGN_SCHOOL, randomDirection())) {
+            System.out.println("build a Design School");
         } else if (tryMove(randomDirection())){
-            System.out.println("I moved!");if (tryBuild(RobotType.DESIGN_SCHOOL, randomDirection())){
-
-            }
-
+            System.out.println("I moved!");
         }
     }
 
@@ -119,7 +118,9 @@ public strictfp class RobotPlayer {
     }
 
     static void runDesignSchool() throws GameActionException {
-
+        for (Direction dir : directions)
+            if (tryBuild(RobotType.LANDSCAPER, randomDirection()))
+                System.out.println("build a landscaper");
     }
 
     static void runFulfillmentCenter() throws GameActionException {
