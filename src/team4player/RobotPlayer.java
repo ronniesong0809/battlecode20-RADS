@@ -21,6 +21,9 @@ public strictfp class RobotPlayer {
     static int turnCount;
     static MapLocation hqLoc;
     static int numMiners = 0;
+    static int numDesignSchool = 0;
+    static int numRefinery = 0;
+    static int numLandscaper = 0;
 
     /**
      * run() is the method that is called when a robot is instantiated in the Battlecode world.
@@ -77,6 +80,16 @@ public strictfp class RobotPlayer {
         }
     }
 
+    static MapLocation findRefinery() throws GameActionException {
+        RobotInfo[] robots = rc.senseNearbyRobots();
+        for (RobotInfo robot: robots) {
+            if (robot.type == RobotType.REFINERY && robot.team == rc.getTeam()) {
+                return robot.location;
+            }
+        }
+        return null;
+    }
+
     static void runHQ() throws GameActionException {
         // limit miners to 10
         if (numMiners < 10) {
@@ -100,16 +113,33 @@ public strictfp class RobotPlayer {
             if (tryMine(dir))
                 System.out.println("I mined soup! " + rc.getSoupCarrying());
         if(!nearbyRobot(RobotType.DESIGN_SCHOOL)) {
-            if (tryBuild(RobotType.DESIGN_SCHOOL, randomDirection())) {
-                System.out.println("build a Design School");
+            if (numDesignSchool <= 5) {
+                if (tryBuild(RobotType.DESIGN_SCHOOL, randomDirection())) {
+                    System.out.println("build a Design School");
+                    numDesignSchool++;
+                }
             }
         }
-        if(rc.getSoupCarrying() == RobotType.MINER.soupLimit) {
+        if(rc.getSoupCarrying() == 20) {
+            if (!nearbyRobot(RobotType.REFINERY)) {
+                for (Direction dir : directions){
+                    if (tryBuild(RobotType.REFINERY, dir)) {
+                        break;
+                    }
+                }
+            }
             System.out.println("at soup limit");
 //            Direction dirToHQ = rc.getLocation().directionTo(hqLoc);
 //            if(goTo(dirToHQ)){
-            if(goTo(hqLoc)){
-                System.out.println("Toward to HQ!");
+            MapLocation refineryLocation = findRefinery();
+            if (refineryLocation != null) {
+                if (goTo(refineryLocation)) {
+                    System.out.println("Toward to Refinery!");
+                }
+            }else {
+                if (goTo(hqLoc)) {
+                    System.out.println("Toward to HQ!");
+                }
             }
         } else if (goTo(randomDirection())){
             System.out.println("I moved!");
@@ -118,6 +148,14 @@ public strictfp class RobotPlayer {
 
     static void runRefinery() throws GameActionException {
         // System.out.println("Pollution: " + rc.sensePollution(rc.getLocation()));
+        if (numRefinery < 5) {
+            for (Direction dir : directions)
+                if (tryBuild(RobotType.REFINERY, dir)){
+                    System.out.println("build a refinery");
+                    System.out.println("Pollution: " + rc.sensePollution(rc.getLocation()));
+                    numRefinery++;
+                }
+        }
     }
 
     static void runVaporator() throws GameActionException {
@@ -125,9 +163,13 @@ public strictfp class RobotPlayer {
     }
 
     static void runDesignSchool() throws GameActionException {
-        for (Direction dir : directions)
-            if (tryBuild(RobotType.LANDSCAPER, dir))
-                System.out.println("build a landscaper");
+        if ( numLandscaper < 3 ) {
+            for (Direction dir : directions)
+                if (tryBuild(RobotType.LANDSCAPER, dir)) {
+                    System.out.println("build a landscaper");
+                    numLandscaper++;
+                }
+        }
     }
 
     static void runFulfillmentCenter() throws GameActionException {
@@ -144,7 +186,7 @@ public strictfp class RobotPlayer {
             int lowestElevation = 9999999;
             for (Direction dir : directions){
                 MapLocation tileToCheck = hqLoc.add(dir);
-                if(rc.getLocation().distanceSquaredTo(tileToCheck) < 4 && rc.canDepositDirt(rc.getLocation().directionTo(tileToCheck))){
+                if(rc.getLocation().distanceSquaredTo(tileToCheck) < 7 && rc.canDepositDirt(rc.getLocation().directionTo(tileToCheck))){
                     if(rc.senseElevation(tileToCheck)<lowestElevation){
                         lowestElevation = rc.senseElevation(tileToCheck);
                         bestPlaceToBuildWall = tileToCheck;
