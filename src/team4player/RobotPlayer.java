@@ -1,6 +1,7 @@
 package team4player;
 import battlecode.common.*;
 import java.lang.Math;
+import java.util.ArrayList;
 
 public strictfp class RobotPlayer {
     static RobotController rc;
@@ -24,6 +25,7 @@ public strictfp class RobotPlayer {
     static int numDesignSchool = 0;
     static int numRefinery = 0;
     static int numLandscaper = 0;
+    static ArrayList<MapLocation> soupLocation = new ArrayList<MapLocation>();
 
     /**
      * run() is the method that is called when a robot is instantiated in the Battlecode world.
@@ -77,6 +79,9 @@ public strictfp class RobotPlayer {
                     hqLoc = robot.location;
                 }
             }
+            if(hqLoc == null) {
+                getHqLocFromBlockchain();
+            }
         }
     }
 
@@ -91,6 +96,9 @@ public strictfp class RobotPlayer {
     }
 
     static void runHQ() throws GameActionException {
+        if(turnCount == 1){
+            sendHqLoc(rc.getLocation());
+        }
         // limit miners to 10
         if (numMiners < 10) {
             for (Direction dir : directions) {
@@ -102,45 +110,37 @@ public strictfp class RobotPlayer {
     }
 
     static void runMiner() throws GameActionException {
-        tryBlockchain();
-        // tryBuild(randomSpawnedByMiner(), randomDirection());
-//        for (Direction dir : directions)
-//            tryBuild(RobotType.FULFILLMENT_CENTER, dir);
+        updateUnitCounts();
+        updateSoupLocation();
+        checkIfSoupGone();
+
         for (Direction dir : directions)
             if (tryRefine(dir))
                 System.out.println("I refined soup! " + rc.getTeamSoup());
         for (Direction dir : directions)
-            if (tryMine(dir))
+            if (tryMine(dir)) {
                 System.out.println("I mined soup! " + rc.getSoupCarrying());
-        if(!nearbyRobot(RobotType.DESIGN_SCHOOL)) {
-            if (numDesignSchool <= 5) {
-                if (tryBuild(RobotType.DESIGN_SCHOOL, randomDirection())) {
-                    System.out.println("build a Design School");
-                    numDesignSchool++;
+                MapLocation soupLoc = rc.getLocation().add(dir);
+                if(!soupLocation.contains(soupLoc)){
+                    broadcastSoupLocation(soupLoc);
                 }
+            }
+        if(numDesignSchool < 3) {
+            if (tryBuild(RobotType.DESIGN_SCHOOL, randomDirection())) {
+                System.out.println("build a Design School");
             }
         }
-        if(rc.getSoupCarrying() == 20) {
-            if (!nearbyRobot(RobotType.REFINERY)) {
-                for (Direction dir : directions){
-                    if (tryBuild(RobotType.REFINERY, dir)) {
-                        break;
-                    }
-                }
-            }
+        if(rc.getSoupCarrying() == RobotType.MINER.soupLimit) {
             System.out.println("at soup limit");
 //            Direction dirToHQ = rc.getLocation().directionTo(hqLoc);
 //            if(goTo(dirToHQ)){
-            MapLocation refineryLocation = findRefinery();
-            if (refineryLocation != null) {
-                if (goTo(refineryLocation)) {
-                    System.out.println("Toward to Refinery!");
-                }
-            }else {
-                if (goTo(hqLoc)) {
-                    System.out.println("Toward to HQ!");
-                }
+//            if (hqLoc != null) {
+            if (goTo(hqLoc)) {
+                System.out.println("Toward to HQ!");
             }
+//            }
+        } else if (soupLocation.size() > 0){
+            goTo(soupLocation.get(0));
         } else if (goTo(randomDirection())){
             System.out.println("I moved!");
         }
@@ -148,7 +148,7 @@ public strictfp class RobotPlayer {
 
     static void runRefinery() throws GameActionException {
         // System.out.println("Pollution: " + rc.sensePollution(rc.getLocation()));
-        if (numRefinery < 5) {
+        if (numRefinery < 3) {
             for (Direction dir : directions)
                 if (tryBuild(RobotType.REFINERY, dir)){
                     System.out.println("build a refinery");
@@ -163,12 +163,13 @@ public strictfp class RobotPlayer {
     }
 
     static void runDesignSchool() throws GameActionException {
-        if ( numLandscaper < 3 ) {
-            for (Direction dir : directions)
-                if (tryBuild(RobotType.LANDSCAPER, dir)) {
-                    System.out.println("build a landscaper");
-                    numLandscaper++;
-                }
+        if (!broadcastedCreation) {
+            broadcastDesignSchoolCreation(rc.getLocation());
+        }
+        for (Direction dir : directions) {
+            if (tryBuild(RobotType.LANDSCAPER, dir)) {
+                System.out.println("build a landscaper");
+            }
         }
     }
 
@@ -186,7 +187,7 @@ public strictfp class RobotPlayer {
             int lowestElevation = 9999999;
             for (Direction dir : directions){
                 MapLocation tileToCheck = hqLoc.add(dir);
-                if(rc.getLocation().distanceSquaredTo(tileToCheck) < 7 && rc.canDepositDirt(rc.getLocation().directionTo(tileToCheck))){
+                if(rc.getLocation().distanceSquaredTo(tileToCheck) < 4 && rc.canDepositDirt(rc.getLocation().directionTo(tileToCheck))){
                     if(rc.senseElevation(tileToCheck)<lowestElevation){
                         lowestElevation = rc.senseElevation(tileToCheck);
                         bestPlaceToBuildWall = tileToCheck;
@@ -226,6 +227,15 @@ public strictfp class RobotPlayer {
 
     static void runNetGun() throws GameActionException {
 
+    }
+
+    static void checkIfSoupGone() throws GameActionException {
+        if(soupLocation.size() > 0){
+            MapLocation targetSoupLoc = soupLocation.get(0);
+            if(rc.canSenseLocation(targetSoupLoc) && rc.senseSoup(targetSoupLoc) == 0){
+                soupLocation.remove(0);
+            }
+        }
     }
 
     /**
@@ -363,4 +373,78 @@ public strictfp class RobotPlayer {
         }
         // System.out.println(rc.getRoundMessages(turnCount-1));
     }
+
+    static final int teamSecret = 4444444;
+    static final String[] messageType = {"HQ loc", "design school created", "soup location"};
+
+    public static void sendHqLoc(MapLocation loc) throws GameActionException{
+        int[] message = new int[7];
+        message[0] = teamSecret;
+        message[1] = 0;
+        message[2] = loc.x;
+        message[3] = loc.y;
+        if (rc.canSubmitTransaction(message, 3)){
+            rc.submitTransaction(message,3);
+        }
+    }
+
+    public static void getHqLocFromBlockchain() throws GameActionException {
+        System.out.println("BLOCKCHAIN!");
+        for (int i = 1; i < rc.getRoundNum(); i++){
+            for(Transaction tx: rc.getBlock(i)){
+                int[] mess = tx.getMessage();
+                if(mess[0] == teamSecret && mess[1]==0){
+                    System.out.println("found the HQ!");
+                    hqLoc = new MapLocation(mess[2], mess[3]);
+                }
+            }
+        }
+    }
+
+    public static boolean broadcastedCreation = false;
+
+    public static void broadcastDesignSchoolCreation(MapLocation loc) throws GameActionException{
+        int[] message = new int[7];
+        message[0] = teamSecret;
+        message[1] = 1;
+        message[2] = loc.x;
+        message[3] = loc.y;
+        if (rc.canSubmitTransaction(message, 3)){
+            rc.submitTransaction(message,3);
+            broadcastedCreation = true;
+        }
+    }
+
+    public static void updateUnitCounts() throws GameActionException {
+        for(Transaction tx: rc.getBlock(rc.getRoundNum()-1)){
+            int[] mess = tx.getMessage();
+            if(mess[0] == teamSecret && mess[1]==1){
+                System.out.println("found the HQ!");
+                numDesignSchool += 1;
+            }
+        }
+    }
+
+    public static void broadcastSoupLocation(MapLocation loc) throws GameActionException {
+        int[] message = new int[7];
+        message[0] = teamSecret;
+        message[1] = 2;
+        message[2] = loc.x;
+        message[3] = loc.y;
+        if (rc.canSubmitTransaction(message, 3)){
+            rc.submitTransaction(message,3);
+            System.out.println("found soup at " + loc);
+        }
+    }
+
+    public static void updateSoupLocation() throws GameActionException {
+        for(Transaction tx: rc.getBlock(rc.getRoundNum()-1)){
+            int[] mess = tx.getMessage();
+            if(mess[0] == teamSecret && mess[1]==2){
+                System.out.println("heard new soup!");
+                soupLocation.add(new MapLocation(mess[2], mess[3]));
+            }
+        }
+    }
+
 }
