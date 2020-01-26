@@ -1,4 +1,5 @@
 # team4player
+[![Build Status](https://travis-ci.com/battlecode20-team4/battlecode20-scaffold.svg?branch=master)](https://travis-ci.com/battlecode20-team4/battlecode20-scaffold)
 
 This is the source code for team *RADS*'s robotplayer.
 
