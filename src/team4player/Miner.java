@@ -31,11 +31,14 @@ public class Miner  extends Unit{
             if (tryRefine(dir))
                 System.out.println("I refined soup! " + rc.getTeamSoup());
 
+        // Sense design schools around to see if this miner should build one.
+
         if (numDesignSchool < 3) {
             if (tryBuild(RobotType.DESIGN_SCHOOL, Util.randomDirection())) {
                 System.out.println("build a Design School");
             }
         }
+
         if (rc.getSoupCarrying() == RobotType.MINER.soupLimit) {
             System.out.println("at soup limit");
             if (nav.goTo(hqLoc)) {

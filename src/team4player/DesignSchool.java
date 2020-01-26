@@ -2,6 +2,7 @@ package team4player;
 import battlecode.common.*;
 
 public class DesignSchool extends Building{
+    static int numLandscapers = 0;
     boolean broadcastCreation = false;
     public DesignSchool(RobotController rc){
         super(rc);
@@ -13,9 +14,10 @@ public class DesignSchool extends Building{
         if (!broadcastCreation) {
             bc.broadcastDesignSchoolCreation(rc.getLocation());
         }
-        for (Direction dir : Util.directions) {
-            if (tryBuild(RobotType.LANDSCAPER, dir)) {
+        if (numLandscapers < 5) {
+            if (tryBuild(RobotType.LANDSCAPER, Util.randomDirection())) {
                 System.out.println("build a landscaper");
+                numLandscapers++;
             }
         }
     }
