@@ -3,6 +3,12 @@
 
 This is the source code for team *RADS*'s robotplayer.
 
+## Project Participants
+- Alexander Saber
+- Daniel Connelly
+- Ronnie Song
+- Sukanya Kothapally
+
 ## Project Structure
 
 - `README.md` This file.
