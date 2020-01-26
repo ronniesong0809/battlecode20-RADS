@@ -45,3 +45,10 @@ This is the Navigation object. You use `nav` to perform movement actions for the
 bc = new Broadcast(rc);
 ```
 This is the Broadcast object. You use `bc` to perform [Blockchain transaction](https://2020.battlecode.org/specs.html#communication).
+
+
+## References
+- Specification: https://2020.battlecode.org/specs.html
+- Javadocs: https://2020.battlecode.org/javadoc/index.html
+- Youtube Channel: https://www.youtube.com/channel/UCOrfTSnyimIXfYzI8j_-CTQ/videos
+- Lecture's robotplayer: https://github.com/battlecode/lectureplayer
