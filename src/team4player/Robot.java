@@ -1,23 +1,20 @@
 package team4player;
 import battlecode.common.*;
 
-import java.util.NavigableMap;
-
 public class Robot {
     RobotController rc;
     Broadcast bc;
-    Navigation nav;
+
     int turnCount = 0;
 
     public Robot(RobotController r) {
         this.rc = r;
         bc = new Broadcast(rc);
-        nav = new Navigation(rc);
     }
 
     public void takeTurn() throws GameActionException{
         turnCount += 1;
-        System.out.println("I'm a robot");
+        //System.out.println("I'm a robot");
     }
 
     /**
@@ -32,6 +29,7 @@ public class Robot {
         if (rc.isReady() && rc.canBuildRobot(type, dir)) {
             rc.buildRobot(type, dir);
             return true;
-        } else return false;
+        }
+        return false;
     }
 }

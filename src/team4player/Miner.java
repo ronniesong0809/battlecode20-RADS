@@ -1,48 +1,64 @@
 package team4player;
 import battlecode.common.*;
+import java.util.ArrayList;
 
 public class Miner  extends Unit{
+    int numDesignSchool = 0;
+    ArrayList<MapLocation> soupLocations = new ArrayList<MapLocation>();
+
     public Miner(RobotController rc) {
         super(rc);
     }
 
-    public void runTurn() throws GameActionException {
-        updateUnitCounts();
-        updateSoupLocation();
+    public void takeTurn() throws GameActionException {
+        super.takeTurn();
+
+        numDesignSchool += bc.updateUnitCounts();
+        bc.updateUnitCounts();
+        bc.updateSoupLocations(soupLocations);
         checkIfSoupGone();
+        nearbySoup();
 
-
-        for (Direction dir : Util.directions)
-            if (tryRefine(dir))
-                System.out.println("I refined soup! " + rc.getTeamSoup());
         for (Direction dir : Util.directions)
             if (tryMine(dir)) {
                 System.out.println("I mined soup! " + rc.getSoupCarrying());
                 MapLocation soupLoc = rc.getLocation().add(dir);
-                if (!soupLocation.contains(soupLoc)) {
-                    broadcastSoupLocation(soupLoc);
+                if (!soupLocations.contains(soupLoc)) {
+                    bc.broadcastSoupLocation(soupLoc);
                 }
             }
+        for (Direction dir : Util.directions)
+            if (tryRefine(dir))
+                System.out.println("I refined soup! " + rc.getTeamSoup());
+
         if (numDesignSchool < 3) {
-            if (tryBuild(RobotType.DESIGN_SCHOOL, randomDirection())) {
+            if (tryBuild(RobotType.DESIGN_SCHOOL, Util.randomDirection())) {
                 System.out.println("build a Design School");
             }
         }
         if (rc.getSoupCarrying() == RobotType.MINER.soupLimit) {
             System.out.println("at soup limit");
-//            Direction dirToHQ = rc.getLocation().directionTo(hqLoc);
-//            if(goTo(dirToHQ)){
-//            if (hqLoc != null) {
-            if (goTo(hqLoc)) {
+            if (nav.goTo(hqLoc)) {
                 System.out.println("Toward to HQ!");
             }
-//            }
-        } else if (soupLocation.size() > 0) {
-            goTo(soupLocation.get(0));
-        } else if (goTo(randomDirection())) {
-            System.out.println("I moved!");
+            nav.goTo(Util.randomDirection());
+        } else if (soupLocations.size() > 0) {
+            nav.goTo(soupLocations.get(0));
+        } else {
+            if (nav.goTo(Util.randomDirection())) {
+                System.out.println("I moved!");
+            }
         }
     }
+
+    /**
+     * Returns a random RobotType spawned by miners.
+     *
+     * @return a random RobotType
+     */
+     //RobotType randomSpawnedByMiner() {
+     //    return spawnedByMiner[(int) (Math.random() * spawnedByMiner.length)];
+     //}
 
     /**
      * Attempts to mine soup in a given direction.
@@ -55,7 +71,8 @@ public class Miner  extends Unit{
         if (rc.isReady() && rc.canMineSoup(dir)) {
             rc.mineSoup(dir);
             return true;
-        } else return false;
+        }
+        return false;
     }
 
     /**
@@ -69,6 +86,24 @@ public class Miner  extends Unit{
         if (rc.isReady() && rc.canDepositSoup(dir)) {
             rc.depositSoup(dir, rc.getSoupCarrying());
             return true;
-        } else return false;
+        }
+        return false;
+    }
+
+    void checkIfSoupGone() throws GameActionException {
+        if (soupLocations.size() > 0) {
+            MapLocation targetSoupLoc = soupLocations.get(0);
+            if (rc.canSenseLocation(targetSoupLoc) && rc.senseSoup(targetSoupLoc) == 0) {
+                soupLocations.remove(0);
+            }
+        }
+    }
+
+    MapLocation nearbySoup() throws GameActionException {
+        MapLocation[] souplocations = rc.senseNearbySoup();
+        for (MapLocation souploc : souplocations) {
+            MapLocation soupLoc = rc.getLocation();
+        }
+        return null;
     }
 }

@@ -1,12 +1,13 @@
 package team4player;
 import battlecode.common.*;
 
-public class Building extends Robot{
-    public Building(RobotController rc) {
-        super(rc);
+public class Vaporator extends Building {
+    public Vaporator(RobotController r) {
+        super(r);
     }
 
     public void takeTurn() throws GameActionException{
         super.takeTurn();
+        //TODO:
     }
 }

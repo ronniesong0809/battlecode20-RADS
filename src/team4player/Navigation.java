@@ -20,7 +20,8 @@ public class Navigation {
         if (rc.isReady() && rc.canMove(dir) && !rc.senseFlooding(rc.getLocation().add(dir))) {
             rc.move(dir);
             return true;
-        } else return false;
+        }
+        return false;
     }
 
     boolean tryMove() throws GameActionException {

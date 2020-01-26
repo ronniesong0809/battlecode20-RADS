@@ -36,9 +36,11 @@ public class Broadcast {
         return null;
     }
 
-    public static boolean broadcastedCreation = false;
+    public boolean broadcastCreation = false;
 
-    public static void broadcastDesignSchoolCreation(MapLocation loc) throws GameActionException {
+    public void broadcastDesignSchoolCreation(MapLocation loc) throws GameActionException {
+        if(broadcastCreation) return;
+
         int[] message = new int[7];
         message[0] = teamSecret;
         message[1] = 1;
@@ -46,19 +48,20 @@ public class Broadcast {
         message[3] = loc.y;
         if (rc.canSubmitTransaction(message, 3)) {
             rc.submitTransaction(message, 3);
-            broadcastedCreation = true;
+            broadcastCreation = true;
         }
     }
 
-    public void updateUnitCounts() throws GameActionException {
+    public int updateUnitCounts() throws GameActionException {
         int count = 0;
         for (Transaction tx : rc.getBlock(rc.getRoundNum() - 1)) {
             int[] mess = tx.getMessage();
             if (mess[0] == teamSecret && mess[1] == 1) {
-                System.out.println("found the HQ!");
+                System.out.println("unit count!");
                 count += 1;
             }
         }
+        return count;
     }
 
     public void broadcastSoupLocation(MapLocation loc) throws GameActionException {
@@ -82,5 +85,18 @@ public class Broadcast {
             }
         }
     }
+
+//    void tryBlockchain() throws GameActionException {
+//        if (turnCount < 3) {
+//            int[] message = new int[7];
+//            for (int i = 0; i < 7; i++) {
+//                message[i] = 123;
+//            }
+//            if (rc.canSubmitTransaction(message, 10))
+//                rc.submitTransaction(message, 10);
+//        }
+//        // System.out.println(rc.getRoundMessages(turnCount-1));
+//    }
+
 
 }
