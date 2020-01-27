@@ -109,12 +109,12 @@ public class Miner  extends Unit{
                     if (nav.goTo(refineryLocation) == false) { break; }
                 }
             }
-            /*else{
-                while(true){
+            else{
+                /*while(true){
                     System.out.println("Toward to HQ!");
                     if(nav.goTo(hqLoc) == false){ break;}
-                }
-            }*/
+                }*/
+            }
             System.out.println("TRYING TO DEPOSIT SOUP...");
             for (Direction dir : Util.directions)
                 if(tryRefine(dir)){ System.out.println("SUCCESFULLY DEPOSITED SOUP"); break;}
