@@ -2,8 +2,9 @@ package team4player;
 import battlecode.common.*;
 import java.util.ArrayList;
 
-public class Miner  extends Unit{
-    int numDesignSchool = 0;
+public class Miner extends Unit{
+    static int numDesignSchool = 0;
+    static int numRefinery = 0;
     ArrayList<MapLocation> soupLocations = new ArrayList<MapLocation>();
 
     public Miner(RobotController rc) {
@@ -32,16 +33,43 @@ public class Miner  extends Unit{
                 System.out.println("I refined soup! " + rc.getTeamSoup());
 
         // Sense design schools around to see if this miner should build one.
-
+//        numDesignSchool = 0;
+        RobotInfo [] nearbyRobots = rc.senseNearbyRobots();
+//        for (RobotInfo r : nearbyRobots) {
+//            if (r.type == RobotType.DESIGN_SCHOOL) {
+//                numDesignSchool++;
+//            }
+//        }
         if (numDesignSchool < 3) {
             if (tryBuild(RobotType.DESIGN_SCHOOL, Util.randomDirection())) {
                 System.out.println("build a Design School");
             }
         }
 
+
         if (rc.getSoupCarrying() == RobotType.MINER.soupLimit) {
+            MapLocation nearestRefinery = null;
+            for (RobotInfo r : nearbyRobots) {
+                if (r.type == RobotType.REFINERY) {
+                    nearestRefinery = new MapLocation(r.getLocation().x, r.getLocation().y);
+                }
+            }
+
+            if (nearestRefinery == null) {
+                if (tryBuild(RobotType.REFINERY, Util.randomDirection())) {
+                    System.out.println("Built Refinery");
+                }
+            }
+
             System.out.println("at soup limit");
-            if (nav.goTo(hqLoc)) {
+            MapLocation toGo = null;
+            if (nearestRefinery != null) {
+                toGo = nearestRefinery;
+            }
+            else {
+                toGo = hqLoc;
+            }
+            if (nav.goTo(toGo)) {
                 System.out.println("Toward to HQ!");
             }
             nav.goTo(Util.randomDirection());

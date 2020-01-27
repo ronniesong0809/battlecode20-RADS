@@ -14,7 +14,7 @@ public class DesignSchool extends Building{
         if (!broadcastCreation) {
             bc.broadcastDesignSchoolCreation(rc.getLocation());
         }
-        if (numLandscapers < 5) {
+        if (numLandscapers < 2) {
             if (tryBuild(RobotType.LANDSCAPER, Util.randomDirection())) {
                 System.out.println("build a landscaper");
                 numLandscapers++;
