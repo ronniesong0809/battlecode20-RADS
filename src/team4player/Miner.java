@@ -12,7 +12,10 @@ public class Miner extends Unit{
     }
 
     public void takeTurn() throws GameActionException {
-        //super.takeTurn();
+        super.takeTurn();
+
+        // Build design school
+
         MapLocation[] soup = rc.senseNearbySoup(-1); // we want a loop until we find the soup, not iterate through above cases (waste of time/instructions)
         if (soup != null && soup.length != 0) { // we found soup! Head towards it
             int randomLoc = (int) Math.random() * soup.length + 0; // random soup location we are moving towards
@@ -42,7 +45,7 @@ public class Miner extends Unit{
             nav.goTo(Util.randomDirection());
         }
         /*
-        numDesignSchool += bc.updateUnitCounts();
+//        numDesignSchool += bc.updateUnitCounts();
         //TODO -- broadcasting, checking if broadcast is stale
          //bc.updateUnitCounts();
          //bc.updateSoupLocations(soupLocations);
@@ -70,13 +73,14 @@ public class Miner extends Unit{
 //                numDesignSchool++;
 //            }
 //        }
+*/
         if (numDesignSchool < 3) {
             if (tryBuild(RobotType.DESIGN_SCHOOL, Util.randomDirection())) {
                 System.out.println("build a Design School");
             }
         }
 
-
+/*
         if (rc.getSoupCarrying() == RobotType.MINER.soupLimit) {
             MapLocation nearestRefinery = null;
             for (RobotInfo r : nearbyRobots) {
