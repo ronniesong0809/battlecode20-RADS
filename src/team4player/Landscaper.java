@@ -8,6 +8,7 @@ public class Landscaper extends Unit{
     static int digX = 0;
     static int digY = 0;
     static int minWallHeight = 10;
+    static int maxWallHeight = 100;
     static boolean initialWallComplete = false;
     static float chanceNewWall = 0.005f;
     static int round = 0;
@@ -58,10 +59,15 @@ public class Landscaper extends Unit{
             if (rc.senseElevation(wallSpot) <= minWallHeight) {
                 rc.depositDirt(rc.getLocation().directionTo(wallSpot));
             }
-            if (initialWallComplete || bc.readInitialWallComplete()) {
+
+            int newWallHeight = bc.readInitialWallComplete();
+            if (newWallHeight > minWallHeight) {
+                minWallHeight = newWallHeight;
+            }
+            if (initialWallComplete || bc.readInitialWallComplete() == maxWallHeight) {
                 initialWallComplete = true;
                 System.out.println("Initial wall complete! ******************");
-                if (rc.senseElevation(wallSpot) >= minWallHeight) {
+                if (rc.senseElevation(wallSpot) >= maxWallHeight) {
                     boolean shouldStop = false;
                     for (int i = 0; i < 8; i++) {
                         MapLocation newLoc = wallSpot.add(Direction.values()[i]);
