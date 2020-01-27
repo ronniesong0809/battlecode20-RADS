@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Miner extends Unit{
     static int numDesignSchool = 0;
-    static int numRefinery = 0;
+    static int numVaporator = 0;
     ArrayList<MapLocation> soupLocations = new ArrayList<MapLocation>();
 
     public Miner(RobotController rc) {
@@ -13,6 +13,19 @@ public class Miner extends Unit{
 
     public void takeTurn() throws GameActionException {
         super.takeTurn();
+
+        numVaporator = 0;
+        RobotInfo [] nearbyVaporators = rc.senseNearbyRobots();
+        for (RobotInfo r : nearbyVaporators) {
+            if (r.type == RobotType.VAPORATOR) {
+                numVaporator++;
+            }
+        }
+        if (rc.getTeamSoup() > 500 && rc.getRoundNum() > 300 && numVaporator < 1) {
+            if (tryBuild(RobotType.VAPORATOR, Util.randomDirection())) {
+                System.out.println("Teamsoup: " + rc.getTeamSoup() + ", RoundNum: " + rc.getRoundNum() + " build a Vaporator");
+            }
+        }
 
         // Build design school
         // Sense design schools around to see if this miner should build one.
