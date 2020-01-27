@@ -15,6 +15,20 @@ public class Miner extends Unit{
         super.takeTurn();
 
         // Build design school
+        // Sense design schools around to see if this miner should build one.
+        numDesignSchool = 0;
+        RobotInfo [] nearbyRobots = rc.senseNearbyRobots();
+        for (RobotInfo r : nearbyRobots) {
+            if (r.type == RobotType.DESIGN_SCHOOL) {
+                numDesignSchool++;
+            }
+        }
+
+        if (numDesignSchool < 5) {
+            if (tryBuild(RobotType.DESIGN_SCHOOL, Util.randomDirection())) {
+                System.out.println("build a Design School");
+            }
+        }
 
         MapLocation[] soup = rc.senseNearbySoup(-1); // we want a loop until we find the soup, not iterate through above cases (waste of time/instructions)
         if (soup != null && soup.length != 0) { // we found soup! Head towards it
@@ -74,11 +88,11 @@ public class Miner extends Unit{
 //            }
 //        }
 */
-        if (numDesignSchool < 3) {
-            if (tryBuild(RobotType.DESIGN_SCHOOL, Util.randomDirection())) {
-                System.out.println("build a Design School");
-            }
-        }
+//        if (numDesignSchool < 3) {
+//            if (tryBuild(RobotType.DESIGN_SCHOOL, Util.randomDirection())) {
+//                System.out.println("build a Design School");
+//            }
+//        }
 
 /*
         if (rc.getSoupCarrying() == RobotType.MINER.soupLimit) {

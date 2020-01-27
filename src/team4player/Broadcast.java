@@ -14,7 +14,7 @@ public class Broadcast {
     public static void sendHqLoc(MapLocation loc) throws GameActionException {
         int[] message = new int[7];
         message[0] = teamSecret;
-        message[1] = 0;
+        message[1] = 101101101;
         message[2] = loc.x;
         message[3] = loc.y;
         if (rc.canSubmitTransaction(message, 3)){
@@ -27,7 +27,7 @@ public class Broadcast {
         for (int i = 1; i < rc.getRoundNum(); i++){
             for(Transaction tx: rc.getBlock(i)){
                 int[] mess = tx.getMessage();
-                if(mess[0] == teamSecret && mess[1]==0){
+                if(mess[0] == teamSecret && mess[1]==101101101){
                     System.out.println("found the HQ!");
                     return new MapLocation(mess[2], mess[3]);
                 }

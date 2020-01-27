@@ -9,6 +9,9 @@ public class Landscaper extends Unit{
     static int digY = 0;
     static int minWallHeight = 10;
     static boolean initialWallComplete = false;
+    static float chanceNewWall = 0.005f;
+    static int round = 0;
+    static MapLocation wallSpot = null;
 
     public Landscaper(RobotController rc){
         super(rc);
@@ -17,6 +20,7 @@ public class Landscaper extends Unit{
     public void takeTurn() throws GameActionException {
         super.takeTurn();
 
+        round++;
 
         if (wallLocs == null) {
             initializeWallLocationsAndLevels();
@@ -32,17 +36,13 @@ public class Landscaper extends Unit{
 
         int currWallSpot = 0;
         // Find next spot to dig to
-        MapLocation wallSpot = null;
-        if (hqLoc != null) {
-            // Iterate over deposit locations
 
-            for (MapLocation tileToCheck : wallLocs) {
-                currWallSpot++;
-                if (rc.getLocation().distanceSquaredTo(tileToCheck) < 4 && rc.canDepositDirt(rc.getLocation().directionTo(tileToCheck))) {
-                    if (rc.senseElevation(tileToCheck) < minWallHeight) {
-                        wallSpot = tileToCheck;
-                        break;
-                    }
+        for (MapLocation tileToCheck : wallLocs) {
+            currWallSpot++;
+            if (rc.getLocation().distanceSquaredTo(tileToCheck) < 4 && rc.canDepositDirt(rc.getLocation().directionTo(tileToCheck))) {
+                if (rc.senseElevation(tileToCheck) < minWallHeight) {
+                    wallSpot = tileToCheck;
+                    break;
                 }
             }
         }
@@ -53,29 +53,41 @@ public class Landscaper extends Unit{
         }
 
         // Add more spots to deposit dirt to in lattice fashion.
-        if (Math.random() < 0.8) {
-            if (wallSpot != null) {
+
+        if (wallSpot != null && rc.canDepositDirt(rc.getLocation().directionTo(wallSpot))) {
+            if (rc.senseElevation(wallSpot) <= minWallHeight) {
                 rc.depositDirt(rc.getLocation().directionTo(wallSpot));
-                if (initialWallComplete || bc.readInitialWallComplete()) {
-                    initialWallComplete = true;
-                    if (rc.senseElevation(wallSpot) == minWallHeight) {
-                        for (int i = 0; i < 8; i += 2) {
-                            MapLocation newLoc = wallSpot.add(Direction.values()[i]);
-                            if (!wallLocs.contains(newLoc) && !(newLoc.x % 2 == digX && newLoc.y % 2 == digY) && newLoc.distanceSquaredTo(hqLoc) > 2) {
-                                wallLocs.add(wallSpot.add(Direction.values()[i]));
-                            }
+            }
+            if (initialWallComplete || bc.readInitialWallComplete()) {
+                initialWallComplete = true;
+                System.out.println("Initial wall complete! ******************");
+                if (rc.senseElevation(wallSpot) >= minWallHeight) {
+                    boolean shouldStop = false;
+                    for (int i = 0; i < 8; i++) {
+                        MapLocation newLoc = wallSpot.add(Direction.values()[i]);
+                        if (!wallLocs.contains(newLoc) &&
+                                !(newLoc.x % 2 == digX && newLoc.y % 2 == digY) &&
+                                newLoc.distanceSquaredTo(hqLoc) > 2 &&
+                                rc.senseElevation(newLoc) <= minWallHeight) {
+                            wallLocs.add(wallSpot.add(Direction.values()[i]));
+                            shouldStop = true;
                         }
-                        wallLocs.remove(wallSpot);
+                    }
+                    wallLocs.remove(wallSpot);
+                    if (shouldStop) {
+                        wallSpot = null;
                     }
                 }
-                System.out.println("building a wall");
             }
         }
 
         // Either go to wall spot or go in a random direction.
         if (wallSpot != null) {
             nav.goTo(wallSpot);
-        } else {
+        } else if (rc.getLocation().distanceSquaredTo(hqLoc) > 30) {
+            nav.goTo(hqLoc);
+        }
+        else {
             nav.goTo(Util.randomDirection());
         }
     }
@@ -139,14 +151,4 @@ public class Landscaper extends Unit{
             wallLevels.add(3);
         }
     }
-
-    public boolean checkIfWallComplete() throws GameActionException {
-        for (MapLocation location : wallLocs) {
-            if (rc.senseElevation(location) < minWallHeight) {
-                return false;
-            }
-        }
-        return true;
-    }
-
 }
