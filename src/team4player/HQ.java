@@ -34,6 +34,16 @@ public class HQ extends Building {
             bc.broadcastInitialWallComplete();
             sentWallComplete = true;
         }
+        Team enemy = rc.getTeam().opponent();
+        RobotInfo[] enemiesInRange = rc.senseNearbyRobots(GameConstants.NET_GUN_SHOOT_RADIUS_SQUARED, enemy);
+        for (RobotInfo e : enemiesInRange) {
+            if (e.type == RobotType.DELIVERY_DRONE) {
+                if (rc.canShootUnit(e.ID)) {
+                    rc.shootUnit(e.ID);
+                    System.out.println("I shoot'ed enemy! " + e.type);
+                }
+            }
+        }
     }
 
     public void initSurroundingWalls() {
