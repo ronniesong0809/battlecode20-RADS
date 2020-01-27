@@ -98,26 +98,27 @@ public class Broadcast {
 //        // System.out.println(rc.getRoundMessages(turnCount-1));
 //    }
 
-    public void broadcastInitialWallComplete()  throws GameActionException {
+    public void broadcastInitialWallComplete(int height)  throws GameActionException {
         int[] message = new int[7];
         message[0] = teamSecret;
         message[1] = 101000101;
+        message[2] = height;
         if (rc.canSubmitTransaction(message, 3)){
             rc.submitTransaction(message,3);
         }
     }
 
-    public boolean readInitialWallComplete() throws GameActionException {
+    public int readInitialWallComplete() throws GameActionException {
         System.out.println("BLOCKCHAIN!");
         for (int i = 1; i < rc.getRoundNum(); i++){
             for(Transaction tx: rc.getBlock(i)){
                 int[] mess = tx.getMessage();
                 if(mess[0] == teamSecret && mess[1]==101000101){
                     System.out.println("Initial Wall Complete");
-                    return true;
+                    return mess[2];
                 }
             }
         }
-        return false;
+        return 0;
     }
 }

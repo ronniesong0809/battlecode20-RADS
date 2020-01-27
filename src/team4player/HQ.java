@@ -30,10 +30,11 @@ public class HQ extends Building {
             }
         }
 
-        if (checkIfWallComplete() && !sentWallComplete) {
-            bc.broadcastInitialWallComplete();
-            sentWallComplete = true;
+        if (checkIfWallComplete()) {
+            minWallHeight += 10;
+            bc.broadcastInitialWallComplete(minWallHeight);
         }
+
         Team enemy = rc.getTeam().opponent();
         RobotInfo[] enemiesInRange = rc.senseNearbyRobots(GameConstants.NET_GUN_SHOOT_RADIUS_SQUARED, enemy);
         for (RobotInfo e : enemiesInRange) {
