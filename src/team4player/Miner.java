@@ -11,12 +11,42 @@ public class Miner  extends Unit{
     }
 
     public void takeTurn() throws GameActionException {
-        super.takeTurn();
-
+        //super.takeTurn();
+        MapLocation[] soup = rc.senseNearbySoup(-1); // we want a loop until we find the soup, not iterate through above cases (waste of time/instructions)
+        if (soup != null && soup.length != 0) { // we found soup! Head towards it
+            int randomLoc = (int) Math.random() * soup.length + 0; // random soup location we are moving towards
+            Direction mineDir = walkTowardsSoup(soup, randomLoc); // until you get near there
+            // Refine soup if we are full.
+            if (rc.getSoupCarrying() >= 70) {
+                refineSoup();
+            } else {
+                if (mineDir == null) {
+                    return;
+                }
+                boolean stillMining = true;
+                while (stillMining) {
+                    stillMining = false; // mines all directions
+                    if (tryMine(mineDir) == false) {
+                        for (Direction dir : Util.directions)
+                            if (tryMine(dir)) {
+                                System.out.println("MINING SOUP");
+                                mineDir = dir;
+                                stillMining = true;
+                            }
+                    }
+                }
+            }
+        } else {
+            System.out.println("GOING RANDOM DIRECTION");
+            nav.goTo(Util.randomDirection());
+        }
+        /*
         numDesignSchool += bc.updateUnitCounts();
-        bc.updateUnitCounts();
-        bc.updateSoupLocations(soupLocations);
-        checkIfSoupGone();
+        //TODO -- broadcasting, checking if broadcast is stale
+         //bc.updateUnitCounts();
+         //bc.updateSoupLocations(soupLocations);
+         //checkIfSoupGone();
+
         nearbySoup();
 
         for (Direction dir : Util.directions)
@@ -48,6 +78,47 @@ public class Miner  extends Unit{
             if (nav.goTo(Util.randomDirection())) {
                 System.out.println("I moved!");
             }
+        }*/
+    }
+
+    public Direction walkTowardsSoup(MapLocation [] soup, int randomLoc) throws GameActionException {
+        //NOTE: do NOT use a while loop. Miners will go to old soup locations that are dried up if you do.
+        while(true) {
+            System.out.println("Towards soup!");
+            for (Direction dir : Util.directions) {
+                if (rc.canMineSoup(dir)) {
+                    return dir;
+                }
+            }
+            if (!nav.goTo(soup[randomLoc])) {
+                nav.goTo(Util.randomDirection());
+            } // This gets miners unstuck if they are being blocked
+        }
+        //return null;
+    }
+
+    public void refineSoup() throws GameActionException {
+        MapLocation refineryLocation = findRefinery();
+        while (rc.getSoupCarrying() >= 70) {
+            System.out.println("at soup limit");
+            if (refineryLocation == null) { for (Direction dir : Util.directions) { if (tryBuild(RobotType.REFINERY, dir)) { break; } } }
+            refineryLocation = findRefinery(); // need to call again, since we just built one
+            if (refineryLocation != null) {
+                while(true){
+                    System.out.println("Toward to Refinery!");
+                    if (nav.goTo(refineryLocation) == false) { break; }
+                }
+            }
+            else{
+                /*while(true){
+                    System.out.println("Toward to HQ!");
+                    if(nav.goTo(hqLoc) == false){ break;}
+                }*/
+            }
+            System.out.println("TRYING TO DEPOSIT SOUP...");
+            for (Direction dir : Util.directions)
+                if(tryRefine(dir)){ System.out.println("SUCCESFULLY DEPOSITED SOUP"); break;}
+            if (refineryLocation == null) nav.goTo(Util.randomDirection());
         }
     }
 
