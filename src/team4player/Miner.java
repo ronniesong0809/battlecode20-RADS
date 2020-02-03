@@ -11,46 +11,51 @@ public class Miner extends Unit{
         super(rc);
     }
 
-		// Sense design schools around to see if this miner should build one.
-		public boolean senseDesignSchools(){
+		// Sense a building passes in
+		public boolean senseBuilding(RobotType type){
 			RobotInfo [] nearbyRobots = rc.senseNearbyRobots();
 					for (RobotInfo r : nearbyRobots) {
-							if (r.type == RobotType.DESIGN_SCHOOL) {
+							if (r.type == type) {
 								return true;
 							}
 					}
 					return false;
 		}
 
-    public void takeTurn() throws GameActionException {
-        super.takeTurn();
-
+		public void buildDesignSchoolOrRefinery() throws GameActionException{
         // Build design school
-        if (numDesignSchool < 1 && !senseDesignSchools()) {
+        if (numDesignSchool < 1 && !senseBuilding(RobotType.DESIGN_SCHOOL)) {
+            //if (tryBuild(RobotType.DESIGN_SCHOOL)) {
             if (tryBuild(RobotType.DESIGN_SCHOOL, Util.randomDirection())) {
                 numDesignSchool++;
                 System.out.println("build a Design School");
             }
         }
-				else{
-						for (Direction dir : Util.directions) {
-							tryBuild(RobotType.REFINERY, dir);
-						}
-				}
+				else if(!senseBuilding(RobotType.REFINERY)) tryBuild(RobotType.REFINERY);
+		}
 
-				if (rc.getSoupCarrying() >= 70) {refineSoup();}
-				else{
-					MapLocation[] soup = rc.senseNearbySoup(-1);
-					if (soup != null && soup.length != 0) { // we found soup! Head towards it
-							int randomLoc = (int) Math.random() * soup.length + 0; // random soup to avoid crowds
-							walkTowardsSoup(soup, randomLoc);
-							for (Direction dir : Util.directions){
-									tryMine(dir);
-							}
-					} else {
-            System.out.println("GOING RANDOM DIRECTION");
-            nav.goTo(Util.randomDirection());
-        	}
+		public void checkForSoup() throws GameActionException{
+				MapLocation[] soup = rc.senseNearbySoup(-1);
+				if (soup != null && soup.length != 0) { // we found soup! Head towards it
+						int randomLoc = (int) Math.random() * soup.length + 0; // random soup to avoid crowds
+						walkTowardsSoup(soup, randomLoc);
+						for (Direction dir : Util.directions){
+								tryMine(dir);
+						}
+				} else {
+					System.out.println("GOING RANDOM DIRECTION"); // we can be stuck
+					nav.goTo(Util.randomDirection());
+				}
+		}
+
+    public void takeTurn() throws GameActionException {
+        super.takeTurn();
+				int x = 0;
+				if (rc.getSoupCarrying() >= 70) x=1;
+				switch(x){
+					case 1: refineSoup();
+									break;
+					default: {checkForSoup();break;}
 				}
         /*
         numDesignSchool += bc.updateUnitCounts();
@@ -71,28 +76,31 @@ public class Miner extends Unit{
     }
 
     public void refineSoup() throws GameActionException {
-        MapLocation refineryLocation = findRefinery();
-        while (rc.getSoupCarrying() >= 70) {
-            System.out.println("at soup limit");
-            if (refineryLocation == null) { for (Direction dir : Util.directions) { if (tryBuild(RobotType.REFINERY, dir)) { break; } } }
-            refineryLocation = findRefinery(); // need to call again, since we may have just built one
-            if (refineryLocation != null) {
-                while(true){
-                    System.out.println("Toward to Refinery!");
-                    if (nav.goTo(refineryLocation) == false) { break; }
-                }
-            }
-            else{
-                while(true){
-                    System.out.println("Toward to HQ!");
-                    if(nav.goTo(hqLoc) == false){ break;}
-                }
-            }
-            System.out.println("TRYING TO DEPOSIT SOUP...");
-            for (Direction dir : Util.directions)
-                if(tryRefine(dir)){ System.out.println("SUCCESFULLY DEPOSITED SOUP"); break;}
-            nav.goTo(Util.randomDirection());
-        }
+					buildDesignSchoolOrRefinery();
+					MapLocation refineryLocation = findRefinery();
+					while (rc.getSoupCarrying() >= 70) {
+							System.out.println("at soup limit");
+							//if (refineryLocation == null) { if(tryBuild(RobotType.REFINERY)) break;}
+							//if (refineryLocation == null) { for (Direction dir : Util.directions) { if (tryBuild(RobotType.REFINERY, dir)) { break; } } }
+
+							refineryLocation = findRefinery(); // need to call again, since we may have just built one
+							if (refineryLocation != null) {
+									while(true){
+											System.out.println("Toward to Refinery!");
+											if (nav.goTo(refineryLocation) == false) { break; }
+									}
+							}
+							else{
+									while(true){
+											System.out.println("Toward to HQ!");
+											if(nav.goTo(hqLoc) == false){ break;}
+									}
+							}
+							System.out.println("TRYING TO DEPOSIT SOUP...");
+							for (Direction dir : Util.directions)
+									if(tryRefine(dir)){ System.out.println("SUCCESFULLY DEPOSITED SOUP"); break;}
+							nav.goTo(Util.randomDirection());
+					}
     }
 
     /**
