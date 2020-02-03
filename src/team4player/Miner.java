@@ -22,9 +22,7 @@ public class Miner extends Unit{
 					return false;
 		}
 
-    public void takeTurn() throws GameActionException {
-        super.takeTurn();
-
+		public void buildDesignSchoolOrRefinery() throws GameActionException{
         // Build design school
         if (numDesignSchool < 1 && !senseDesignSchools()) {
             if (tryBuild(RobotType.DESIGN_SCHOOL, Util.randomDirection())) {
@@ -36,6 +34,17 @@ public class Miner extends Unit{
 						for (Direction dir : Util.directions) {
 							tryBuild(RobotType.REFINERY, dir);
 						}
+				}
+
+		}
+
+    public void takeTurn() throws GameActionException {
+        super.takeTurn();
+
+				int x = 0;
+        if (numDesignSchool < 1 && !senseDesignSchools()) x = 1;
+				switch(x){
+					case 1: buildDesignSchoolOrRefinery();break;
 				}
 
 				if (rc.getSoupCarrying() >= 70) {refineSoup();}
@@ -83,10 +92,10 @@ public class Miner extends Unit{
                 }
             }
             else{
-                while(true){
+                /*while(true){
                     System.out.println("Toward to HQ!");
                     if(nav.goTo(hqLoc) == false){ break;}
-                }
+                }*/
             }
             System.out.println("TRYING TO DEPOSIT SOUP...");
             for (Direction dir : Util.directions)
