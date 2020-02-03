@@ -25,11 +25,26 @@ public class Robot {
      * @return true if a move was performed
      * @throws GameActionException
      */
-    boolean tryBuild(RobotType type, Direction dir) throws GameActionException {
-        if (rc.isReady() && rc.canBuildRobot(type, dir)) {
-            rc.buildRobot(type, dir);
-            return true;
-        }
-        return false;
+		// Daniel's overloaded function (builds in all directions instead of one)
+    boolean tryBuild(RobotType type) throws GameActionException {
+			  //TODO -- add build on HQ wall.
+				for (Direction dir : Util.directions){ // build in all directions, since we don't care
+					if (rc.isReady() && rc.canBuildRobot(type, dir)) {
+							rc.buildRobot(type, dir);
+							return true;
+					}
+				}
+				return false;
     }
+
+    boolean tryBuild(RobotType type, Direction dir) throws GameActionException {
+			  //TODO -- add build on HQ wall.
+				if (rc.isReady() && rc.canBuildRobot(type, dir)) {
+						rc.buildRobot(type, dir);
+						return true;
+				}
+				return false;
+    }
+
+
 }
