@@ -25,7 +25,6 @@ public class Miner extends Unit{
 		public void buildDesignSchoolOrRefinery() throws GameActionException{
         // Build design school
         if (numDesignSchool < 1 && !senseBuilding(RobotType.DESIGN_SCHOOL)) {
-            //if (tryBuild(RobotType.DESIGN_SCHOOL)) {
             if (tryBuild(RobotType.DESIGN_SCHOOL, Util.randomDirection())) {
                 numDesignSchool++;
                 System.out.println("build a Design School");
@@ -80,10 +79,6 @@ public class Miner extends Unit{
 					MapLocation refineryLocation = findRefinery();
 					while (rc.getSoupCarrying() >= 70) {
 							System.out.println("at soup limit");
-							//if (refineryLocation == null) { if(tryBuild(RobotType.REFINERY)) break;}
-							//if (refineryLocation == null) { for (Direction dir : Util.directions) { if (tryBuild(RobotType.REFINERY, dir)) { break; } } }
-
-							refineryLocation = findRefinery(); // need to call again, since we may have just built one
 							if (refineryLocation != null) {
 									while(true){
 											System.out.println("Toward to Refinery!");
