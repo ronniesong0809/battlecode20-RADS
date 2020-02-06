@@ -24,11 +24,9 @@ public class Miner extends Unit{
 
 		public void buildDesignSchoolOrRefinery() throws GameActionException{
         // Build design school
-        if (numDesignSchool < 1 && !senseBuilding(RobotType.DESIGN_SCHOOL)) {
-            if (tryBuild(RobotType.DESIGN_SCHOOL, Util.randomDirection())) {
-                numDesignSchool++;
-                System.out.println("build a Design School");
-            }
+        if (numDesignSchool < 1 && !senseBuilding(RobotType.DESIGN_SCHOOL) && senseBuilding(RobotType.HQ) && tryBuild(RobotType.DESIGN_SCHOOL)){
+						numDesignSchool++;
+						System.out.println("build a Design School");
         }
 				else if(!senseBuilding(RobotType.REFINERY)) tryBuild(RobotType.REFINERY);
 		}
