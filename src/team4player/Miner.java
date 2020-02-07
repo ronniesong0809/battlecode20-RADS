@@ -39,12 +39,12 @@ public class Miner extends Unit{
 		public void checkForSoup() throws GameActionException{
 				MapLocation[] soup = rc.senseNearbySoup(-1);
 				if (soup != null && soup.length != 0) { // we found soup! Head towards it
-						int randomLoc = (int) Math.random() * soup.length + 0; // random soup to avoid crowds
+						boolean mined = false; // checks if  we need to move areas for soup
 						for (Direction dir : Util.directions){
 								if(tryMine(dir)){mined = true;}
 						}
-						boolean mined = false;
-						if (!mined){ // checks if  we need to move areas for soup
+						if (!mined){
+							int randomLoc = (int) (Math.random() * soup.length + 0); // random soup to avoid crowds
 						  walkTowardsSoup(soup, randomLoc);}
 				} else {
 					System.out.println("GOING DIAGONAL DIRECTION"); // we can be stuck
