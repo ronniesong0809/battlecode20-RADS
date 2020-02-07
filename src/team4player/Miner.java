@@ -1,9 +1,6 @@
 package team4player;
 import battlecode.common.*;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
 
 public class Miner extends Unit{
     static int numDesignSchool = 0;
@@ -29,11 +26,11 @@ public class Miner extends Unit{
 
 		public void buildDesignSchoolOrRefinery() throws GameActionException{
         // Build design school if miner hasn't made one, none are nearby, and we are by HQ  --- all to control production of DSs
-        if (numDesignSchool < 1 && !senseBuilding(RobotType.DESIGN_SCHOOL) && senseBuilding(RobotType.HQ) && tryBuild(RobotType.DESIGN_SCHOOL)){
+        if (numDesignSchool < 1 && !senseBuilding(RobotType.DESIGN_SCHOOL) && senseBuilding(RobotType.HQ) && tryBuild(RobotType.DESIGN_SCHOOL, hqLoc)){
 						numDesignSchool++;
 						System.out.println("built a Design School");
         }
-				else if(!senseBuilding(RobotType.REFINERY)) tryBuild(RobotType.REFINERY);
+				else if(!senseBuilding(RobotType.REFINERY)) tryBuild(RobotType.REFINERY, hqLoc);
 		}
 
 		public void checkForSoup() throws GameActionException{
