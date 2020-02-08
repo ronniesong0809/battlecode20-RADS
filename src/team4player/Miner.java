@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Miner extends Unit{
     static int numDesignSchool = 0;
     static int numRefinery = 0;
-		int diagonalDir = -1; // the diagonal direction a miner is heading if nowhere else to go.
+		int diagonalDir = -1; // the diagonal direction a miner is heading if no soup location is known
 		int [] diagonalArr = {1,3,5,7}; // diagonal directions to move
     ArrayList<MapLocation> soupLocations = new ArrayList<MapLocation>();
 
@@ -26,11 +26,11 @@ public class Miner extends Unit{
 
 		public void buildDesignSchoolOrRefinery() throws GameActionException{
         // Build design school if miner hasn't made one, none are nearby, and we are by HQ  --- all to control production of DSs
-        if (numDesignSchool < 1 && !senseBuilding(RobotType.DESIGN_SCHOOL) && senseBuilding(RobotType.HQ) && tryBuild(RobotType.DESIGN_SCHOOL, hqLoc)){
+				if(!senseBuilding(RobotType.REFINERY)) tryBuild(RobotType.REFINERY, hqLoc);
+				else if(numDesignSchool < 1 && !senseBuilding(RobotType.DESIGN_SCHOOL) && senseBuilding(RobotType.HQ) && tryBuild(RobotType.DESIGN_SCHOOL, hqLoc)){
 						numDesignSchool++;
 						System.out.println("built a Design School");
         }
-				else if(!senseBuilding(RobotType.REFINERY)) tryBuild(RobotType.REFINERY, hqLoc);
 		}
 
 		public void checkForSoup() throws GameActionException{
@@ -44,10 +44,10 @@ public class Miner extends Unit{
 							int randomLoc = (int) (Math.random() * soup.length + 0); // random soup to avoid crowds
 						  walkTowardsSoup(soup, randomLoc);}
 				} else {
-					System.out.println("GOING DIAGONAL DIRECTION"); // we can be stuck
+					System.out.println("GOING DIAGONAL DIRECTION");
 					if(!nav.goTo(Util.directions[diagonalDir])) {
-						nav.goTo(Util.randomDirection());
-						diagonalDir=-1;}
+						nav.goTo(Util.randomDirection()); // to remove ourselves from hallways basically
+						diagonalDir=-1;}// reset diagonal direction, since we hit a wall.
 					//System.out.println("GOING RANDOM DIRECTION"); // we can be stuck
 					//nav.goTo(Util.randomDirection());
 				}
