@@ -36,20 +36,26 @@ public class Broadcast {
         return null;
     }
 
-    public boolean broadcastCreation = false;
-
     public void broadcastDesignSchoolCreation(MapLocation loc) throws GameActionException {
-        if(broadcastCreation) return;
 
         int[] message = new int[7];
         message[0] = teamSecret;
-        message[1] = 1;
+        message[1] = 220022;
         message[2] = loc.x;
         message[3] = loc.y;
         if (rc.canSubmitTransaction(message, 3)) {
             rc.submitTransaction(message, 3);
-            broadcastCreation = true;
         }
+    }
+
+    public boolean readDesignSchoolCreation() throws GameActionException {
+        for (Transaction tx : rc.getBlock(rc.getRoundNum() - 1)) {
+            int[] mess = tx.getMessage();
+            if (mess[0] == teamSecret && mess[1] == 220022) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public int updateUnitCounts() throws GameActionException {
