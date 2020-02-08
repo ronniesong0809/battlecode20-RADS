@@ -9,17 +9,23 @@ public class HQ extends Building {
     static List<MapLocation> wallLocs = null;
     static int minWallHeight = 10;
     static boolean sentWallComplete = false;
+    static int round = 0;
 
     public HQ(RobotController rc) throws GameActionException{
         super(rc);
-        bc.sendHqLoc(rc.getLocation());
+
     }
 
     public void takeTurn() throws GameActionException {
         super.takeTurn();
+        round++;
 
         if (wallLocs == null) {
             initSurroundingWalls();
+        }
+
+        if (round % 10 == 0) {
+            bc.sendHqLoc(rc.getLocation());
         }
 
         if (numMiners < 5) {
@@ -30,10 +36,10 @@ public class HQ extends Building {
             }
         }
 
-        if (checkIfWallComplete()) {
-            minWallHeight += 10;
-            bc.broadcastInitialWallComplete(minWallHeight);
-        }
+//        if (checkIfWallComplete()) {
+//            minWallHeight += 10;
+//            bc.broadcastInitialWallComplete(minWallHeight);
+//        }
 
         Team enemy = rc.getTeam().opponent();
         RobotInfo[] enemiesInRange = rc.senseNearbyRobots(GameConstants.NET_GUN_SHOOT_RADIUS_SQUARED, enemy);
