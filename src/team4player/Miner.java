@@ -82,7 +82,7 @@ public class Miner extends Unit{
 							if (rc.canMineSoup(dir)) {return;}
 					}
 					// move towards soup...if stuck, get unstuck.
-					if (!nav.goTo(soup[randomLoc])) {nav.goTo(Util.randomDirection());}
+					if (!nav.goAround(soup[randomLoc])) {nav.goTo(Util.randomDirection());}
     }
 
     public void refineSoup() throws GameActionException {
