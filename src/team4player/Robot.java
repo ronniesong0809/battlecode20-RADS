@@ -26,10 +26,11 @@ public class Robot {
      * @throws GameActionException
      */
 		// Daniel's overloaded function (builds in all directions instead of one)
-    boolean tryBuild(RobotType type) throws GameActionException {
-			  //TODO -- add build on HQ wall.
+    boolean tryBuild(RobotType type, MapLocation hqLoc) throws GameActionException {
+        MapLocation currentLocation = rc.getLocation();
 				for (Direction dir : Util.directions){ // build in all directions, since we don't care
-					if (rc.isReady() && rc.canBuildRobot(type, dir)) {
+					MapLocation potentialBuildlocation = currentLocation.add(dir);
+					if (rc.isReady() && rc.canBuildRobot(type, dir) && potentialBuildlocation.distanceSquaredTo(hqLoc) > 2){
 							rc.buildRobot(type, dir);
 							return true;
 					}
