@@ -22,10 +22,10 @@ repositories {
     maven {
 
         url "https://maven.pkg.github.com/battlecode/battlecode20"
-        credentials {
-            username = project.findProperty("gpr.user")
-            password = new URL("https://2020.battlecode.org/access.txt").text.trim()
-        }
+//        credentials {
+//            username = project.findProperty("gpr.user")
+//            password = new URL("https://2020.battlecode.org/access.txt").text.trim()
+//        }
     }
     // Use the JCenter repo to resolve Scala dependencies.
     jcenter()
@@ -122,12 +122,12 @@ task version {
     }
 }
 
-task screamForUpdate() {
-    group 'battlecode'
-    doLast {
-        if (versions.battlecode != new URL("https://2020.battlecode.org/version.txt").text.trim()) print("\n\n\n\n\n\n\tNEW VERSION AVAILABLE\n\trun ./gradlew update to download \n\n\n\n")
-    }
-}
+//task screamForUpdate() {
+//    group 'battlecode'
+//    doLast {
+//        if (versions.battlecode != new URL("https://2020.battlecode.org/version.txt").text.trim()) print("\n\n\n\n\n\n\tNEW VERSION AVAILABLE\n\trun ./gradlew update to download \n\n\n\n")
+//    }
+//}
 
 // This task pulls the newest version number from the website
 // The gradle will then download that version of the engine and client
@@ -150,7 +150,7 @@ task unpackClient(type: Copy, dependsOn: configurations.client) {
     group 'battlecode'
 
     dependsOn configurations.client
-    dependsOn screamForUpdate
+//    dependsOn screamForUpdate
     from {
         configurations.client.collect {
             zipTree(it)
