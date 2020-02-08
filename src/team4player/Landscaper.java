@@ -75,7 +75,7 @@ public class Landscaper extends Unit{
             }
         }
 
-        if (dir != null && rc.canDigDirt(dir)) {
+        if (dir != null && rc.canDigDirt(dir) && rc.senseRobotAtLocation(rc.getLocation().add(dir)) == null) {
             rc.digDirt(dir);
             return true;
         }
