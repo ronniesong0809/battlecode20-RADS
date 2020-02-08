@@ -10,6 +10,7 @@ public class Landscaper extends Unit{
     static int minWallHeight = 10;
     static MapLocation wallSpot = null;
     static int personality = 0;
+    static boolean initialized = false;
 
     public Landscaper(RobotController rc){
         super(rc);
@@ -18,26 +19,41 @@ public class Landscaper extends Unit{
     public void takeTurn() throws GameActionException {
         super.takeTurn();
 
+        if (hqLoc == null) {
+            findHQ();
+        }
+
         // Initialize the map locations to build on
-        if (wallLocs == null) {
+        if (wallLocs == null && hqLoc != null) {
             initializeWallLocationsAndLevels();
         }
 
-        // Find wall spot
-        if (wallSpot == null) {
-            findWallSpot();
+        if (rc.getLocation().distanceSquaredTo(hqLoc) >= 10) {
+            nav.goAround(hqLoc);
         }
         else {
-            // Try to dig dirt if you are carrying none
-            if (rc.getDirtCarrying() == 0) {
-                tryDig();
-            }
-            // Otherwise deposit dirt if you are close enough
-            else if (rc.getLocation().distanceSquaredTo(wallSpot) > 0) {
-                nav.goTo(wallSpot);
-            }
-            else {
-                tryDeposit(wallSpot);
+            // Find wall spot
+
+            if (wallSpot == null && initialized) {
+                wallSpot = findWallSpot();
+            } else {
+                RobotInfo otherRobot = rc.senseRobotAtLocation(wallSpot);
+                if (otherRobot != null && rc.getID() != otherRobot.getID()) {
+                    wallSpot = null;
+                }
+                else {
+                    // Otherwise deposit dirt if you are close enough
+                    if (rc.getLocation().distanceSquaredTo(wallSpot) >= 1) {
+                        nav.goAround(wallSpot);
+                    } else {
+                        // Try to dig dirt if you are carrying none
+                        if (rc.getDirtCarrying() == 0) {
+                            tryDig();
+                        } else {
+                            tryDeposit(wallSpot);
+                        }
+                    }
+                }
             }
         }
     }
@@ -51,9 +67,11 @@ public class Landscaper extends Unit{
         Direction dir = null;
         for (Direction d : Util.directions) {
             MapLocation digSpot = rc.getLocation().add(d);
-            if ((digSpot.x % 2 == digX && digSpot.y % 2 == digY) && digSpot.distanceSquaredTo(hqLoc) > 2) {
+            if (digSpot.distanceSquaredTo(hqLoc) > 2) {
                 dir = rc.getLocation().directionTo(digSpot);
-                break;
+                if (rc.canDigDirt(dir)) {
+                    break;
+                }
             }
         }
 
@@ -107,6 +125,7 @@ public class Landscaper extends Unit{
             }
         }
 
+        initialized = true;
 
     }
 
@@ -118,10 +137,9 @@ public class Landscaper extends Unit{
 
     public MapLocation findWallSpot() throws GameActionException {
         for (MapLocation tileToCheck : wallLocs) {
-            if (rc.getLocation().distanceSquaredTo(tileToCheck) < 4 && rc.canDepositDirt(rc.getLocation().directionTo(tileToCheck))) {
-//                if (rc.senseElevation(tileToCheck) < minWallHeight) {
-//                    return tileToCheck;
-//                }
+            // Check if another landscaper is on that tile.
+            RobotInfo otherRobot = rc.senseRobotAtLocation(tileToCheck);
+            if (otherRobot == null) {
                 return tileToCheck;
             }
         }
