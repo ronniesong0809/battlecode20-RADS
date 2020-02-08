@@ -27,7 +27,7 @@ public class Miner extends Unit{
 		public void buildDesignSchoolOrRefinery() throws GameActionException{
         // Build design school if miner hasn't made one, none are nearby, and we are by HQ  --- all to control production of DSs
 				if(!senseBuilding(RobotType.REFINERY)) tryBuild(RobotType.REFINERY, hqLoc);
-				else if(numDesignSchool < 1 && !senseBuilding(RobotType.DESIGN_SCHOOL) && senseBuilding(RobotType.HQ) && tryBuild(RobotType.DESIGN_SCHOOL, hqLoc)){
+			 	else if(numDesignSchool < 1 && !bc.readDesignSchoolCreation() && tryBuild(RobotType.DESIGN_SCHOOL, hqLoc)){
 					numDesignSchool++;
 					System.out.println("built a Design School");
 				}
@@ -88,7 +88,7 @@ public class Miner extends Unit{
     public void refineSoup() throws GameActionException {
 					buildDesignSchoolOrRefinery();
 					MapLocation refineryLocation = findRefinery();
-					while (rc.getSoupCarrying() >= 70) {
+					if (rc.getSoupCarrying() >= 70) {
 							System.out.println("TRYING TO DEPOSIT SOUP...");
 							for (Direction dir : Util.directions)
 									if(tryRefine(dir)){ System.out.println("SUCCESFULLY DEPOSITED SOUP"); return;}
