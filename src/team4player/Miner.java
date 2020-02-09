@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public class Miner extends Unit{
     static int numDesignSchool = 0;
+    static int numFulfillmentCenter = 0;
     static int numRefinery = 0;
 		int diagonalDir = -1; // the diagonal direction a miner is heading if no soup location is known
 		int [] diagonalArr = {1,3,5,7}; // diagonal directions to move
@@ -26,10 +27,18 @@ public class Miner extends Unit{
 
 		public void buildDesignSchoolOrRefinery() throws GameActionException{
         // Build design school if miner hasn't made one, none are nearby, and we are by HQ  --- all to control production of DSs
+				if (numDesignSchool < 1 && bc.readDesignSchoolCreation()) {
+					numDesignSchool++;
+				}
+				if (numFulfillmentCenter < 1 && bc.readFCCreation()) {
+					numFulfillmentCenter++;
+				}
 				if(!senseBuilding(RobotType.REFINERY)) tryBuild(RobotType.REFINERY, hqLoc);
-			 	else if(numDesignSchool < 1 && !bc.readDesignSchoolCreation() && tryBuild(RobotType.DESIGN_SCHOOL, hqLoc)){
+			 	else if(numDesignSchool < 1 && !senseBuilding(RobotType.DESIGN_SCHOOL) && !bc.readDesignSchoolCreation() && tryBuild(RobotType.DESIGN_SCHOOL, hqLoc)){
 					numDesignSchool++;
 					System.out.println("built a Design School");
+				} else if (numFulfillmentCenter < 1 && !senseBuilding(RobotType.FULFILLMENT_CENTER) && !bc.readFCCreation() && tryBuild(RobotType.FULFILLMENT_CENTER, hqLoc)) {
+			 		numFulfillmentCenter++;
 				}
 		}
 

@@ -102,7 +102,7 @@ public class Landscaper extends Unit{
 
         int block_x = hqLoc.x - 1;
         int block_y = hqLoc.y + 1;
-        for (int i = 0; i < 16; i++) {
+        for (int i = 0; i < 8; i++) {
             wallLocs.add(new MapLocation(block_x, block_y));
 
             switch (i) {
@@ -110,16 +110,16 @@ public class Landscaper extends Unit{
                 case 1:
                     block_x++;
                     break;
-                case 4:
-                case 5:
+                case 2:
+                case 3:
                     block_y--;
                     break;
-                case 8:
-                case 9:
+                case 4:
+                case 5:
                     block_x--;
                     break;
-                case 12:
-                case 13:
+                case 6:
+                case 7:
                     block_y++;
                     break;
             }
