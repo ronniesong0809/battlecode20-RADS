@@ -30,6 +30,8 @@ public class Unit extends Robot{
                 hqLoc = bc.getHqLocFromBlockchain();
             }
         }
+        if(rc.getRoundNum()==3)
+            findEnemyHQ();
     }
 
     MapLocation findRefinery() throws GameActionException {
