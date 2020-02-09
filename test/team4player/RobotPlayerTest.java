@@ -12,7 +12,7 @@ import org.mockito.junit.*;
 
 public class RobotPlayerTest {
     @Mock
-    RobotController rcMock = mock(RobotController.class);;
+    RobotController rcMock = mock(RobotController.class);
 
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
