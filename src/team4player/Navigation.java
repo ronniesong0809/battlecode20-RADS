@@ -67,6 +67,46 @@ public class Navigation {
         return false;
     }
 
+    boolean droneMove(Direction dir) throws GameActionException {
+        Direction[] toTry =
+                {
+                        dir,
+                        dir.rotateLeft(),
+                        dir.rotateLeft().rotateLeft(),
+                        dir.rotateRight(),
+                        dir.rotateRight().rotateRight()
+                };
+
+        for (Direction d : toTry) {
+            if (rc.isReady() && rc.canMove(dir)) {
+                rc.move(d);
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    boolean goAround(Direction dir) throws GameActionException {
+        Direction[] toTry =
+                {
+                        dir,
+                        dir.rotateLeft(),
+                        dir.rotateLeft().rotateLeft(),
+                        dir.rotateRight(),
+                        dir.rotateRight().rotateRight()
+                };
+
+        for (Direction d : toTry) {
+            if (tryMove(d)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+
     boolean goTo(MapLocation dir) throws GameActionException {
         return goTo(rc.getLocation().directionTo(dir));
     }

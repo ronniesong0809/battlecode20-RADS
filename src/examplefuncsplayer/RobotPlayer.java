@@ -65,6 +65,16 @@ public strictfp class RobotPlayer {
     static void runHQ() throws GameActionException {
         for (Direction dir : directions)
             tryBuild(RobotType.MINER, dir);
+        Team enemy = rc.getTeam().opponent();
+        RobotInfo[] enemiesInRange = rc.senseNearbyRobots(GameConstants.NET_GUN_SHOOT_RADIUS_SQUARED, enemy);
+        for (RobotInfo e : enemiesInRange) {
+            if (e.type == RobotType.DELIVERY_DRONE) {
+                if (rc.canShootUnit(e.ID)) {
+                    rc.shootUnit(e.ID);
+                    System.out.println("I shoot'ed enemy! " + e.type);
+                }
+            }
+        }
     }
 
     static void runMiner() throws GameActionException {
