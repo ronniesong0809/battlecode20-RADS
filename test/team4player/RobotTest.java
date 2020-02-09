@@ -27,16 +27,16 @@ public class RobotTest {
     @Before
     public void setup() throws GameActionException{
         if(rcMock.senseFlooding(new MapLocation(3,3))) {
-            when(robotMock.tryBuild(RobotType.MINER, new MapLocation(5, 5))).thenReturn(true);
-        }else{
             when(robotMock.tryBuild(RobotType.MINER, new MapLocation(5, 5))).thenReturn(false);
+        }else{
+            when(robotMock.tryBuild(RobotType.MINER, new MapLocation(5, 5))).thenReturn(true);
         }
     }
 
     @Test
     public void tryBuild() throws GameActionException{
         boolean result;
-        if (rcMock.senseFlooding(new MapLocation(3,3)) == false)
+        if (rcMock.senseFlooding(new MapLocation(3,3)))
             result = robotMock.tryBuild(RobotType.MINER, new MapLocation(5, 5));
         else
             result = false;
@@ -47,7 +47,7 @@ public class RobotTest {
     @Test
     public void tryBuildTest2() throws GameActionException{
         boolean result;
-        if (rcMock.senseFlooding(new MapLocation(3,3)) == false)
+        if (!rcMock.senseFlooding(new MapLocation(3,3)))
             result = robotMock.tryBuild(RobotType.MINER, new MapLocation(5, 5));
         else
             result = false;
