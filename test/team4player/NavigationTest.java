@@ -12,51 +12,47 @@ import org.mockito.junit.*;
 
 public class NavigationTest {
     @Mock
-    RobotController rcMock = mock(RobotController.class);
+    Navigation navMock = mock(Navigation.class);
 
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
 
-    @InjectMocks
-    Navigation navigation;
-
     @Before
-    public void setUp() {
-        when(rcMock.getTeam()).thenReturn(Team.A);
-        when(rcMock.getType()).thenReturn(RobotType.HQ);
-        when(rcMock.getID()).thenReturn(12345678);
-        when(rcMock.getLocation()).thenReturn(new MapLocation(5, 5));
-        when(rcMock.getRoundNum()).thenReturn(50);
+    public void setUp() throws GameActionException {
+        when(navMock.tryMove()).thenReturn(true);
+        when(navMock.tryMove(Direction.NORTH)).thenReturn(true);
+        when(navMock.goTo(Direction.SOUTH)).thenReturn(true);
+        when(navMock.goTo(new MapLocation(5, 5))).thenReturn(true);
+        when(navMock.goAround(new MapLocation(5, 5))).thenReturn(true);
     }
 
     @Test
-    public void TryMove_test() throws Exception {
-        boolean result = navigation.tryMove(Direction.NORTH);
-        assertEquals(false, result);
+    public void tryMoveTest() throws GameActionException {
+        boolean result = navMock.tryMove();
+        assertEquals(result, true);
     }
-//
-//    @Test
-//    public void TryMove_test2() throws Exception {
-//        navigation.tryMove(Direction.NORTH);
-//        MapLocation result = rcMock.getLocation();
-//        assertEquals(result, new MapLocation(5,5));
-//    }
-//
-//    @Test
-//    public void GoTo_test() throws Exception {
-//        boolean result = navigation.goTo(Direction.NORTH);
-//        assertEquals(true, result);
-//    }
-//
-//    @Test
-//    public void GoTo_test2() throws Exception {
-//        boolean result = navigation.goTo(new MapLocation(5, 6));
-//        assertEquals(true, result);
-//    }
-//
-//    @Test
-//    public void GoAround_test() throws Exception {
-//        boolean result = navigation.goAround(new MapLocation(6, 5));
-//        assertEquals(true, result);
-//    }
+
+    @Test
+    public void tryMoveTest2() throws GameActionException {
+        boolean result = navMock.tryMove(Direction.NORTH);
+        assertEquals(result, true);
+    }
+
+    @Test
+    public void goToTest() throws GameActionException {
+        boolean result = navMock.goTo(Direction.SOUTH);
+        assertEquals(true, result);
+    }
+
+    @Test
+    public void goToTest2() throws GameActionException {
+        boolean result = navMock.goTo(new MapLocation(5, 5));
+        assertEquals(true, result);
+    }
+
+    @Test
+    public void goAroundTest() throws GameActionException {
+        boolean result = navMock.goAround(new MapLocation(5, 5));
+        assertEquals(true, result);
+    }
 }
