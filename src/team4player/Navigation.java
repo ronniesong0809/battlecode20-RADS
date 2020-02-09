@@ -66,6 +66,24 @@ public class Navigation {
         }
         return false;
     }
+    boolean goAroundT(MapLocation loc) throws GameActionException {
+        Direction dir = rc.getLocation().directionTo(loc);
+        Direction[] toTry =
+                {
+                        dir,
+                        dir.rotateRight(),
+                        dir.rotateRight().rotateRight(),
+                        dir.rotateLeft(),
+                        dir.rotateLeft().rotateLeft()
+                };
+
+        for (Direction d : toTry) {
+            if (tryMove(d)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     boolean goTo(MapLocation dir) throws GameActionException {
         return goTo(rc.getLocation().directionTo(dir));
