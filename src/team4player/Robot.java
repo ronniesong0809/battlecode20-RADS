@@ -30,7 +30,7 @@ public class Robot {
         MapLocation currentLocation = rc.getLocation();
 				for (Direction dir : Util.directions){ // build in all directions, since we don't care
 					MapLocation potentialBuildlocation = currentLocation.add(dir);
-					if (rc.isReady() && rc.canBuildRobot(type, dir) && potentialBuildlocation.distanceSquaredTo(hqLoc) > 4){
+					if (rc.isReady() && rc.canBuildRobot(type, dir) && potentialBuildlocation.distanceSquaredTo(hqLoc) > 8){
 							rc.buildRobot(type, dir);
 							return true;
 					}
