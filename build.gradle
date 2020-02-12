@@ -325,3 +325,43 @@ task buildMap(type: JavaExec, dependsOn: 'build') {
 
 unpackClient32.onlyIf { arch32 }
 build.dependsOn('unpackClient32')
+
+apply plugin: 'jacoco'
+
+jacocoTestReport {
+    reports {
+        xml.enabled = true // coveralls plugin depends on xml format report
+        html.enabled = true
+        html.destination file("${buildDir}/reports/jacoco/jacocoTestReport")
+    }
+}
+
+apply plugin: "com.github.kt3k.coveralls"
+
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "gradle.plugin.org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.9.0"
+    }
+}
+
+apply plugin: "net.saliman.cobertura"
+
+buildscript {
+  repositories {
+    maven {
+      url "https://plugins.gradle.org/m2/"
+    }
+  }
+  dependencies {
+    classpath "net.saliman:gradle-cobertura-plugin:3.0.0"
+  }
+}
+
+coveralls {
+    jacocoReportPath 'build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml'
+}
