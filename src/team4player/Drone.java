@@ -43,24 +43,24 @@ public class Drone extends Unit {
 
         // Here is where actions take place
         switch (currState) {
+//            case 0:
+//                // Go all the way north
+//                if (!go(Direction.NORTH)) {
+//                    currState++;
+//                }
+//                break;
+//            case 1:
+//                // Go all the way east
+//                if (!go(Direction.EAST)) {
+//                    currState++;
+//                }
+//                break;
             case 0:
-                // Go all the way north
-                if (!go(Direction.NORTH)) {
-                    currState++;
-                }
-                break;
-            case 1:
-                // Go all the way east
-                if (!go(Direction.EAST)) {
-                    currState++;
-                }
-                break;
-            case 2:
                 // Build array of possible enemy HQ locations
                 composeEnemyHQLocations();
                 currState++;
                 break;
-            case 3:
+            case 1:
                 // Find and go to enemy HQ
                 boolean stillMoving = goToHQLocations(enemyLocationToCheck);
 
@@ -73,7 +73,7 @@ public class Drone extends Unit {
                 }
 
                 break;
-            case 4:
+            case 2:
                 // Circle enemy HQ
                 circleHQandPickUp();
                 break;
@@ -90,7 +90,9 @@ public class Drone extends Unit {
 
     public void composeEnemyHQLocations() {
         enemyHQlocs = new ArrayList<MapLocation>();
-        MapLocation topCorner = rc.getLocation();
+
+        MapLocation topCorner = new MapLocation(rc.getMapWidth()-1, rc.getMapHeight()-1);
+
         enemyHQlocs.add(new MapLocation(topCorner.x - hqLoc.x, topCorner.y - hqLoc.y));
         enemyHQlocs.add(new MapLocation(topCorner.x - hqLoc.x, hqLoc.y));
         enemyHQlocs.add(new MapLocation(hqLoc.x, topCorner.y - hqLoc.y));
@@ -103,7 +105,7 @@ public class Drone extends Unit {
         // Check if enemy HQ is there and return true if so.
         MapLocation enemyHQlocation = enemyHQlocs.get(toCheck);
         if (rc.getLocation().distanceSquaredTo(enemyHQlocation) > 20) {
-            nav.goAround(enemyHQlocation);
+            nav.droneMove(rc.getLocation().directionTo(enemyHQlocation));
             return true;
         } else {
             // Check if it is there

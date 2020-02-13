@@ -73,12 +73,13 @@ public class Navigation {
                         dir,
                         dir.rotateLeft(),
                         dir.rotateLeft().rotateLeft(),
+                        dir.rotateLeft().rotateLeft().rotateLeft(),
                         dir.rotateRight(),
                         dir.rotateRight().rotateRight()
                 };
 
         for (Direction d : toTry) {
-            if (rc.isReady() && rc.canMove(dir)) {
+            if (rc.canMove(d)) {
                 rc.move(d);
                 return true;
             }
@@ -86,6 +87,25 @@ public class Navigation {
         return false;
     }
 
+    boolean circleMove(Direction dir) throws GameActionException {
+        Direction[] toTry =
+                {
+                        dir,
+                        dir.rotateLeft(),
+                        dir.rotateLeft().rotateLeft(),
+                        dir.rotateLeft().rotateLeft().rotateLeft(),
+                        dir.rotateRight(),
+                        dir.rotateRight().rotateRight()
+                };
+
+        for (Direction d : toTry) {
+            if (rc.canMove(dir)) {
+                rc.move(d);
+                return true;
+            }
+        }
+        return false;
+    }
 
     boolean goAround(Direction dir) throws GameActionException {
         Direction[] toTry =

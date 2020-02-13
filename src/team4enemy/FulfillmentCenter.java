@@ -17,7 +17,7 @@ public class FulfillmentCenter extends Building {
             bc.broadcastFulfillmentCenterCreation();
         }
 
-        if (numDrones < 1) {
+        if (numDrones < 3) {
             if (tryBuild(RobotType.DELIVERY_DRONE, Util.randomDirection())) {
                 numDrones++;
             }
