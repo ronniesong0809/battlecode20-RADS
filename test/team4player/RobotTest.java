@@ -16,42 +16,49 @@ import static org.mockito.Mockito.when;
 
 public class RobotTest {
     @Mock
-    Robot robotMock = mock(Robot.class);
-
-    @Mock
     RobotController rcMock = mock(RobotController.class);
+
+    @InjectMocks
+    Robot robotMock = new Robot(rcMock);
 
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
 
-    @Before
-    public void setup() throws GameActionException{
-        if(rcMock.senseFlooding(new MapLocation(3,3))) {
-            when(robotMock.tryBuild(RobotType.MINER, new MapLocation(5, 5))).thenReturn(false);
-        }else{
-            when(robotMock.tryBuild(RobotType.MINER, new MapLocation(5, 5))).thenReturn(true);
-        }
+    @Test
+    public void tryBuildMapLocation() throws GameActionException{
+        when(rcMock.getLocation()).thenReturn(new MapLocation(5,5));
+        when(rcMock.isReady()).thenReturn(true);
+        when(rcMock.canBuildRobot(RobotType.MINER, Direction.NORTH)).thenReturn(true);
+
+        boolean result = robotMock.tryBuild(RobotType.MINER, new MapLocation(50, 50));
+        assertEquals(result, true);
     }
 
     @Test
-    public void tryBuild() throws GameActionException{
-        boolean result;
-        if (rcMock.senseFlooding(new MapLocation(3,3)))
-            result = robotMock.tryBuild(RobotType.MINER, new MapLocation(5, 5));
-        else
-            result = false;
+    public void tryBuildMapLocation2() throws GameActionException{
+        when(rcMock.getLocation()).thenReturn(new MapLocation(5,5));
+        when(rcMock.isReady()).thenReturn(true);
+        when(rcMock.canBuildRobot(RobotType.MINER, Direction.NORTH)).thenReturn(true);
 
+        boolean result = robotMock.tryBuild(RobotType.MINER, new MapLocation(5, 5));
         assertEquals(result, false);
     }
 
     @Test
-    public void tryBuildTest2() throws GameActionException{
-        boolean result;
-        if (!rcMock.senseFlooding(new MapLocation(3,3)))
-            result = robotMock.tryBuild(RobotType.MINER, new MapLocation(5, 5));
-        else
-            result = false;
+    public void tryBuildDirectionTest() throws GameActionException{
+        when(rcMock.isReady()).thenReturn(true);
+        when(rcMock.canBuildRobot(RobotType.MINER, Direction.NORTH)).thenReturn(true);
 
+        boolean result = robotMock.tryBuild(RobotType.MINER, Direction.NORTH);
         assertEquals(result, true);
+    }
+
+    @Test
+    public void tryBuildDirectionTest2() throws GameActionException{
+        when(rcMock.isReady()).thenReturn(false);
+        when(rcMock.canBuildRobot(RobotType.MINER, Direction.NORTH)).thenReturn(true);
+
+        boolean result = robotMock.tryBuild(RobotType.MINER, Direction.NORTH);
+        assertEquals(result, false);
     }
 }
