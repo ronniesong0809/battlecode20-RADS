@@ -331,8 +331,8 @@ apply plugin: 'jacoco'
 jacocoTestReport {
     reports {
         xml.enabled = true // coveralls plugin depends on xml format report
-        html.enabled = true
-        html.destination file("${buildDir}/reports/jacoco/jacocoTestReport")
+        html.enabled = false
+        xml.destination file("${buildDir}/reports/jacoco/jacocoTestReport.xml")
     }
 }
 
@@ -363,5 +363,5 @@ buildscript {
 }
 
 coveralls {
-    jacocoReportPath 'build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml'
+    jacocoReportPath 'build/reports/jacoco/jacocoTestReport.xml'
 }

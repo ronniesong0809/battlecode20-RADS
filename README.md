@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.com/battlecode20-team4/battlecode20-scaffold.svg?branch=master)](https://travis-ci.com/battlecode20-team4/battlecode20-scaffold)
 [![Coverage Status](https://coveralls.io/repos/github/ronniesong0809/battlecode20-RADS/badge.svg?branch=master)](https://coveralls.io/github/ronniesong0809/battlecode20-RADS?branch=master)
-[![License: AGPL 3.0](https://img.shields.io/badge/License-GPL--3.0-yellow.svg)](https://github.com/battlecode20-team4/battlecode20-scaffold/blob/master/LICENSE)
+[![License: AGPL 3.0](https://img.shields.io/badge/License-AGPL--3.0-yellow.svg)](https://github.com/battlecode20-team4/battlecode20-scaffold/blob/master/LICENSE)
 
 This is the Battlecode 2020 scaffold, containing an `examplefuncsplayer`. Read https://2020.battlecode.org/getting-started!
 
