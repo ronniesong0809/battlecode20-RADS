@@ -1,4 +1,4 @@
-package team4player;
+package team4enemy;
 
 import battlecode.common.*;
 
@@ -104,8 +104,7 @@ public class Miner extends Unit {
             }
         }
         // move towards soup...if stuck, get unstuck.
-        MapLocation x = soup[randomLoc];
-        if (!nav.goAround(x)) {
+        if (!nav.goAround(soup[randomLoc])) {
             nav.goTo(Util.randomDirection());
         }
     }
