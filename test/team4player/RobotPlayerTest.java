@@ -14,6 +14,9 @@ public class RobotPlayerTest {
     @Mock
     RobotController rcMock = mock(RobotController.class);
 
+    @InjectMocks
+    RobotPlayer rpMock = new RobotPlayer();
+
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
 
@@ -27,27 +30,32 @@ public class RobotPlayerTest {
     }
 
     @Test
-    public void getTeam_test() {
+    public void getTeamTest() {
         assertEquals(rcMock.getTeam(), Team.A);
     }
 
     @Test
-    public void getType_test() {
+    public void getTypeTest() {
         assertEquals(rcMock.getType(), RobotType.HQ);
     }
 
     @Test
-    public void getID_test() {
+    public void getIDTest() {
         assertEquals(rcMock.getID(), 12345678);
     }
 
     @Test
-    public void getLocation_test() {
+    public void getLocationTest() {
         assertEquals(rcMock.getLocation(), new MapLocation(0, 0));
     }
 
     @Test
-    public void getRoundNum_test() {
+    public void getRoundNumTest() {
         assertEquals(rcMock.getRoundNum(), 50);
     }
+
+//    @Test
+//    public void runTest () throws GameActionException{
+//        rpMock.run(rcMock);
+//    }
 }
