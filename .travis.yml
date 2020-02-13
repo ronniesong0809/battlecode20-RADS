@@ -1,1 +1,10 @@
 language: java
+
+jdk:
+- openjdk8
+
+after_success:
+- ./gradlew test jacocoTestReport coveralls
+env:
+  global:
+    - COVERALLS_REPO_TOKEN=t4iMhDASBCpzSkXSXUwsyK043iITd1URA
