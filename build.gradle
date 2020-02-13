@@ -90,6 +90,10 @@ dependencies {
     // The Battlecode client.
     client group: 'org.battlecode', name: clientName, version: versions.battlecode
 
+    // mockito
+    testCompile "org.mockito:mockito-core:2.+"
+    // testCompile "org.junit.jupiter:junit-jupiter-api:5.0.1"
+
     // Scala!
     // implementation 'org.scala-lang:scala-library:2.11.7'
     // testImplementation 'org.scalatest:scalatest_2.11:3.0.0'
