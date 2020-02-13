@@ -1,4 +1,5 @@
-package team4player;
+package team4enemy;
+
 import battlecode.common.*;
 
 import java.util.ArrayList;
@@ -11,7 +12,7 @@ public class HQ extends Building {
     static boolean sentWallComplete = false;
     static int round = 0;
 
-    public HQ(RobotController rc) throws GameActionException{
+    public HQ(RobotController rc) throws GameActionException {
         super(rc);
 
     }
@@ -25,7 +26,7 @@ public class HQ extends Building {
         }
 
         if (round % 10 == 0) {
-            bc.sendHqLoc(rc.getLocation());
+            Broadcast.sendHqLoc(rc.getLocation());
         }
 
         if (numMiners < 5) {
@@ -53,14 +54,30 @@ public class HQ extends Building {
             wallLocs.add(new MapLocation(block_x, block_y));
 
             switch (i) {
-                case 0: case 1: case 2: case 3:
-                    block_x++; break;
-                case 4: case 5: case 6: case 7:
-                    block_y--; break;
-                case 8: case 9: case 10: case 11:
-                    block_x--; break;
-                case 12: case 13: case 14: case 15:
-                    block_y++; break;
+                case 0:
+                case 1:
+                case 2:
+                case 3:
+                    block_x++;
+                    break;
+                case 4:
+                case 5:
+                case 6:
+                case 7:
+                    block_y--;
+                    break;
+                case 8:
+                case 9:
+                case 10:
+                case 11:
+                    block_x--;
+                    break;
+                case 12:
+                case 13:
+                case 14:
+                case 15:
+                    block_y++;
+                    break;
             }
         }
     }

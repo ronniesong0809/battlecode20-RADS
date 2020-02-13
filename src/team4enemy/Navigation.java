@@ -1,10 +1,11 @@
-package team4player;
+package team4enemy;
+
 import battlecode.common.*;
 
 public class Navigation {
     RobotController rc;
 
-    public Navigation(RobotController r){
+    public Navigation(RobotController r) {
         rc = r;
     }
 
@@ -52,29 +53,11 @@ public class Navigation {
         Direction dir = rc.getLocation().directionTo(loc);
         Direction[] toTry =
                 {
-                    dir,
-                    dir.rotateLeft(),
-                    dir.rotateLeft().rotateLeft(),
-                    dir.rotateRight(),
-                    dir.rotateRight().rotateRight()
-                };
-
-        for (Direction d : toTry) {
-            if (tryMove(d)) {
-                return true;
-            }
-        }
-        return false;
-    }
-    boolean goAroundT(MapLocation loc) throws GameActionException {
-        Direction dir = rc.getLocation().directionTo(loc);
-        Direction[] toTry =
-                {
                         dir,
-                        dir.rotateRight(),
-                        dir.rotateRight().rotateRight(),
                         dir.rotateLeft(),
-                        dir.rotateLeft().rotateLeft()
+                        dir.rotateLeft().rotateLeft(),
+                        dir.rotateRight(),
+                        dir.rotateRight().rotateRight()
                 };
 
         for (Direction d : toTry) {
@@ -125,6 +108,7 @@ public class Navigation {
         return false;
     }
 
+
     boolean goAround(Direction dir) throws GameActionException {
         Direction[] toTry =
                 {
@@ -142,7 +126,6 @@ public class Navigation {
         }
         return false;
     }
-
 
 
     boolean goTo(MapLocation dir) throws GameActionException {

@@ -1,11 +1,13 @@
-package team4player;
+package team4enemy;
+
 import battlecode.common.*;
 
-public class DesignSchool extends Building{
+public class DesignSchool extends Building {
     static int numLandscapers = 0;
     boolean broadcastCreation = false;
     static int numRounds = 0;
-    public DesignSchool(RobotController rc){
+
+    public DesignSchool(RobotController rc) {
         super(rc);
     }
 

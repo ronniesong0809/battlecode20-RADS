@@ -1,4 +1,5 @@
-package team4player;
+package team4enemy;
+
 import battlecode.common.*;
 
 public class Netgun extends Building {

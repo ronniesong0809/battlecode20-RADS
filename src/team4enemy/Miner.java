@@ -1,4 +1,4 @@
-package team4player;
+package team4enemy;
 
 import battlecode.common.*;
 
@@ -11,7 +11,6 @@ public class Miner extends Unit {
     int diagonalDir = -1; // the diagonal direction a miner is heading if no soup location is known
     int[] diagonalArr = {1, 3, 5, 7}; // diagonal directions to move
     ArrayList<MapLocation> soupLocations = new ArrayList<MapLocation>();
-	boolean rougeFlag = false;
 
     public Miner(RobotController rc) {
         super(rc);
@@ -69,72 +68,25 @@ public class Miner extends Unit {
         }
     }
 
-	public void takeTurn() throws GameActionException {
-		super.takeTurn();
-		if (rc.getRoundNum() == 2)
-			rougeFlag = true;
-
-		if (rougeFlag)
-			rouge();
-		else
-			normal();
-	}
-
-	public void rouge() throws GameActionException {
-		MapLocation enemyLoc = null;
-		boolean notFound;
-
-		if (enemyLoc == null)
-			enemyLoc = closestEnemyLoc();
-
-		if (rc.canSenseLocation(enemyLoc)) {
-			RobotInfo enemyHq = rc.senseRobotAtLocation(enemyLoc);
-			if (enemyHq == null || !(enemyHq.type == RobotType.HQ && enemyHq.team != rc.getTeam())) {
-				System.out.println("Not here");
-				notFound = true;
-			}else
-				notFound = false;
-		} else {
-			notFound = false;
-		}
-
-		if (notFound) {
-			System.out.println("remove " + enemyLoc);
-			enemyHqLocList.remove(enemyLoc);
-			System.out.println("Current list: " + enemyHqLocList);
-			enemyLoc = closestEnemyLoc();
-		}
-		nav.goAroundT(enemyLoc);
-	}
-
-	public MapLocation closestEnemyLoc () throws GameActionException{
-		System.out.println("going to enemy hq!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-		System.out.println(enemyHqLocList);
-		MapLocation loc = rc.getLocation();
-		MapLocation closest = null;
-		int distance = 999999;
-		for (MapLocation enemyLoc : enemyHqLocList) {
-			if (loc.distanceSquaredTo(enemyLoc) < distance) {
-				closest = enemyLoc;
-				distance = loc.distanceSquaredTo(enemyLoc);
-			}
-		}
-		return closest;
-	}
-
-    public void normal() throws GameActionException {
-		if (diagonalDir == -1){
-			int random = (int) (Math.random() * 4); // random soup to avoid crowds
-			diagonalDir = diagonalArr[random];
-		}
-		else{System.out.println(Util.directions[diagonalDir]);}
-		int x = 0;
-		if (rc.getSoupCarrying() >= 70) x=1;
-		switch(x){
-			case 1: refineSoup();
-				break;
-			default: {checkForSoup();break;}
-		}
+    public void takeTurn() throws GameActionException {
+        super.takeTurn();
+        if (diagonalDir == -1) {
+            int random = (int) (Math.random() * 4); // random soup to avoid crowds
+            diagonalDir = diagonalArr[random];
+        } else {
+            System.out.println(Util.directions[diagonalDir]);
+        }
+        int x = 0;
+        if (rc.getSoupCarrying() >= 70) x = 1;
+        switch (x) {
+            case 1:
+                refineSoup();
+                break;
+            default: {
+                checkForSoup();
+                break;
+            }
+        }
         /*
         numDesignSchool += bc.updateUnitCounts();
         //TODO -- broadcasting, checking if broadcast is stale
@@ -152,8 +104,7 @@ public class Miner extends Unit {
             }
         }
         // move towards soup...if stuck, get unstuck.
-        MapLocation x = soup[randomLoc];
-        if (!nav.goAround(x)) {
+        if (!nav.goAround(soup[randomLoc])) {
             nav.goTo(Util.randomDirection());
         }
     }

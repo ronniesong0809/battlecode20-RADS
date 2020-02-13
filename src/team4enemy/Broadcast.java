@@ -1,10 +1,12 @@
-package team4player;
+package team4enemy;
+
 import battlecode.common.*;
+
 import java.util.ArrayList;
 
 public class Broadcast {
     private static RobotController rc;
-    static final int teamSecret = 4444444;
+    static final int teamSecret = 5555555;
     static final String[] messageType = {"HQ loc", "design school created", "soup location"};
 
     public Broadcast(RobotController r) {
@@ -17,17 +19,17 @@ public class Broadcast {
         message[1] = 101101101;
         message[2] = loc.x;
         message[3] = loc.y;
-        if (rc.canSubmitTransaction(message, 3)){
-            rc.submitTransaction(message,3);
+        if (rc.canSubmitTransaction(message, 3)) {
+            rc.submitTransaction(message, 3);
         }
     }
 
     public static MapLocation getHqLocFromBlockchain() throws GameActionException {
         System.out.println("BLOCKCHAIN!");
-        for (int i = 1; i < rc.getRoundNum(); i++){
-            for(Transaction tx: rc.getBlock(i)){
+        for (int i = 1; i < rc.getRoundNum(); i++) {
+            for (Transaction tx : rc.getBlock(i)) {
                 int[] mess = tx.getMessage();
-                if(mess[0] == teamSecret && mess[1]==101101101){
+                if (mess[0] == teamSecret && mess[1] == 101101101) {
                     System.out.println("found the HQ!");
                     return new MapLocation(mess[2], mess[3]);
                 }
@@ -121,22 +123,22 @@ public class Broadcast {
 //        // System.out.println(rc.getRoundMessages(turnCount-1));
 //    }
 
-    public void broadcastInitialWallComplete(int height)  throws GameActionException {
+    public void broadcastInitialWallComplete(int height) throws GameActionException {
         int[] message = new int[7];
         message[0] = teamSecret;
         message[1] = 101000101;
         message[2] = height;
-        if (rc.canSubmitTransaction(message, 3)){
-            rc.submitTransaction(message,3);
+        if (rc.canSubmitTransaction(message, 3)) {
+            rc.submitTransaction(message, 3);
         }
     }
 
     public int readInitialWallComplete() throws GameActionException {
         System.out.println("BLOCKCHAIN!");
-        for (int i = 1; i < rc.getRoundNum(); i++){
-            for(Transaction tx: rc.getBlock(i)){
+        for (int i = 1; i < rc.getRoundNum(); i++) {
+            for (Transaction tx : rc.getBlock(i)) {
                 int[] mess = tx.getMessage();
-                if(mess[0] == teamSecret && mess[1]==101000101){
+                if (mess[0] == teamSecret && mess[1] == 101000101) {
                     System.out.println("Initial Wall Complete");
                     return mess[2];
                 }
