@@ -331,8 +331,18 @@ apply plugin: 'jacoco'
 jacocoTestReport {
     reports {
         xml.enabled = true // coveralls plugin depends on xml format report
-        html.enabled = false
+        html.enabled = true
         xml.destination file("${buildDir}/reports/jacoco/jacocoTestReport.xml")
+    }
+//    test {
+//        jacoco {
+//            excludes = ['**/team4enemy/**']
+//        }
+//    }
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: ['**/team4enemy/**', '**/examplefuncsplayer/**'])
+        }))
     }
 }
 
