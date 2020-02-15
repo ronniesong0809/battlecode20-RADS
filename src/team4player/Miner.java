@@ -35,7 +35,8 @@ public class Miner extends Unit {
         if (numFulfillmentCenter < 1 && bc.readFCCreation()) {
             numFulfillmentCenter++;
         }
-        if (!senseBuilding(RobotType.REFINERY)) tryBuild(RobotType.REFINERY, hqLoc);
+        MapLocation[] soup = rc.senseNearbySoup(-1); // build refineries only close to soup
+        if (!senseBuilding(RobotType.REFINERY) && soup != null && soup.length != 0) tryBuild(RobotType.REFINERY, hqLoc);
         else if (numDesignSchool < 1 && !senseBuilding(RobotType.DESIGN_SCHOOL) && !bc.readDesignSchoolCreation() && tryBuild(RobotType.DESIGN_SCHOOL, hqLoc)) {
             numDesignSchool++;
             System.out.println("built a Design School");
