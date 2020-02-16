@@ -55,7 +55,7 @@ public class MinerTest {
         when(rcMock.canMineSoup(Direction.CENTER)).thenReturn(true);
         when(navMock.goAround(new MapLocation(1,1))).thenReturn(false);
 
-        minerMock.walkTowardsSoup(new MapLocation[]{new MapLocation(1,1)}, 0);
+        minerMock.walkTowardsSoup(new MapLocation(1,1));
     }
 
     @Test

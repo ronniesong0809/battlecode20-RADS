@@ -1,0 +1,38 @@
+public class HelloWorld{
+
+     public static void main(String []args){
+        int packedMessage = 0;
+        int x = 7;
+        int y = 57;
+        int teamSecret2 = 63;
+        
+        System.out.println(Integer.toString(packedMessage, 2));
+        packedMessage = (packedMessage << 6) + x;
+        System.out.println(Integer.toString(packedMessage, 2));
+        packedMessage = (packedMessage << 6) + y;
+        System.out.println(Integer.toString(packedMessage, 2));
+        packedMessage = (packedMessage << 6) + teamSecret2;
+        System.out.println(Integer.toString(packedMessage, 2));
+    
+        System.out.println("\n\n\n");
+        // also: 0x7 == 7 and 0xf == 15 == 0b1111
+    
+        int originalSecret = packedMessage & 0b111111; // Team secret
+        System.out.println(originalSecret);
+        int originaly = (packedMessage >> 6) & 0b111111;
+        System.out.println(originaly);
+        //System.out.println(Integer.toString(((packedMessage >> 12) & 0b111111), 2));
+        int originalx = (packedMessage >> 12) & 0b111111;
+        System.out.println(originalx);
+        
+        // 0 0 1 1 1 1 | 1 1 1 0 0 1 | 1 1 1 1 1 1    & 0b111111   \\ we get 63
+        // 0 0 0 0 0 0 | 0 0 1 1 1 1 | 1 1 1 0 0 1   & 0b111111   \\ we get 57
+        
+        // 0 0 1 1 1 1 | 
+        
+        //1 1 1 0 0 1 | 1 1 1 1 1 1 & 0b111111   \\ we get 63
+        
+        /*int originalXalt = (packedMessage >> 6) & 0b111111;
+        System.out.println(originalXalt);*/
+     }
+}

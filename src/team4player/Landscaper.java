@@ -22,8 +22,8 @@ public class Landscaper extends Unit{
         if (hqLoc == null) {
             findHQ();
         }
-
         // Initialize the map locations to build on
+
         if (wallLocs == null && hqLoc != null) {
             initializeWallLocationsAndLevels();
         }

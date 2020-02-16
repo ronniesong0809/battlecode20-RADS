@@ -13,7 +13,7 @@ public class Broadcast {
         rc = r;
     }
 
-    public static void sendHqLoc(MapLocation loc) throws GameActionException {
+    public static void sendHqLocToBlockchain(MapLocation loc) throws GameActionException {
         int[] message = new int[7];
         message[0] = teamSecret;
         message[1] = 101101101;
