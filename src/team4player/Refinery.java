@@ -8,6 +8,7 @@ import battlecode.common.RobotType;
 public class Refinery extends Building{
     public Refinery(RobotController rc) throws GameActionException{
         super(rc);
+        bc.sendRefineryLocToBlockchain(rc.getLocation());
         //System.out.println(bc.sendRefineryLocToBlockchain(rc.getLocation()));
     }
 

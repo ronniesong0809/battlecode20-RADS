@@ -81,17 +81,23 @@ public class Miner extends Unit {
 				return true;
 		}
 
-		public int blockchainSoup() throws GameActionException{
+		public MapLocation blockchainSoup() throws GameActionException{
 				MapLocation [] mapLoc = bc.getRefineryLocFromBlockchain();
+				//MapLocation newSoupLocation = bc.getRefineryLocFromBlockchain();
+				//return newSoupLocation;
+
 				//if (newSoupLocation != null) {
 				for(MapLocation newSoupLocation : mapLoc){
-						if (oldSoupLocations.contains(newSoupLocation)){return 0;} // don't add this old location, soup is gone
-						else if (!soupLocations.contains(newSoupLocation)){//don't add the location twice.
+						if (oldSoupLocations.contains(newSoupLocation)){continue;} // don't add this old location, soup is gone
+						return newSoupLocation;
+						/*else if (!soupLocations.contains(newSoupLocation)){//don't add the location twice.
 							soupLocations.add(newSoupLocation);
-							return 2;
-						}
+							return newSoupLocation;
+							//return 2;
+						}*/
 				}
-				return 0;
+				return null;
+				//return 0;
 		}
 		//TODO -- use this
 		public boolean goDiagonal() throws GameActionException{
@@ -114,12 +120,14 @@ public class Miner extends Unit {
 
         if (rc.getSoupCarrying() >= 70) x = 1; // refine soup
 				//else if (senseNearbySoup()){ x = 0;} //mine soup
-				else if (destination == null){ // we aren't travelling to a soup location, look for one
+				//else if (destination == null){ // we aren't travelling to a soup location, look for one
 						if(!senseNearbySoup()){
-							x = blockchainSoup(); // case 2, or case default
+							destination = blockchainSoup();
+							//x = blockchainSoup(); // case 2, or case default
 						}
-				}
-				else if (destination != null){
+				//}
+				if (destination != null){
+				//else if (destination != null){
 						x = 3;
 				}
 
@@ -136,6 +144,10 @@ public class Miner extends Unit {
 								walkTowardsSoup(destination);
 								if (rc.canSenseLocation(destination)){ // we are close enough to the refinery...mine soup next round.
 									//if (!senseNearbySoup()){ ;} //mine soup
+									// we move twice because we want to get closer to destination in case soup is not nearby to attract us further in...
+									walkTowardsSoup(destination);
+									walkTowardsSoup(destination);
+
 									oldSoupLocations.add(destination);
 									soupLocations.remove(destination);
 									destination = null;

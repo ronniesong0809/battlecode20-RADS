@@ -12,37 +12,47 @@ public class Broadcast {
         rc = r;
     }
 
-		public static void sendHqLocToBlockchain(MapLocation loc) throws GameActionException {
-        int[] message = new int[7];
+    public static int sendHqLocToBlockchain(MapLocation loc) throws GameActionException {
         int packedMessage = 0;
+        int[] message = new int[7];
         packedMessage = (packedMessage << 6) + loc.x;
         packedMessage = (packedMessage << 6) + loc.y;
         packedMessage = (packedMessage << 6) + teamSecret;
-				System.out.println("(HQ)SENDING: " + packedMessage);
+				System.out.println("SENDING: " + packedMessage);
         message[0] = packedMessage;
-        if (rc.canSubmitTransaction(message, 3)){
-            rc.submitTransaction(message,3);
+
+        if (rc.canSubmitTransaction(message, 4)){
+            rc.submitTransaction(message,4);
+						return message[0];
         }
+				return 0;
     }
 
     public static MapLocation getHqLocFromBlockchain() throws GameActionException {
-        System.out.println("BLOCKCHAIN!");
+        System.out.println("BLOCKCHAIN! (HQ)");
+				//MapLocation [] msgs = new MapLocation[7];
+				int j = 0; // keeps track of where we insert into msgs.
         for (int i = 1; i < rc.getRoundNum(); i++){
             for(Transaction tx: rc.getBlock(i)){
-								int[] mess = tx.getMessage();
+                int[] mess = tx.getMessage();
 								int secret = mess[0] & 0b111111;
 								int originaly = (mess[0] >> 6) & 0b111111;
 								int originalx = (mess[0] >> 12) & 0b111111;
                 if(secret == teamSecret){
-									System.out.println("found the HQ!  " + secret + " " + originalx + " " + originaly);
-									return new MapLocation(originalx, originaly);
+										System.out.println(secret);
+										System.out.println(originaly);
+										System.out.println(originalx);
+                    System.out.println("found the HQ!  " + secret + " " + originalx + " " + originaly);
+                    return new MapLocation(originalx, originaly);
                 }
             }
         }
-       	return null;
-		}
+        //return msgs;
+				return null;
+    }
 
     /*public static void sendHqLocToBlockchain(MapLocation loc) throws GameActionException {
+		//	return;
         int[] message = new int[7];
         message[0] = teamSecret;
         message[1] = 101101101;
@@ -54,12 +64,41 @@ public class Broadcast {
     }
 
     public static MapLocation getHqLocFromBlockchain() throws GameActionException {
+		//	return null;
         System.out.println("BLOCKCHAIN!");
         for (int i = 1; i < rc.getRoundNum(); i++){
             for(Transaction tx: rc.getBlock(i)){
                 int[] mess = tx.getMessage();
                 if(mess[0] == teamSecret && mess[1]==101101101){
                     System.out.println("found the HQ!");
+                    return new MapLocation(mess[2], mess[3]);
+                }
+            }
+        }
+        return null;
+    }*/
+
+    /*public static void sendRefineryLocToBlockchain(MapLocation loc) throws GameActionException {
+        int[] message = new int[7];
+        message[0] = teamSecret2;
+        message[1] = 101101101;
+        message[2] = loc.x;
+        message[3] = loc.y;
+        if (rc.canSubmitTransaction(message, 3)){
+            rc.submitTransaction(message,3);
+        }
+    }
+
+    public static MapLocation getRefineryLocFromBlockchain() throws GameActionException {
+        System.out.println("BLOCKCHAIN!");
+        for (int i = 1; i < rc.getRoundNum(); i++){
+            for(Transaction tx: rc.getBlock(i)){
+                int[] mess = tx.getMessage();
+								System.out.println(mess[0]);
+								System.out.println(mess[2]);
+								System.out.println(mess[3]);
+                if(mess[0] == teamSecret2 && mess[1]==101101101){
+                    System.out.println("found the REFINERY!");
                     return new MapLocation(mess[2], mess[3]);
                 }
             }
@@ -91,6 +130,7 @@ public class Broadcast {
 			exists on the blockchain, it only grabs the first one it finds. This is okay in most cases,
 			but should be changed in the future to return all locations matching the teamSecret2.
 		*/
+    //public static MapLocation getRefineryLocFromBlockchain() throws GameActionException {
     public static MapLocation [] getRefineryLocFromBlockchain() throws GameActionException {
         System.out.println("BLOCKCHAIN! (refinery)");
 				MapLocation [] msgs = new MapLocation[7];
@@ -106,13 +146,14 @@ public class Broadcast {
 								System.out.println(originalx);
                 if(secret == teamSecret2){
                     System.out.println("found a refinery!  " + secret + " " + originalx + " " + originaly);
+                    //return new MapLocation(originalx, originaly);
 										msgs[j] = new MapLocation(originalx, originaly);
 										++j;
-                    //return new MapLocation(originalx, originaly);
                 }
             }
         }
         return msgs;
+				//return null;
     }
 
     public void broadcastFulfillmentCenterCreation() throws GameActionException {
