@@ -12,7 +12,6 @@ public class Miner extends Unit {
 
     int diagonalDir = -1; // the diagonal direction a miner is heading if no soup location is known
     int[] diagonalArr = {1, 3, 5, 7}; // diagonal directions to move
-    ArrayList<MapLocation> soupLocations = new ArrayList<MapLocation>(); // go and take all soup
     ArrayList<MapLocation> oldSoupLocations = new ArrayList<MapLocation>(); // don't go here anymore
 
     public Miner(RobotController rc) {
@@ -83,23 +82,13 @@ public class Miner extends Unit {
 
 		public MapLocation blockchainSoup() throws GameActionException{
 				MapLocation [] mapLoc = bc.getRefineryLocFromBlockchain();
-				//MapLocation newSoupLocation = bc.getRefineryLocFromBlockchain();
-				//return newSoupLocation;
-
-				//if (newSoupLocation != null) {
 				for(MapLocation newSoupLocation : mapLoc){
 						if (oldSoupLocations.contains(newSoupLocation)){continue;} // don't add this old location, soup is gone
 						return newSoupLocation;
-						/*else if (!soupLocations.contains(newSoupLocation)){//don't add the location twice.
-							soupLocations.add(newSoupLocation);
-							return newSoupLocation;
-							//return 2;
-						}*/
 				}
 				return null;
-				//return 0;
 		}
-		//TODO -- use this
+
 		public boolean goDiagonal() throws GameActionException{
 				System.out.println("GOING DIAGONAL DIRECTION");
 				if (!nav.goTo(Util.directions[diagonalDir])) {// reset diagonal direction, since we hit a wall.
@@ -113,43 +102,28 @@ public class Miner extends Unit {
     public void takeTurn() throws GameActionException {
         super.takeTurn();
 				int x = 0;
-        //if (checkForSoup()){goDiagonal(); return;}
 				if (destination == null) { System.out.println("Destination is null");}
 				else {System.out.println("Destination is NOT null: " + destination.x + " " + destination.y);}
         if (diagonalDir == -1) { changeDirection();} // diagonal walking stuff
 
         if (rc.getSoupCarrying() >= 70) x = 1; // refine soup
-				//else if (senseNearbySoup()){ x = 0;} //mine soup
-				//else if (destination == null){ // we aren't travelling to a soup location, look for one
-						if(!senseNearbySoup()){
-							destination = blockchainSoup();
-							//x = blockchainSoup(); // case 2, or case default
-						}
-				//}
-				if (destination != null){
-				//else if (destination != null){
-						x = 3;
+				else if (destination == null){ // we aren't travelling to a soup location, look for one
+						if(!senseNearbySoup()){destination = blockchainSoup();}
 				}
+				if (destination != null){x = 2;}
 
         switch (x) {
             case 1: // building a building and refining soup
         				buildABuilding();
                 refineSoup();
                 break;
-						case 2: // walking
-								destination = soupLocations.get(0);
-								walkTowardsSoup(destination);
-								break;
-						case 3: //walk towards soup
+						case 2: //walk towards soup
 								walkTowardsSoup(destination);
 								if (rc.canSenseLocation(destination)){ // we are close enough to the refinery...mine soup next round.
-									//if (!senseNearbySoup()){ ;} //mine soup
 									// we move twice because we want to get closer to destination in case soup is not nearby to attract us further in...
 									walkTowardsSoup(destination);
 									walkTowardsSoup(destination);
-
 									oldSoupLocations.add(destination);
-									soupLocations.remove(destination);
 									destination = null;
 								}
             default: {
@@ -182,6 +156,7 @@ public class Miner extends Unit {
             if (refineryLocation != null) {
                 while (true) {
                     System.out.println("Toward to Refinery!");
+										//TODO -- is there a way to stop within one square of a building?
 										/*if (rc.canSenseLocation(destination)) {
 												oldSoupLocations.add(
 												break;

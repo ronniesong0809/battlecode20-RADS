@@ -22,10 +22,6 @@ public class Landscaper extends Unit{
         if (hqLoc == null) {
             findHQ();
         }
-				/*else {
-            System.out.println(hqLoc);
-				}
-				return;*/
         // Initialize the map locations to build on
 
         if (wallLocs == null && hqLoc != null) {
