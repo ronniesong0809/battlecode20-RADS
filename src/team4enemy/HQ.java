@@ -26,7 +26,7 @@ public class HQ extends Building {
         }
 
         if (round % 10 == 0) {
-            Broadcast.sendHqLoc(rc.getLocation());
+            Broadcast.sendHqLocToBlockchain(rc.getLocation());
         }
 
         if (numMiners < 5) {
