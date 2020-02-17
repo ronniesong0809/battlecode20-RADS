@@ -34,17 +34,17 @@ public class Miner extends Unit {
         if (numDesignSchool < 1 && bc.readDesignSchoolCreation()) {
             numDesignSchool++;
         }
-        /*if (numFulfillmentCenter < 1 && bc.readFCCreation()) {
+        if (numFulfillmentCenter < 1 && bc.readFCCreation()) {
             numFulfillmentCenter++;
-        }*/
+        }
         MapLocation[] soup = rc.senseNearbySoup(-1); // build refineries only close to soup
         if (!senseBuilding(RobotType.REFINERY) && soup != null && soup.length != 0) tryBuild(RobotType.REFINERY, hqLoc);
         else if (numDesignSchool < 1 && !senseBuilding(RobotType.DESIGN_SCHOOL) && !bc.readDesignSchoolCreation() && tryBuild(RobotType.DESIGN_SCHOOL, hqLoc)) {
             numDesignSchool++;
             System.out.println("built a Design School");
-        } /*else if (numFulfillmentCenter < 1 && !senseBuilding(RobotType.FULFILLMENT_CENTER) && !bc.readFCCreation() && tryBuild(RobotType.FULFILLMENT_CENTER, hqLoc)) {
+        } else if (numFulfillmentCenter < 1 && !senseBuilding(RobotType.FULFILLMENT_CENTER) && !bc.readFCCreation() && tryBuild(RobotType.FULFILLMENT_CENTER, hqLoc)) {
             numFulfillmentCenter++;
-        }*/
+        }
     }
 
     public boolean checkForSoup() throws GameActionException {
@@ -118,11 +118,7 @@ public class Miner extends Unit {
                 refineSoup();
                 break;
 						case 2: //walk towards soup
-								walkTowardsSoup(destination);
-								if (rc.canSenseLocation(destination)){ // we are close enough to the refinery...mine soup next round.
-									// we move twice because we want to get closer to destination in case soup is not nearby to attract us further in...
-									walkTowardsSoup(destination);
-									walkTowardsSoup(destination);
+								if (!walkTowardsSoup(destination) && rc.canSenseLocation(destination)){ // we are close enough to the refinery...mine soup next round.
 									oldSoupLocations.add(destination);
 									destination = null;
 								}
@@ -136,12 +132,14 @@ public class Miner extends Unit {
     }
 
    // public void walkTowardsSoup(MapLocation[] soup, int randomLoc) throws GameActionException {
-    public void walkTowardsSoup(MapLocation x) throws GameActionException {
+    public boolean walkTowardsSoup(MapLocation x) throws GameActionException {
         System.out.println("Towards soup!");
         // move towards soup...if stuck, get unstuck.
         if (!nav.goAround(x)) {
             nav.goTo(Util.randomDirection());
+						return false;
         }
+				return true;
     }
 
     public void refineSoup() throws GameActionException {
