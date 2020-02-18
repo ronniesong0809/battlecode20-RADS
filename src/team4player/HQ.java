@@ -24,7 +24,7 @@ public class HQ extends Building {
             initSurroundingWalls();
         }
 
-        if (round % 10 == 0) {
+        if (round % 40 == 0) {
             bc.sendHqLocToBlockchain(rc.getLocation());
         }
 

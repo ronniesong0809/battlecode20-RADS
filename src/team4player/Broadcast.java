@@ -78,7 +78,7 @@ public class Broadcast {
         packedMessage = (packedMessage << 6) + loc.x;
         packedMessage = (packedMessage << 6) + loc.y;
         packedMessage = (packedMessage << 6) + teamSecret2;
-				System.out.println("SENDING: " + packedMessage);
+				//System.out.println("SENDING: " + packedMessage);
         message[0] = packedMessage;
 
         if (rc.canSubmitTransaction(message, 4)){
@@ -90,7 +90,7 @@ public class Broadcast {
 
     //public static MapLocation getRefineryLocFromBlockchain() throws GameActionException {
     public static MapLocation [] getRefineryLocFromBlockchain() throws GameActionException {
-        System.out.println("BLOCKCHAIN! (refinery)");
+        //System.out.println("BLOCKCHAIN! (refinery)");
 				MapLocation [] msgs = new MapLocation[7];
 				int j = 0; // we need to add in the messages we find into MapLocation [] msgs in proper index.
         for (int i = 1; i < rc.getRoundNum(); i++){
@@ -100,10 +100,10 @@ public class Broadcast {
 								int originaly = (mess[0] >> 6) & 0b111111;
 								int originalx = (mess[0] >> 12) & 0b111111;
                 if(secret == teamSecret2){
-										System.out.println(secret);
+										/*System.out.println(secret);
 										System.out.println(originaly);
 										System.out.println(originalx);
-										System.out.println("found a refinery!  " + secret + " " + originalx + " " + originaly);
+										System.out.println("found a refinery!  " + secret + " " + originalx + " " + originaly);*/
                     //return new MapLocation(originalx, originaly);
 										msgs[j] = new MapLocation(originalx, originaly);
 										++j;
