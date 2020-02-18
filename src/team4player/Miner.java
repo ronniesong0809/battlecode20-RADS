@@ -65,8 +65,9 @@ public class Miner extends Unit {
 				return false;
     }*/
 
-    public boolean checkForSoup() throws GameActionException {
-        MapLocation[] soup = rc.senseNearbySoup(-1);
+    //public boolean checkForSoup() throws GameActionException {
+    public boolean checkForSoup(MapLocation [] soup) throws GameActionException {
+        //MapLocation[] soup = rc.senseNearbySoup(-1);
         if (soup != null && soup.length != 0) { // we found soup! Head towards it
 					  boolean mined = false;
 						// Try to mine any soup nearby
@@ -109,22 +110,26 @@ public class Miner extends Unit {
     public void takeTurn() throws GameActionException {
         super.takeTurn();
 				int x = 0;
-
+				MapLocation[] soup = null;
 				/* THE FOLLOWING IS IN ORDER OF PREFERENCE OF A MINER's BEHAVIOR*/
 				// refine soup
         if (rc.getSoupCarrying() >= 70) x = 1;
 
 				// check for nearby soup // TODO
 				//else if(soupDestination != null){x=3;}
+				else{
+          soup = rc.senseNearbySoup(-1);
+          x = 3;
+        }
 
 				// we aren't travelling to a soup/refinery location, look for one
-				else if (blockchainRefineryDestination == null){
+				if (blockchainRefineryDestination == null){
 					blockchainRefineryDestination = blockchainSoup();
 					baseRefinery = blockchainRefineryDestination; // there is a closer refinery to make our base
 				}
 
 				//We may currently be pursuing a refinery (after before else if, or on a previous turn)
-				if (blockchainRefineryDestination != null){x = 2;}
+				if (blockchainRefineryDestination != null && x==0){x = 2;}
 
         switch (x) {
             case 1: // building a building and refining soup
@@ -138,6 +143,9 @@ public class Miner extends Unit {
 								}
 								break;
 						case 3:
+                if (diagonalDir == -1) { changeDirection();} // diagonal walking stuff
+                if(!checkForSoup(soup)){goDiagonal();} // no soup around...walk diagonally
+								break;
 								//TODO -- get soup going
 								/*if (!walkTowardsSoup(soupDestination) && rc.canSenseLocation(soupDestination)){
 									tryMine();
@@ -161,8 +169,8 @@ public class Miner extends Unit {
 									}
 								if(tryMine()){}*/
         				//buildABuilding();
-								if (diagonalDir == -1) { changeDirection();} // diagonal walking stuff
-								if(!checkForSoup()){goDiagonal();} // no soup around...walk diagonally
+								//if (diagonalDir == -1) { changeDirection();} // diagonal walking stuff
+								//if(!checkForSoup()){goDiagonal();} // no soup around...walk diagonally
                 break;
 								}
         }
