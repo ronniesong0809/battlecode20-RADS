@@ -36,17 +36,17 @@ public class Miner extends Unit {
         if (numDesignSchool < 1 && bc.readDesignSchoolCreation()) {
             numDesignSchool++;
         }
-        /*if (numFulfillmentCenter < 1 && bc.readFCCreation()) {
+        if (numFulfillmentCenter < 1 && bc.readFCCreation()) {
             numFulfillmentCenter++;
-        }*/
+        }
         MapLocation[] soup = rc.senseNearbySoup(-1); // build refineries only close to soup
         if (!senseBuilding(RobotType.REFINERY) && soup != null && soup.length != 0) tryBuild(RobotType.REFINERY, hqLoc);
         else if (numDesignSchool < 1 && !senseBuilding(RobotType.DESIGN_SCHOOL) && !bc.readDesignSchoolCreation() && tryBuild(RobotType.DESIGN_SCHOOL, hqLoc)) {
             numDesignSchool++;
             System.out.println("built a Design School");
-        } /*else if (numFulfillmentCenter < 1 && !senseBuilding(RobotType.FULFILLMENT_CENTER) && !bc.readFCCreation() && tryBuild(RobotType.FULFILLMENT_CENTER, hqLoc)) {
+        } else if (numFulfillmentCenter < 1 && !senseBuilding(RobotType.FULFILLMENT_CENTER) && !bc.readFCCreation() && tryBuild(RobotType.FULFILLMENT_CENTER, hqLoc)) {
             numFulfillmentCenter++;
-        }*/
+        }
     }
 
 		//TODO -- move towards one specific soup location
