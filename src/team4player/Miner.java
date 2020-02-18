@@ -68,7 +68,7 @@ public class Miner extends Unit {
     //public boolean checkForSoup() throws GameActionException {
     public boolean checkForSoup(MapLocation [] soup) throws GameActionException {
         //MapLocation[] soup = rc.senseNearbySoup(-1);
-        if (soup != null && soup.length != 0) { // we found soup! Head towards it
+        //if (soup != null && soup.length != 0) { // we found soup! Head towards it
 					  boolean mined = false;
 						// Try to mine any soup nearby
 						mined = tryMine();
@@ -76,9 +76,9 @@ public class Miner extends Unit {
 						if (!mined) {
 							int randomLoc = (int) (Math.random() * soup.length + 0); // random soup to avoid crowds
 							walkTowardsSoup(soup[randomLoc]);
+								return true;
 						}
-						return true;
-        }
+        //}
 				return false;
     }
 
@@ -119,7 +119,7 @@ public class Miner extends Unit {
 				//else if(soupDestination != null){x=3;}
 				else{
           soup = rc.senseNearbySoup(-1);
-          x = 3;
+        	if (soup != null && soup.length != 0) {x=3;}// we found soup! Head towards it
         }
 
 				// we aren't travelling to a soup/refinery location, look for one
@@ -143,6 +143,7 @@ public class Miner extends Unit {
 								}
 								break;
 						case 3:
+        				//buildABuilding();
                 if (diagonalDir == -1) { changeDirection();} // diagonal walking stuff
                 if(!checkForSoup(soup)){goDiagonal();} // no soup around...walk diagonally
 								break;
@@ -162,6 +163,8 @@ public class Miner extends Unit {
 								break;*/
 
             default: {
+                if (diagonalDir == -1) { changeDirection();} // diagonal walking stuff
+								goDiagonal();
 								// We are pursuing a soup location
 								/*if (soupDestination != null){
 								 	if (!walkTowardsSoup(soupDestination) || rc.canSenseLocation(soupDestination)){
