@@ -11,17 +11,15 @@ import org.mockito.junit.*;
 
 
 public class NavigationTest {
+    @Rule
+    public MockitoRule mockitoRule = MockitoJUnit.rule();
     @Mock
     RobotController rcMock = mock(RobotController.class);
-
     @InjectMocks
     Navigation navMock = new Navigation(rcMock);
 
-    @Rule
-    public MockitoRule mockitoRule = MockitoJUnit.rule();
-
     @Before
-    public void setup() throws GameActionException{
+    public void setup() throws GameActionException {
         when(rcMock.isReady()).thenReturn(true);
         when(rcMock.canMove(Direction.CENTER)).thenReturn(true);
         when(rcMock.getLocation()).thenReturn(new MapLocation(5, 5));

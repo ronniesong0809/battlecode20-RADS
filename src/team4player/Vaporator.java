@@ -1,4 +1,5 @@
 package team4player;
+
 import battlecode.common.*;
 
 public class Vaporator extends Building {
@@ -6,7 +7,7 @@ public class Vaporator extends Building {
         super(r);
     }
 
-    public void takeTurn() throws GameActionException{
+    public void takeTurn() throws GameActionException {
         super.takeTurn();
         //TODO:
     }

@@ -4,8 +4,8 @@ import battlecode.common.*;
 
 public class DesignSchool extends Building {
     static int numLandscapers = 0;
-    boolean broadcastCreation = false;
     static int numRounds = 0;
+    boolean broadcastCreation = false;
 
     public DesignSchool(RobotController rc) {
         super(rc);

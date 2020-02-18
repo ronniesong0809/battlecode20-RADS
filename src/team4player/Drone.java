@@ -1,4 +1,5 @@
 package team4player;
+
 import battlecode.common.*;
 
 import java.util.List;
@@ -91,7 +92,7 @@ public class Drone extends Unit {
     public void composeEnemyHQLocations() {
         enemyHQlocs = new ArrayList<MapLocation>();
 
-        MapLocation topCorner = new MapLocation(rc.getMapWidth()-1, rc.getMapHeight()-1);
+        MapLocation topCorner = new MapLocation(rc.getMapWidth() - 1, rc.getMapHeight() - 1);
 
         enemyHQlocs.add(new MapLocation(topCorner.x - hqLoc.x, topCorner.y - hqLoc.y));
         enemyHQlocs.add(new MapLocation(topCorner.x - hqLoc.x, hqLoc.y));
@@ -126,13 +127,12 @@ public class Drone extends Unit {
         int closestSpot = closestCircleSpot();
         if (rc.getLocation().distanceSquaredTo(droneCircle.get(closestSpot)) == 0) {
             // We are on the circle so now go to the next spot
-            int nextSpot = closestSpot+1;
+            int nextSpot = closestSpot + 1;
             if (closestSpot == 23) {
                 nextSpot = 0;
             }
             nav.droneMove(rc.getLocation().directionTo(droneCircle.get(nextSpot)));
-        }
-        else {
+        } else {
             // Go to the closest spot
             nav.droneMove(rc.getLocation().directionTo(droneCircle.get(closestSpot)));
         }
@@ -150,7 +150,10 @@ public class Drone extends Unit {
             droneCircle.add(new MapLocation(block_x, block_y));
 
             switch (i) {
-                case 0: case 1: case 2: case 3:
+                case 0:
+                case 1:
+                case 2:
+                case 3:
                     block_x++;
                     break;
                 case 4:

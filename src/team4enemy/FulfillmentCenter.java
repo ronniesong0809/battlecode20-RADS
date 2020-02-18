@@ -3,8 +3,8 @@ package team4enemy;
 import battlecode.common.*;
 
 public class FulfillmentCenter extends Building {
-    public int numDrones = 0;
     static int numRounds = 0;
+    public int numDrones = 0;
 
     public FulfillmentCenter(RobotController rc) {
         super(rc);

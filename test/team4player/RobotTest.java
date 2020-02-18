@@ -15,18 +15,16 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class RobotTest {
+    @Rule
+    public MockitoRule mockitoRule = MockitoJUnit.rule();
     @Mock
     RobotController rcMock = mock(RobotController.class);
-
     @InjectMocks
     Robot robotMock = new Robot(rcMock);
 
-    @Rule
-    public MockitoRule mockitoRule = MockitoJUnit.rule();
-
     @Test
-    public void tryBuildMapLocation() throws GameActionException{
-        when(rcMock.getLocation()).thenReturn(new MapLocation(5,5));
+    public void tryBuildMapLocation() throws GameActionException {
+        when(rcMock.getLocation()).thenReturn(new MapLocation(5, 5));
         when(rcMock.isReady()).thenReturn(true);
         when(rcMock.canBuildRobot(RobotType.MINER, Direction.NORTH)).thenReturn(true);
 
@@ -35,8 +33,8 @@ public class RobotTest {
     }
 
     @Test
-    public void tryBuildMapLocation2() throws GameActionException{
-        when(rcMock.getLocation()).thenReturn(new MapLocation(5,5));
+    public void tryBuildMapLocation2() throws GameActionException {
+        when(rcMock.getLocation()).thenReturn(new MapLocation(5, 5));
         when(rcMock.isReady()).thenReturn(true);
         when(rcMock.canBuildRobot(RobotType.MINER, Direction.NORTH)).thenReturn(true);
 
@@ -45,7 +43,7 @@ public class RobotTest {
     }
 
     @Test
-    public void tryBuildDirectionTest() throws GameActionException{
+    public void tryBuildDirectionTest() throws GameActionException {
         when(rcMock.isReady()).thenReturn(true);
         when(rcMock.canBuildRobot(RobotType.MINER, Direction.NORTH)).thenReturn(true);
 
@@ -54,7 +52,7 @@ public class RobotTest {
     }
 
     @Test
-    public void tryBuildDirectionTest2() throws GameActionException{
+    public void tryBuildDirectionTest2() throws GameActionException {
         when(rcMock.isReady()).thenReturn(false);
         when(rcMock.canBuildRobot(RobotType.MINER, Direction.NORTH)).thenReturn(true);
 
