@@ -8,7 +8,9 @@ public class Miner extends Unit {
     static int numDesignSchool = 0;
     static int numFulfillmentCenter = 0;
     static int numRefinery = 0;
-		static MapLocation destination = null;
+		static MapLocation blockchainRefineryDestination = null; // blockchain refinery
+		static MapLocation soupDestination = null; // TODO -- pursue one soup location at a time
+		static MapLocation baseRefinery = null; // When a miner cannot sense a refinery or HQ, but a refinery has been built...go to this (since HQ is blocked in by landscapers)
 
     int diagonalDir = -1; // the diagonal direction a miner is heading if no soup location is known
     int[] diagonalArr = {1, 3, 5, 7}; // diagonal directions to move
@@ -47,16 +49,28 @@ public class Miner extends Unit {
         }
     }
 
+		//TODO -- move towards one specific soup location
+    /*public boolean checkForSoup() throws GameActionException {
+        MapLocation[] soup = rc.senseNearbySoup(-1);
+        if (soup != null && soup.length != 0) { // we found soup! Head towards it
+						if(blockchainRefineryDestination == null){
+							int randomLoc = (int) (Math.random() * soup.length + 0); // random soup to avoid crowds
+							soupDestination = soup[randomLoc];
+							//if (!walkTowardsSoup(soupDestination) && rc.canSenseLocation(soupDestination)){
+								//soupDestination = null;
+							//}
+						return true;
+						}
+        }
+				return false;
+    }*/
+
     public boolean checkForSoup() throws GameActionException {
         MapLocation[] soup = rc.senseNearbySoup(-1);
         if (soup != null && soup.length != 0) { // we found soup! Head towards it
 					  boolean mined = false;
 						// Try to mine any soup nearby
-            for (Direction dir : Util.directions) {
-                if (tryMine(dir)) {
-                    mined = true;
-                }
-            }
+						mined = tryMine();
 						// move towards soup if we didn't mine anything. This code increases avg rounds by 200+
 						if (!mined) {
 							int randomLoc = (int) (Math.random() * soup.length + 0); // random soup to avoid crowds
@@ -65,13 +79,6 @@ public class Miner extends Unit {
 						return true;
         }
 				return false;
-				/*else {
-            System.out.println("GOING DIAGONAL DIRECTION");
-           if (!nav.goTo(Util.directions[diagonalDir])) {// reset diagonal direction, since we hit a wall.
-                //nav.goTo(Util.randomDirection()); // to remove ourselves from hallways basically
-                diagonalDir = -1; // reset diagonal direction since we hit a wall
-            }
-				}*/
     }
 
 		public boolean changeDirection(){
@@ -102,77 +109,112 @@ public class Miner extends Unit {
     public void takeTurn() throws GameActionException {
         super.takeTurn();
 				int x = 0;
-				if (destination == null) { System.out.println("Destination is null");}
-				else {System.out.println("Destination is NOT null: " + destination.x + " " + destination.y);}
-        if (diagonalDir == -1) { changeDirection();} // diagonal walking stuff
 
-        if (rc.getSoupCarrying() >= 70) x = 1; // refine soup
-				else if (destination == null){ // we aren't travelling to a soup location, look for one
-						if(!senseNearbySoup()){destination = blockchainSoup();}
+				/* THE FOLLOWING IS IN ORDER OF PREFERENCE OF A MINER's BEHAVIOR*/
+				// refine soup
+        if (rc.getSoupCarrying() >= 70) x = 1;
+
+				// check for nearby soup // TODO
+				//else if(soupDestination != null){x=3;}
+
+				// we aren't travelling to a soup/refinery location, look for one
+				else if (blockchainRefineryDestination == null){
+					blockchainRefineryDestination = blockchainSoup();
+					baseRefinery = blockchainRefineryDestination; // there is a closer refinery to make our base
 				}
-				if (destination != null){x = 2;}
+
+				//We may currently be pursuing a refinery (after before else if, or on a previous turn)
+				if (blockchainRefineryDestination != null){x = 2;}
 
         switch (x) {
             case 1: // building a building and refining soup
         				buildABuilding();
-                refineSoup();
+                if (!refineSoup()){walkTowardsBuilding();}
                 break;
-						case 2: //walk towards soup
-								if (!walkTowardsSoup(destination) && rc.canSenseLocation(destination)){ // we are close enough to the refinery...mine soup next round.
-									oldSoupLocations.add(destination);
-									destination = null;
+						case 2: //walk towards soup refinery
+								if (!walkTowardsSoup(blockchainRefineryDestination) && rc.canSenseLocation(blockchainRefineryDestination)){ // we ran into something, and we are nearby the refinery (i.e., we bumped into the refinery)
+									oldSoupLocations.add(blockchainRefineryDestination); // TODO -- adds any soup location...could be a performance issue
+									blockchainRefineryDestination = null;
 								}
+								break;
+						case 3:
+								//TODO -- get soup going
+								/*if (!walkTowardsSoup(soupDestination) && rc.canSenseLocation(soupDestination)){
+									tryMine();
+								}
+								else {soupDestination = null;}*/
+
+								//walkTowardsSoup(soupDestination){
+								//if(tryMine()){}
+								/*for (Direction dir : Util.directions)
+									if(tryMine(dir)){break;}
+								else if (soupDestination != null && !walkTowardsSoup(soupDestination) || rc.canSenseLocation(soupDestination)){
+									//soupDestination = null;
+								}
+								break;*/
+
             default: {
-								if (senseNearbySoup()){checkForSoup();}
-								else {goDiagonal();}
-                //if (!checkForSoup()){goDiagonal();}
+								// We are pursuing a soup location
+								/*if (soupDestination != null){
+								 	if (!walkTowardsSoup(soupDestination) || rc.canSenseLocation(soupDestination)){
+
+									}
+								if(tryMine()){}*/
+        				//buildABuilding();
+								if (diagonalDir == -1) { changeDirection();} // diagonal walking stuff
+								if(!checkForSoup()){goDiagonal();} // no soup around...walk diagonally
                 break;
-            }
+								}
         }
     }
 
-   // public void walkTowardsSoup(MapLocation[] soup, int randomLoc) throws GameActionException {
+		//TODO -- have this be !nav.goTO on 3rd line?
     public boolean walkTowardsSoup(MapLocation x) throws GameActionException {
         System.out.println("Towards soup!");
         // move towards soup...if stuck, get unstuck.
-        if (!nav.goAround(x)) {
+        if (!nav.goAround(x) && rc.canSenseLocation(x)){ // we ran into something, and we are nearby the refinery (e.g., we bumped into the refinery)
             nav.goTo(Util.randomDirection());
 						return false;
         }
 				return true;
     }
 
-    public void refineSoup() throws GameActionException {
+    public boolean walkTowards(MapLocation x) throws GameActionException {
+        System.out.println("Towards building!");
+        // move towards soup...if stuck, get unstuck.
+        if (!nav.goAround(x) && rc.canSenseLocation(x)){ // we ran into something, and we are nearby the refinery (e.g., we bumped into the refinery)
+            nav.goTo(Util.randomDirection());
+						return false;
+        }
+				return true;
+    }
+
+    public boolean refineSoup() throws GameActionException {
+				System.out.println("TRYING TO DEPOSIT SOUP...");
+				for (Direction dir : Util.directions)
+						if (tryRefine(dir)) {
+								System.out.println("SUCCESFULLY DEPOSITED SOUP");
+								return true;
+						}
+				return false;
+		}
+
+    public void walkTowardsBuilding() throws GameActionException {
         MapLocation refineryLocation = findRefinery();
-        if (rc.getSoupCarrying() >= 70) {
-            System.out.println("TRYING TO DEPOSIT SOUP...");
-            for (Direction dir : Util.directions)
-                if (tryRefine(dir)) {
-                    System.out.println("SUCCESFULLY DEPOSITED SOUP");
-                    return;
-                }
-            if (refineryLocation != null) {
-                while (true) {
-                    System.out.println("Toward to Refinery!");
-										//TODO -- is there a way to stop within one square of a building?
-										/*if (rc.canSenseLocation(destination)) {
-												oldSoupLocations.add(
-												break;
-										}*/
-                    if (!nav.goTo(refineryLocation)) {
-                        nav.goTo(Util.randomDirection()); // must randomly move so as to avoid getting stuck.
-                        break;
-                    }
-                }
-            } else {
-                while (true) {
-                    System.out.println("Toward to HQ!");
-                    if (!nav.goTo(hqLoc)) {
-                        nav.goTo(Util.randomDirection());
-                        break;
-                    }
-                }
-            }
+				if (refineryLocation != null) {
+						while (true) {
+							if (baseRefinery == null) { baseRefinery = refineryLocation;}
+							System.out.println("Toward to Refinery!");
+							// we ran into something, and we are nearby the refinery (i.e., we bumped into the refinery)
+							if (!walkTowards(refineryLocation) && rc.canSenseLocation(refineryLocation)){break;}
+						}
+				} else if (baseRefinery != null) {
+					while (true){
+						if (!walkTowards(baseRefinery) && rc.canSenseLocation(baseRefinery)){break;}
+					}
+						} else if(baseRefinery == null) { // TODO -- a bug exists where a miner doesn't set a base refinery.. probably because of too much HQ broadcasting
+							System.out.println("Toward to HQ!");
+							if (!walkTowards(hqLoc) && rc.canSenseLocation(hqLoc)){}
         }
     }
 
@@ -189,6 +231,18 @@ public class Miner extends Unit {
      * @return true if a move was performed
      * @throws GameActionException
      */
+		//NEW
+    boolean tryMine() throws GameActionException {
+        for (Direction dir : Util.directions) {
+					if (rc.isReady() && rc.canMineSoup(dir)) {
+							rc.mineSoup(dir);
+							return true;
+        	}
+				}
+        return false;
+    }
+
+		//OLD
     boolean tryMine(Direction dir) throws GameActionException {
         if (rc.isReady() && rc.canMineSoup(dir)) {
             rc.mineSoup(dir);
@@ -197,13 +251,6 @@ public class Miner extends Unit {
         return false;
     }
 
-    /**
-     * Attempts to refine soup in a given direction.
-     *
-     * @param dir The intended direction of refining
-     * @return true if a move was performed
-     * @throws GameActionException
-     */
     boolean tryRefine(Direction dir) throws GameActionException {
         if (rc.isReady() && rc.canDepositSoup(dir)) {
             rc.depositSoup(dir, rc.getSoupCarrying());
@@ -219,5 +266,4 @@ public class Miner extends Unit {
         }
         return false;
     }
-
 }

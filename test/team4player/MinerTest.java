@@ -57,7 +57,19 @@ public class MinerTest {
 
         minerMock.walkTowardsSoup(new MapLocation(1,1));
     }
+		//New
+    /*@Test
+    public void refineSoup() throws GameActionException {
+        when(rcMock.isReady()).thenReturn(true);
+        when(rcMock.canMineSoup(Direction.CENTER)).thenReturn(true);
 
+				//TODO -- Ask Ronnie for help.
+        //boolean result = minerMock.tryMine(Direction.CENTER);
+        boolean result = minerMock.tryMine();
+        //assertTrue(result);
+    }*/
+
+		//Old
     @Test
     public void refineSoup() throws GameActionException {
         when(rcMock.isReady()).thenReturn(true);
