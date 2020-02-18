@@ -15,17 +15,14 @@ import static org.mockito.Mockito.*;
 
 
 public class MinerTest {
-    @Mock
-    RobotController rcMock = mock(RobotController.class);
-
-    @Mock
-    Navigation navMock = mock(Navigation.class);
-
-    @InjectMocks
-    Miner minerMock = new Miner(rcMock);
-
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
+    @Mock
+    RobotController rcMock = mock(RobotController.class);
+    @Mock
+    Navigation navMock = mock(Navigation.class);
+    @InjectMocks
+    Miner minerMock = new Miner(rcMock);
 
     @Before
     public void setup() {
@@ -43,9 +40,9 @@ public class MinerTest {
 
     @Test
     public void checkForSoupTest() throws GameActionException {
-        when(rcMock.senseNearbySoup(-1)).thenReturn(new MapLocation[]{new MapLocation(1,1)});
+        when(rcMock.senseNearbySoup(-1)).thenReturn(new MapLocation[]{new MapLocation(1, 1)});
         when(rcMock.canMineSoup(Direction.CENTER)).thenReturn(true);
-        when(navMock.goAround(new MapLocation(1,1))).thenReturn(false);
+        when(navMock.goAround(new MapLocation(1, 1))).thenReturn(false);
 
         minerMock.checkForSoup();
     }
@@ -53,11 +50,11 @@ public class MinerTest {
     @Test
     public void walkTowardsSoup() throws GameActionException {
         when(rcMock.canMineSoup(Direction.CENTER)).thenReturn(true);
-        when(navMock.goAround(new MapLocation(1,1))).thenReturn(false);
+        when(navMock.goAround(new MapLocation(1, 1))).thenReturn(false);
 
-        minerMock.walkTowardsSoup(new MapLocation(1,1));
+        minerMock.walkTowardsSoup(new MapLocation(1, 1));
     }
-		//New
+    //New
     /*@Test
     public void refineSoup() throws GameActionException {
         when(rcMock.isReady()).thenReturn(true);
@@ -69,7 +66,7 @@ public class MinerTest {
         //assertTrue(result);
     }*/
 
-		//Old
+    //Old
     @Test
     public void refineSoup() throws GameActionException {
         when(rcMock.isReady()).thenReturn(true);

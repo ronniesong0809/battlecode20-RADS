@@ -11,14 +11,12 @@ import org.mockito.junit.*;
 
 
 public class RobotPlayerTest {
-    @Mock
-    RobotController rcMock = mock(RobotController.class);
-
-    @InjectMocks
-    RobotPlayer rpMock = new RobotPlayer();
-
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
+    @Mock
+    RobotController rcMock = mock(RobotController.class);
+    @InjectMocks
+    RobotPlayer rpMock = new RobotPlayer();
 
     @Before
     public void setUp() {

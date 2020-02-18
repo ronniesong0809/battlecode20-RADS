@@ -1,8 +1,10 @@
 package team4player;
+
 import battlecode.common.*;
+
 import java.util.*;
 
-public class Landscaper extends Unit{
+public class Landscaper extends Unit {
     static List<MapLocation> wallLocs = null;
     static List<Integer> wallLevels = null;
     static int digX = 0;
@@ -12,7 +14,7 @@ public class Landscaper extends Unit{
     static int personality = 0;
     static boolean initialized = false;
 
-    public Landscaper(RobotController rc){
+    public Landscaper(RobotController rc) {
         super(rc);
     }
 
@@ -30,8 +32,7 @@ public class Landscaper extends Unit{
 
         if (rc.getLocation().distanceSquaredTo(hqLoc) >= 10) {
             nav.goAround(hqLoc);
-        }
-        else {
+        } else {
             // Find wall spot
 
             if (wallSpot == null && initialized) {
@@ -40,8 +41,7 @@ public class Landscaper extends Unit{
                 RobotInfo otherRobot = rc.senseRobotAtLocation(wallSpot);
                 if (otherRobot != null && rc.getID() != otherRobot.getID()) {
                     wallSpot = null;
-                }
-                else {
+                } else {
                     // Otherwise deposit dirt if you are close enough
                     if (rc.getLocation().distanceSquaredTo(wallSpot) >= 1) {
                         nav.goAround(wallSpot);

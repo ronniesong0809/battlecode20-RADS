@@ -80,7 +80,7 @@ public class Drone extends Unit {
     public void composeEnemyHQLocations() {
         enemyHQlocs = new ArrayList<MapLocation>();
 
-        MapLocation topCorner = new MapLocation(rc.getMapWidth()-1, rc.getMapHeight()-1);
+        MapLocation topCorner = new MapLocation(rc.getMapWidth() - 1, rc.getMapHeight() - 1);
 
         enemyHQlocs.add(new MapLocation(topCorner.x - hqLoc.x, topCorner.y - hqLoc.y));
         enemyHQlocs.add(new MapLocation(topCorner.x - hqLoc.x, hqLoc.y));

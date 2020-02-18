@@ -14,14 +14,12 @@ import static org.mockito.Mockito.*;
 
 
 public class UnitTest {
-    @Mock
-    RobotController rcMock = mock(RobotController.class);
-
-    @InjectMocks
-    Unit unitMock = new Unit(rcMock);
-
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
+    @Mock
+    RobotController rcMock = mock(RobotController.class);
+    @InjectMocks
+    Unit unitMock = new Unit(rcMock);
 
     @Before
     public void setup() {
