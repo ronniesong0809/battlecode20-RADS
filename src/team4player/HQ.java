@@ -78,6 +78,8 @@ public class HQ extends Building {
                 case 15:
                     block_y++;
                     break;
+                default:
+                    break;
             }
         }
     }

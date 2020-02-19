@@ -122,6 +122,8 @@ public class Landscaper extends Unit {
                 case 7:
                     block_y++;
                     break;
+                default:
+                    break;
             }
         }
 

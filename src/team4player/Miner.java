@@ -230,7 +230,10 @@ public class Miner extends Unit {
             }
         } else if (baseRefinery == null) { // TODO -- a bug exists where a miner doesn't set a base refinery.. probably because of too much HQ broadcasting
             System.out.println("Toward to HQ!");
-            if (!walkTowards(hqLoc) && rc.canSenseLocation(hqLoc)) {
+            while (true) {
+                if (!walkTowards(hqLoc) && rc.canSenseLocation(hqLoc)) {
+                    break;
+                }
             }
         }
     }
@@ -244,7 +247,6 @@ public class Miner extends Unit {
     /**
      * Attempts to mine soup in a given direction.
      *
-     * @param dir The intended direction of mining
      * @return true if a move was performed
      * @throws GameActionException
      */
