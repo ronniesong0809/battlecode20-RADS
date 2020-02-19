@@ -1,6 +1,6 @@
 package team4player;
 
-import battlecode.common.*;
+import battlecode.common.Direction;
 
 public class Util {
     static Direction[] directions = {

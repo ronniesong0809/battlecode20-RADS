@@ -1,0 +1,6 @@
+path_classifiers:
+  src:
+    - src/team4player
+    - exclude: src/examplefunplayer
+    - exclude: src/team4enemy
+    - exclude: src/finalbota
