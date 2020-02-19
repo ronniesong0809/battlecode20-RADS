@@ -2,9 +2,8 @@ package team4player;
 
 import battlecode.common.*;
 
-import java.util.List;
 import java.util.ArrayList;
-import java.util.Map;
+import java.util.List;
 
 public class Drone extends Unit {
     static int currState = 0;
@@ -77,6 +76,9 @@ public class Drone extends Unit {
             case 2:
                 // Circle enemy HQ
                 circleHQandPickUp();
+                break;
+
+            default:
                 break;
         }
     }
@@ -193,6 +195,8 @@ public class Drone extends Unit {
                 case 23:
                     block_y++;
                     block_x++;
+                    break;
+                default:
                     break;
             }
         }
