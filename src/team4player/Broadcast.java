@@ -1,6 +1,9 @@
 package team4player;
 
-import battlecode.common.*;
+import battlecode.common.GameActionException;
+import battlecode.common.MapLocation;
+import battlecode.common.RobotController;
+import battlecode.common.Transaction;
 
 import java.util.ArrayList;
 

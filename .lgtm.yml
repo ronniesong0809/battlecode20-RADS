@@ -1,0 +1,5 @@
+path_classifiers:
+  exclude:
+    - "src/examplefunplayer/"
+    - "src/team4enemy"
+    - "src/finalbota"

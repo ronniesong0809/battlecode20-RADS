@@ -2,7 +2,8 @@ package team4player;
 
 import battlecode.common.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Landscaper extends Unit {
     static List<MapLocation> wallLocs = null;
@@ -121,6 +122,8 @@ public class Landscaper extends Unit {
                 case 6:
                 case 7:
                     block_y++;
+                    break;
+                default:
                     break;
             }
         }

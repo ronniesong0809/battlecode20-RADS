@@ -1,6 +1,8 @@
 package team4player;
 
-import battlecode.common.*;
+import battlecode.common.GameActionException;
+import battlecode.common.RobotController;
+import battlecode.common.RobotType;
 
 public class DesignSchool extends Building {
     static int numLandscapers = 0;
