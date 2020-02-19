@@ -36,7 +36,7 @@ public strictfp class RobotPlayer {
             case DELIVERY_DRONE:
                 me = new Drone(rc);
                 break;
-            case NET_GUN:
+            default:
                 me = new Netgun(rc);
                 break;
         }

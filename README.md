@@ -4,8 +4,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/ronniesong0809/battlecode20-RADS/badge.svg)](https://coveralls.io/github/ronniesong0809/battlecode20-RADS?branch=master)
 [![License: AGPL 3.0](https://img.shields.io/badge/License-AGPL--3.0-yellow.svg)](https://github.com/battlecode20-team4/battlecode20-scaffold/blob/master/LICENSE)
 [![CodeFactor](https://www.codefactor.io/repository/github/ronniesong0809/battlecode20-rads/badge)](https://www.codefactor.io/repository/github/ronniesong0809/battlecode20-rads)
-[![codecov](https://codecov.io/gh/ronniesong0809/battlecode20-RADS/branch/master/graph/badge.svg)](https://codecov.io/gh/ronniesong0809/battlecode20-RADS)
-[![Total alerts](https://img.shields.io/lgtm/alerts/g/ronniesong0809/battlecode20-RADS.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/ronniesong0809/battlecode20-RADS/alerts/)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/2916fccd9804435d89f09b3dbb8c9120)](https://app.codacy.com/manual/ronsong/battlecode20-RADS?utm_source=github.com&utm_medium=referral&utm_content=ronniesong0809/battlecode20-RADS&utm_campaign=Badge_Grade_Dashboard)
 
 This is the Battlecode 2020 scaffold, containing an `examplefuncsplayer`. Read:
 - https://github.com/ronniesong0809/battlecode20-RADS/blob/refactor/src/team4player/README.md

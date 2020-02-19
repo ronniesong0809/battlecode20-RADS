@@ -1,6 +1,8 @@
 package team4player;
 
-import battlecode.common.*;
+import battlecode.common.Clock;
+import battlecode.common.GameActionException;
+import battlecode.common.RobotController;
 
 public strictfp class RobotPlayer {
 
@@ -36,7 +38,7 @@ public strictfp class RobotPlayer {
             case DELIVERY_DRONE:
                 me = new Drone(rc);
                 break;
-            case NET_GUN:
+            default:
                 me = new Netgun(rc);
                 break;
         }

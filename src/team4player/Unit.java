@@ -26,7 +26,7 @@ public class Unit extends Robot {
                 }
             }
             if (hqLoc == null) {
-                hqLoc = bc.getHqLocFromBlockchain();
+                hqLoc = Broadcast.getHqLocFromBlockchain();
             }
         }
     }
