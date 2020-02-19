@@ -21,7 +21,7 @@ public class Robot {
     /**
      * Attempts to build a given robot in a given direction.
      *
-     * @param type  The type of the robot to build
+     * @param type The type of the robot to build
      * @param hqLoc The intended direction of movement
      * @return true if a move was performed
      * @throws GameActionException
