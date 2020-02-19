@@ -78,6 +78,9 @@ public class Drone extends Unit {
                 // Circle enemy HQ
                 circleHQandPickUp();
                 break;
+
+            default:
+                break;
         }
     }
 
@@ -193,6 +196,8 @@ public class Drone extends Unit {
                 case 23:
                     block_y++;
                     block_x++;
+                    break;
+                default:
                     break;
             }
         }
