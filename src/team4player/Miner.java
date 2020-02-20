@@ -31,7 +31,7 @@ public class Miner extends Unit {
         return false;
     }
 
-    public void buildABuilding() throws GameActionException {
+    public boolean buildABuilding() throws GameActionException {
         // Build design school if miner hasn't made one, none are nearby, and we are by HQ  --- all to control production of DSs
         if (numDesignSchool < 1 && bc.readDesignSchoolCreation()) {
             numDesignSchool++;
@@ -47,6 +47,7 @@ public class Miner extends Unit {
         } else if (numFulfillmentCenter < 1 && !senseBuilding(RobotType.FULFILLMENT_CENTER) && !bc.readFCCreation() && tryBuild(RobotType.FULFILLMENT_CENTER, hqLoc)) {
             numFulfillmentCenter++;
         }
+				return true;
     }
 
 		//TODO -- move towards one specific soup location
@@ -65,20 +66,17 @@ public class Miner extends Unit {
 				return false;
     }*/
 
-    //public boolean checkForSoup() throws GameActionException {
     public boolean checkForSoup(MapLocation [] soup) throws GameActionException {
         //MapLocation[] soup = rc.senseNearbySoup(-1);
-        //if (soup != null && soup.length != 0) { // we found soup! Head towards it
-					  boolean mined = false;
-						// Try to mine any soup nearby
-						mined = tryMine();
-						// move towards soup if we didn't mine anything. This code increases avg rounds by 200+
-						if (!mined) {
-							int randomLoc = (int) (Math.random() * soup.length + 0); // random soup to avoid crowds
-							walkTowardsSoup(soup[randomLoc]);
-								return true;
-						}
-        //}
+				boolean mined = false;
+				// Try to mine any soup nearby
+				mined = tryMine();
+				// move towards soup if we didn't mine anything. This code increases avg rounds by 200+
+				if (!mined) {
+					int randomLoc = (int) (Math.random() * soup.length + 0); // random soup to avoid crowds
+					walkTowards(soup[randomLoc]);
+						return true;
+				}
 				return false;
     }
 
@@ -137,7 +135,7 @@ public class Miner extends Unit {
                 if (!refineSoup()){walkTowardsBuilding();}
                 break;
 						case 2: //walk towards soup refinery
-								if (!walkTowardsSoup(blockchainRefineryDestination) && rc.canSenseLocation(blockchainRefineryDestination)){ // we ran into something, and we are nearby the refinery (i.e., we bumped into the refinery)
+								if (!walkTowards(blockchainRefineryDestination) && rc.canSenseLocation(blockchainRefineryDestination)){ // we ran into something, and we are nearby the refinery (i.e., we bumped into the refinery)
 									oldSoupLocations.add(blockchainRefineryDestination); // TODO -- adds any soup location...could be a performance issue
 									blockchainRefineryDestination = null;
 								}
@@ -147,19 +145,11 @@ public class Miner extends Unit {
                 if (diagonalDir == -1) { changeDirection();} // diagonal walking stuff
                 if(!checkForSoup(soup)){goDiagonal();} // no soup around...walk diagonally
 								break;
-								//TODO -- get soup going
+								//TODO -- walk towards a specific soup destination
 								/*if (!walkTowardsSoup(soupDestination) && rc.canSenseLocation(soupDestination)){
 									tryMine();
 								}
-								else {soupDestination = null;}*/
-
-								//walkTowardsSoup(soupDestination){
-								//if(tryMine()){}
-								/*for (Direction dir : Util.directions)
-									if(tryMine(dir)){break;}
-								else if (soupDestination != null && !walkTowardsSoup(soupDestination) || rc.canSenseLocation(soupDestination)){
-									//soupDestination = null;
-								}
+								else {soupDestination = null;}
 								break;*/
 
             default: {
@@ -171,23 +161,9 @@ public class Miner extends Unit {
 
 									}
 								if(tryMine()){}*/
-        				//buildABuilding();
-								//if (diagonalDir == -1) { changeDirection();} // diagonal walking stuff
-								//if(!checkForSoup()){goDiagonal();} // no soup around...walk diagonally
                 break;
 								}
         }
-    }
-
-		//TODO -- have this be !nav.goTO on 3rd line?
-    public boolean walkTowardsSoup(MapLocation x) throws GameActionException {
-        System.out.println("Towards soup!");
-        // move towards soup...if stuck, get unstuck.
-        if (!nav.goAround(x) && rc.canSenseLocation(x)){ // we ran into something, and we are nearby the refinery (e.g., we bumped into the refinery)
-            nav.goTo(Util.randomDirection());
-						return false;
-        }
-				return true;
     }
 
     public boolean walkTowards(MapLocation x) throws GameActionException {
@@ -210,7 +186,7 @@ public class Miner extends Unit {
 				return false;
 		}
 
-    public void walkTowardsBuilding() throws GameActionException {
+    public boolean walkTowardsBuilding() throws GameActionException {
         MapLocation refineryLocation = findRefinery();
 				if (refineryLocation != null) {
 						while (true) {
@@ -227,9 +203,9 @@ public class Miner extends Unit {
 							System.out.println("Toward to HQ!");
 							if (!walkTowards(hqLoc) && rc.canSenseLocation(hqLoc)){}
         }
+				return true;
     }
 
-		//NEW
     boolean tryMine() throws GameActionException {
         for (Direction dir : Util.directions) {
 					if (rc.isReady() && rc.canMineSoup(dir)) {
@@ -237,15 +213,6 @@ public class Miner extends Unit {
 							return true;
         	}
 				}
-        return false;
-    }
-
-		//OLD
-    boolean tryMine(Direction dir) throws GameActionException {
-        if (rc.isReady() && rc.canMineSoup(dir)) {
-            rc.mineSoup(dir);
-            return true;
-        }
         return false;
     }
 
