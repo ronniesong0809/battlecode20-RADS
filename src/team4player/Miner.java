@@ -8,9 +8,9 @@ public class Miner extends Unit {
     static int numDesignSchool = 0;
     static int numFulfillmentCenter = 0;
     static int numRefinery = 0;
-		static MapLocation blockchainRefineryDestination = null; // blockchain refinery
-		static MapLocation soupDestination = null; // TODO -- pursue one soup location at a time
-		static MapLocation baseRefinery = null; // When a miner cannot sense a refinery or HQ, but a refinery has been built...go to this (since HQ is blocked in by landscapers)
+    static MapLocation blockchainRefineryDestination = null; // blockchain refinery
+    static MapLocation soupDestination = null; // TODO -- pursue one soup location at a time
+    static MapLocation baseRefinery = null; // When a miner cannot sense a refinery or HQ, but a refinery has been built...go to this (since HQ is blocked in by landscapers)
 
     int diagonalDir = -1; // the diagonal direction a miner is heading if no soup location is known
     int[] diagonalArr = {1, 3, 5, 7}; // diagonal directions to move
@@ -50,7 +50,7 @@ public class Miner extends Unit {
 				return true;
     }
 
-		//TODO -- move towards one specific soup location
+    //TODO -- move towards one specific soup location
     /*public boolean checkForSoup() throws GameActionException {
         MapLocation[] soup = rc.senseNearbySoup(-1);
         if (soup != null && soup.length != 0) { // we found soup! Head towards it
@@ -80,30 +80,32 @@ public class Miner extends Unit {
 				return false;
     }
 
-		public boolean changeDirection(){
-				int random = (int) (Math.random() * 4); // random soup to avoid crowds
-				diagonalDir = diagonalArr[random];
-				return true;
-		}
+    public boolean changeDirection() {
+        int random = (int) (Math.random() * 4); // random soup to avoid crowds
+        diagonalDir = diagonalArr[random];
+        return true;
+    }
 
-		public MapLocation blockchainSoup() throws GameActionException{
-				MapLocation [] mapLoc = bc.getRefineryLocFromBlockchain();
-				for(MapLocation newSoupLocation : mapLoc){
-						if (oldSoupLocations.contains(newSoupLocation)){continue;} // don't add this old location, soup is gone
-						return newSoupLocation;
-				}
-				return null;
-		}
+    public MapLocation blockchainSoup() throws GameActionException {
+        MapLocation[] mapLoc = Broadcast.getRefineryLocFromBlockchain();
+        for (MapLocation newSoupLocation : mapLoc) {
+            if (oldSoupLocations.contains(newSoupLocation)) {
+                continue;
+            } // don't add this old location, soup is gone
+            return newSoupLocation;
+        }
+        return null;
+    }
 
-		public boolean goDiagonal() throws GameActionException{
-				System.out.println("GOING DIAGONAL DIRECTION");
-				if (!nav.goTo(Util.directions[diagonalDir])) {// reset diagonal direction, since we hit a wall.
-						//nav.goTo(Util.randomDirection()); // to remove ourselves from hallways basically
-						diagonalDir = -1; // reset diagonal direction since we hit a wall
-						return false;
-				}
-				return true;
-		}
+    public boolean goDiagonal() throws GameActionException {
+        System.out.println("GOING DIAGONAL DIRECTION");
+        if (!nav.goTo(Util.directions[diagonalDir])) {// reset diagonal direction, since we hit a wall.
+            //nav.goTo(Util.randomDirection()); // to remove ourselves from hallways basically
+            diagonalDir = -1; // reset diagonal direction since we hit a wall
+            return false;
+        }
+        return true;
+    }
 
     public void takeTurn() throws GameActionException {
         super.takeTurn();
@@ -131,8 +133,10 @@ public class Miner extends Unit {
 
         switch (x) {
             case 1: // building a building and refining soup
-        				buildABuilding();
-                if (!refineSoup()){walkTowardsBuilding();}
+                buildABuilding();
+                if (!refineSoup()) {
+                    walkTowardsBuilding();
+                }
                 break;
 						case 2: //walk towards soup refinery
 								if (!walkTowards(blockchainRefineryDestination) && rc.canSenseLocation(blockchainRefineryDestination)){ // we ran into something, and we are nearby the refinery (i.e., we bumped into the refinery)
@@ -162,29 +166,29 @@ public class Miner extends Unit {
 									}
 								if(tryMine()){}*/
                 break;
-								}
+            }
         }
     }
 
     public boolean walkTowards(MapLocation x) throws GameActionException {
         System.out.println("Towards building!");
         // move towards soup...if stuck, get unstuck.
-        if (!nav.goAround(x) && rc.canSenseLocation(x)){ // we ran into something, and we are nearby the refinery (e.g., we bumped into the refinery)
+        if (!nav.goAround(x) && rc.canSenseLocation(x)) { // we ran into something, and we are nearby the refinery (e.g., we bumped into the refinery)
             nav.goTo(Util.randomDirection());
-						return false;
+            return false;
         }
-				return true;
+        return true;
     }
 
     public boolean refineSoup() throws GameActionException {
-				System.out.println("TRYING TO DEPOSIT SOUP...");
-				for (Direction dir : Util.directions)
-						if (tryRefine(dir)) {
-								System.out.println("SUCCESFULLY DEPOSITED SOUP");
-								return true;
-						}
-				return false;
-		}
+        System.out.println("TRYING TO DEPOSIT SOUP...");
+        for (Direction dir : Util.directions)
+            if (tryRefine(dir)) {
+                System.out.println("SUCCESFULLY DEPOSITED SOUP");
+                return true;
+            }
+        return false;
+    }
 
     public boolean walkTowardsBuilding() throws GameActionException {
         MapLocation refineryLocation = findRefinery();
@@ -208,11 +212,11 @@ public class Miner extends Unit {
 
     boolean tryMine() throws GameActionException {
         for (Direction dir : Util.directions) {
-					if (rc.isReady() && rc.canMineSoup(dir)) {
-							rc.mineSoup(dir);
-							return true;
-        	}
-				}
+            if (rc.isReady() && rc.canMineSoup(dir)) {
+                rc.mineSoup(dir);
+                return true;
+            }
+        }
         return false;
     }
 

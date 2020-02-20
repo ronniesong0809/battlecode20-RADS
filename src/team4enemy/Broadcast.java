@@ -5,9 +5,9 @@ import battlecode.common.*;
 import java.util.ArrayList;
 
 public class Broadcast {
-    private static RobotController rc;
     static final int teamSecret = 5555555;
     static final String[] messageType = {"HQ loc", "design school created", "soup location"};
+    private static RobotController rc;
 
     public Broadcast(RobotController r) {
         rc = r;

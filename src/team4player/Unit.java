@@ -1,7 +1,8 @@
 package team4player;
+
 import battlecode.common.*;
 
-public class Unit extends Robot{
+public class Unit extends Robot {
 
     MapLocation hqLoc;
     Navigation nav;
@@ -11,7 +12,7 @@ public class Unit extends Robot{
         nav = new Navigation(rc);
     }
 
-    public void takeTurn()throws GameActionException{
+    public void takeTurn() throws GameActionException {
         super.takeTurn();
         findHQ();
     }
@@ -25,7 +26,7 @@ public class Unit extends Robot{
                 }
             }
             if (hqLoc == null) {
-                hqLoc = bc.getHqLocFromBlockchain();
+                hqLoc = Broadcast.getHqLocFromBlockchain();
             }
         }
     }

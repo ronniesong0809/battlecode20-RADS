@@ -1,5 +1,7 @@
 package team4player;
-import battlecode.common.*;
+
+import battlecode.common.GameActionException;
+import battlecode.common.RobotController;
 
 public class Netgun extends Building {
     public Netgun(RobotController rc) {

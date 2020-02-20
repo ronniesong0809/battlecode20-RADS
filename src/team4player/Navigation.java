@@ -1,10 +1,14 @@
 package team4player;
-import battlecode.common.*;
+
+import battlecode.common.Direction;
+import battlecode.common.GameActionException;
+import battlecode.common.MapLocation;
+import battlecode.common.RobotController;
 
 public class Navigation {
     RobotController rc;
 
-    public Navigation(RobotController r){
+    public Navigation(RobotController r) {
         rc = r;
     }
 
@@ -51,11 +55,11 @@ public class Navigation {
         Direction dir = rc.getLocation().directionTo(loc);
         Direction[] toTry =
                 {
-                    dir,
-                    dir.rotateLeft(),
-                    dir.rotateLeft().rotateLeft(),
-                    dir.rotateRight(),
-                    dir.rotateRight().rotateRight()
+                        dir,
+                        dir.rotateLeft(),
+                        dir.rotateLeft().rotateLeft(),
+                        dir.rotateRight(),
+                        dir.rotateRight().rotateRight()
                 };
 
         for (Direction d : toTry) {
