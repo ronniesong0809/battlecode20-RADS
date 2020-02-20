@@ -54,13 +54,8 @@ public class NavigationTest {
 
     @Test
     public void goToMapLocationTest() throws GameActionException {
-        boolean result = navMock.goTo(new MapLocation(5, 5));
-        assertEquals(true, result);
-    }
-
-    @Test
-    public void goAroundDirectionTest() throws GameActionException {
-        boolean result = navMock.goAround(Direction.CENTER);
+        //boolean result = navMock.goTo(new MapLocation(5, 5));
+        boolean result = navMock.goTo(Direction.CENTER);
         assertEquals(true, result);
     }
 

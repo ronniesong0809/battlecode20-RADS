@@ -223,25 +223,12 @@ public class Miner extends Unit {
 					while (true){
 						if (!walkTowards(baseRefinery) && rc.canSenseLocation(baseRefinery)){break;}
 					}
-						} else if(baseRefinery == null) { // TODO -- a bug exists where a miner doesn't set a base refinery.. probably because of too much HQ broadcasting
+						} else if(baseRefinery == null) {
 							System.out.println("Toward to HQ!");
 							if (!walkTowards(hqLoc) && rc.canSenseLocation(hqLoc)){}
         }
     }
 
-    /**
-     * Returns a random RobotType spawned by miners.
-     *
-     * @return a random RobotType
-     */
-
-    /**
-     * Attempts to mine soup in a given direction.
-     *
-     * @param dir The intended direction of mining
-     * @return true if a move was performed
-     * @throws GameActionException
-     */
 		//NEW
     boolean tryMine() throws GameActionException {
         for (Direction dir : Util.directions) {

@@ -16,7 +16,6 @@ public class Navigation {
      * @throws GameActionException
      */
     boolean tryMove(Direction dir) throws GameActionException {
-        // System.out.println("I am trying to move " + dir + "; " + rc.isReady() + " " + rc.getCooldownTurns() + " " + rc.canMove(dir));
         if (rc.isReady() && rc.canMove(dir) && !rc.senseFlooding(rc.getLocation().add(dir))) {
             rc.move(dir);
             return true;
@@ -105,29 +104,5 @@ public class Navigation {
             }
         }
         return false;
-    }
-
-    boolean goAround(Direction dir) throws GameActionException {
-        Direction[] toTry =
-                {
-                        dir,
-                        dir.rotateLeft(),
-                        dir.rotateLeft().rotateLeft(),
-                        dir.rotateRight(),
-                        dir.rotateRight().rotateRight()
-                };
-
-        for (Direction d : toTry) {
-            if (tryMove(d)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-
-
-    boolean goTo(MapLocation dir) throws GameActionException {
-        return goTo(rc.getLocation().directionTo(dir));
     }
 }
