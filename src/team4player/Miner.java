@@ -226,9 +226,10 @@ public class Miner extends Unit {
 
     boolean senseNearbySoup() throws GameActionException {
         MapLocation[] localSoupLocations = rc.senseNearbySoup();
-        for (MapLocation soupLoc : localSoupLocations) {
+				if (localSoupLocations != null){ return true;}
+        /*for (MapLocation soupLoc : localSoupLocations) {
 						if (soupLoc != null){ return true;}
-        }
+        }*/
         return false;
     }
 }

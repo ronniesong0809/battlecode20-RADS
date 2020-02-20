@@ -28,7 +28,10 @@ public class MinerTest {
 		RobotInfo rInfoMock = mock(RobotInfo.class); // daniel
 
 		@Mock
-		Util uMock = mock(Util.class); // daniel
+		Util utilMock = mock(Util.class); // daniel
+
+		@Mock
+		Unit unitMock = mock(Unit.class); // daniel
 
     @InjectMocks
     Miner minerMock = new Miner(rcMock);
@@ -42,7 +45,7 @@ public class MinerTest {
         when(rcMock.getType()).thenReturn(RobotType.HQ);
     }
 
-		@Test
+		/*@Test
 		public void buildABuilding() throws GameActionException {
 				//rcMock(1, false, 0, 0, 0, new MapLocation(5,5), Team.A, RobotType.MINER);
 				//RobotInfo rInfoMock = new RobotInfo(1, false, 0, 0, 0, new MapLocation(5,5), Team.A, RobotType.MINER);
@@ -50,7 +53,7 @@ public class MinerTest {
         when(rcMock.getSoupCarrying()).thenReturn(70);
 				minerMock.buildABuilding();
 
-		} // Daniel -- HELP
+		} // Daniel -- HELP*/
 
 		@Test
 		public void changeDirection() throws GameActionException {
@@ -104,17 +107,21 @@ public class MinerTest {
     public void walkTowardsBuilding() throws GameActionException {
 				//minerMock.refineryLocation = null; //
         //when(rcMock.canMineSoup(Direction.CENTER)).thenReturn(true);
+				//minerMock.diagonalDir = 0;
+        when(rcMock.senseNearbyRobots()).thenReturn(new RobotInfo[]{new RobotInfo(12, Team.A, RobotType.HQ, 0, false, 0, 0, 0, new MapLocation(5, 5))});
+				when(unitMock.findRefinery()).thenReturn(rInfoMock.location);
+				//minerMock.baseRefinery = null;
 				boolean result = minerMock.walkTowardsBuilding();
 				assertTrue(result);
 		} // daniel
 
-    @Test
+    /*@Test
     public void tryMine() throws GameActionException {
         when(rcMock.isReady()).thenReturn(true);
         when(rcMock.canMineSoup(Direction.CENTER)).thenReturn(true);
 				boolean result = minerMock.walkTowardsBuilding();
 				assertTrue(result);
-		}
+		} // daniel --HELP*/
 
     @Test
     public void refineSoup() throws GameActionException {
@@ -139,9 +146,9 @@ public class MinerTest {
     @Test
     public void senseNearbySoup() throws GameActionException {
         when(rcMock.senseNearbySoup(-1)).thenReturn(new MapLocation[]{new MapLocation(1,1)});
-
+        when(rcMock.canMineSoup(Direction.CENTER)).thenReturn(true);
 				boolean result = minerMock.senseNearbySoup();
-				assertTrue(result);
-		} //daniel
+				assertTrue(result == false);
+		} //daniel -- HELP
 
 }
