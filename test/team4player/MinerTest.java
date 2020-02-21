@@ -47,20 +47,49 @@ public class MinerTest {
     }
 
 		@Test
+		public void takeTurnTest1() throws GameActionException {
+			//Test 1 -- declarations/if statements and then default branch of switch statement
+			unitMock.hqLoc = null;
+        when(rcMock.senseNearbyRobots()).thenReturn(new RobotInfo[]{new RobotInfo(12, Team.A, RobotType.HQ, 0, false, 0, 0, 0, new MapLocation(5, 5))});
+			minerMock.takeTurn();
+     	//Test 2 -- x=1, case 1
+			when(rcMock.getSoupCarrying()).thenReturn(1);
+
+		}
+
+		@Test
+		public void takeTurnTest2() throws GameActionException {
+			//Test 1 -- declarations/if statements and then default branch of switch statement
+			unitMock.hqLoc = null;
+        when(rcMock.senseNearbyRobots()).thenReturn(new RobotInfo[]{new RobotInfo(12, Team.A, RobotType.HQ, 0, false, 0, 0, 0, new MapLocation(5, 5))});
+			minerMock.takeTurn();
+     	//Test 2 -- x=1, case 1
+			when(rcMock.getSoupCarrying()).thenReturn(1);
+
+		}
+
+/*		@Test
 		public void buildABuilding() throws GameActionException {
+				minerMock.numDesignSchool = 0;
+        when(rcMock.senseNearbyRobots()).thenReturn(new RobotInfo[]{new RobotInfo(12, Team.A, RobotType.HQ, 0, false, 0, 0, 0, new MapLocation(5, 5))});
+				minerMock.hqLoc = new MapLocation(5,5);
 				when(bcMock.readDesignSchoolCreation()).thenReturn(true);
+				//assertTrue(minerMock.numDesignSchool >= 0);
+
 				when(bcMock.readFCCreation()).thenReturn(true);
         when(rcMock.senseNearbySoup(-1)).thenReturn(new MapLocation[]{new MapLocation(1, 1)});
 
 				//when(rInfoMock.senseBuilding(
-				when(robotMock.tryBuild(RobotType.REFINERY, Direction.NORTH)).thenReturn(true);
+				when(robotMock.tryBuild(RobotType.REFINERY, new MapLocation(5,5))).thenReturn(true);
+
+
 
 				//Sense building functions
         //doReturn(new RobotInfo[]{new RobotInfo(12, Team.A, RobotType.HQ, 0, false, 0, 0, 0, new MapLocation(5, 5))}).when(rcMock).senseNearbyRobots();
 
 
 				//when(minerMock.senseBuilding(RobotType.REFINERY)).thenReturn(true);
-				//boolean result = minerMock.buildABuilding();
+				boolean result = minerMock.buildABuilding();
 				//assertTrue(result);
 		} // Daniel -- HELP*/
 
@@ -89,9 +118,19 @@ public class MinerTest {
 
     @Test
     public void senseBuildingTest() throws GameActionException {
+				//Test 1 -- building nearby
         when(rcMock.senseNearbyRobots()).thenReturn(new RobotInfo[]{new RobotInfo(12, Team.A, RobotType.HQ, 0, false, 0, 0, 0, new MapLocation(5, 5))});
 
         minerMock.senseBuilding(RobotType.HQ);
+        verify(rcMock).senseNearbyRobots();
+    }
+
+    @Test
+    public void senseBuildingTest2() throws GameActionException {
+				//Test 2 -- returns false, no checking needed for coverage
+        when(rcMock.senseNearbyRobots()).thenReturn(new RobotInfo[]{new RobotInfo(12, Team.A, RobotType.HQ, 0, false, 0, 0, 0, new MapLocation(5, 5))});
+
+        minerMock.senseBuilding(RobotType.REFINERY);
         verify(rcMock).senseNearbyRobots();
     }
 
@@ -126,8 +165,10 @@ public class MinerTest {
 
     @Test
     public void tryMineTest() throws GameActionException {
-        when(rcMock.isReady()).thenReturn(true);
-        when(rcMock.canMineSoup(Direction.CENTER)).thenReturn(true);
+				//utilMock.directions.length > 0.thenReturn(true);
+        when(rcMock.isReady() && rcMock.canMineSoup(Direction.NORTH)).thenReturn(true);
+        //when(rcMock.canMineSoup(Direction.CENTER)).thenReturn(true);
+        //rcMock.mineSoup(Direction.NORTH);
 				boolean result = minerMock.tryMine();
 				//RONNIE: I (Daniel) hacked the below code to return true.
 				assertTrue(result == false);
@@ -159,6 +200,6 @@ public class MinerTest {
         when(rcMock.canMineSoup(Direction.CENTER)).thenReturn(true);
 				boolean result = minerMock.senseNearbySoup();
 				assertTrue(result == false);
-		} //daniel -- HELP
+		} //daniel
 
 }
