@@ -15,9 +15,6 @@ public class FulfillmentCenter extends Building {
     public void takeTurn() throws GameActionException {
         super.takeTurn();
         numRounds++;
-        if (numRounds % 20 == 0) {
-            bc.broadcastFulfillmentCenterCreation();
-        }
 
         if (numDrones < 3) {
             if (tryBuild(RobotType.DELIVERY_DRONE, Util.randomDirection())) {
