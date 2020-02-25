@@ -42,8 +42,8 @@ public class DroneTest {
     @Mock
     Unit unitMock = mock(Unit.class); // daniel
 
-    @Mock
-    Robot robotMock = mock(Robot.class); // daniel
+    /*@Mock
+    Robot robotMock = mock(Robot.class); // daniel*/
 
     @InjectMocks
     Miner minerMock = new Miner(rcMock);
