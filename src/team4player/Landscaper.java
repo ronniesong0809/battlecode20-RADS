@@ -33,7 +33,7 @@ public class Landscaper extends Unit {
             createDigLocations();
         }
 
-        if (rc.getLocation().distanceSquaredTo(hqLoc) >= 10) {
+        if (hqLoc != null && rc.getLocation().distanceSquaredTo(hqLoc) >= 10) {
             nav.goAround(hqLoc);
         } else {
             // Find wall spot
@@ -81,7 +81,7 @@ public class Landscaper extends Unit {
         // Use new dig spot locations list to find the closest possible dig spot
         for (MapLocation d : digSpots) {
             dir = rc.getLocation().directionTo(d);
-            if (rc.getLocation().distanceSquaredTo(d) < 2) {
+            if (rc.getLocation().distanceSquaredTo(d) <= 2) {
                 if (rc.canDigDirt(dir)) {
                     return dir;
                 }
@@ -92,7 +92,7 @@ public class Landscaper extends Unit {
 
     public void tryDeposit(MapLocation spot) throws GameActionException {
 
-        if (rc.getLocation().distanceSquaredTo(hqLoc) > 2) {
+        if (spot.distanceSquaredTo(hqLoc) > 3) {
             if (spot.x < hqLoc.x && spot.y > hqLoc.y) {
                 spot = spot.add(Direction.SOUTHEAST);
             } else if (spot.x < hqLoc.x && spot.y < hqLoc.y) {
@@ -104,9 +104,10 @@ public class Landscaper extends Unit {
             }
         }
 
-        if (spot.distanceSquaredTo(rc.getLocation()) <= 2 && spot != null && rc.canDepositDirt(rc.getLocation().directionTo(spot))) {
+        if (rc.canDepositDirt(rc.getLocation().directionTo(spot))) {
             rc.depositDirt(rc.getLocation().directionTo(spot));
         }
+
     }
 
     public void initializeWallLocationsAndLevels() {
@@ -295,6 +296,7 @@ public class Landscaper extends Unit {
     }
 
     public MapLocation findWallSpot() throws GameActionException {
+
         for (MapLocation tileToCheck : wallLocs) {
             // Check if another landscaper is on that tile.
             if (rc.getLocation().distanceSquaredTo(tileToCheck) <= rc.getCurrentSensorRadiusSquared()) {
@@ -304,6 +306,7 @@ public class Landscaper extends Unit {
                 }
             }
         }
+
         return null;
     }
 
