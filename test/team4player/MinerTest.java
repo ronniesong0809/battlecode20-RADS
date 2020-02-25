@@ -34,8 +34,8 @@ public class MinerTest {
     @Mock
     Unit unitMock = mock(Unit.class); // daniel
 
-    @Mock
-    Robot robotMock = mock(Robot.class); // daniel
+    /*@Mock
+    Robot robotMock = mock(Robot.class); // daniel*/
 
 		@Mock
 		Robot robotMock = mock(Robot.class); // daniel
