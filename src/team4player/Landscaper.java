@@ -297,28 +297,16 @@ public class Landscaper extends Unit {
 
     public MapLocation findWallSpot() throws GameActionException {
 
-        if (Math.random() < 0.5) {
-            for (MapLocation tileToCheck : wallLocs) {
-                // Check if another landscaper is on that tile.
-                if (rc.getLocation().distanceSquaredTo(tileToCheck) <= rc.getCurrentSensorRadiusSquared()) {
-                    RobotInfo otherRobot = rc.senseRobotAtLocation(tileToCheck);
-                    if (otherRobot == null) {
-                        return tileToCheck;
-                    }
+        for (MapLocation tileToCheck : wallLocs) {
+            // Check if another landscaper is on that tile.
+            if (rc.getLocation().distanceSquaredTo(tileToCheck) <= rc.getCurrentSensorRadiusSquared()) {
+                RobotInfo otherRobot = rc.senseRobotAtLocation(tileToCheck);
+                if (otherRobot == null) {
+                    return tileToCheck;
                 }
             }
         }
-        else {
-            for (int i = MapLocation tileToCheck : wallLocs) {
-                // Check if another landscaper is on that tile.
-                if (rc.getLocation().distanceSquaredTo(tileToCheck) <= rc.getCurrentSensorRadiusSquared()) {
-                    RobotInfo otherRobot = rc.senseRobotAtLocation(tileToCheck);
-                    if (otherRobot == null) {
-                        return tileToCheck;
-                    }
-                }
-            }
-        }
+
 
         return null;
     }
