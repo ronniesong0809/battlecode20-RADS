@@ -11,6 +11,7 @@ public class Miner extends Unit {
     static MapLocation blockchainRefineryDestination = null; // blockchain refinery
     static MapLocation soupDestination = null; // TODO -- pursue one soup location at a time
     static MapLocation baseRefinery = null; // When a miner cannot sense a refinery or HQ, but a refinery has been built...go to this (since HQ is blocked in by landscapers)
+		static Direction lastSuccessfulMine = null; // Direction where a miner had success mining last time..try this FIRST
 
     int diagonalDir = -1; // the diagonal direction a miner is heading if no soup location is known
     int[] diagonalArr = {1, 3, 5, 7}; // diagonal directions to move
@@ -211,9 +212,17 @@ public class Miner extends Unit {
     }
 
     boolean tryMine() throws GameActionException {
+				if (lastSuccessfulMine != null){
+            if (rc.isReady() && rc.canMineSoup(lastSuccessfulMine)) {
+                rc.mineSoup(lastSuccessfulMine);
+								return true;
+						}
+				}
+
         for (Direction dir : Util.directions) {
             if (rc.isReady() && rc.canMineSoup(dir)) {
                 rc.mineSoup(dir);
+								lastSuccessfulMine = dir;
                 return true;
             }
         }
