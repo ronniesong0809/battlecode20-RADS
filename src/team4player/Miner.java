@@ -42,7 +42,9 @@ public class Miner extends Unit {
         }
         MapLocation[] soup = rc.senseNearbySoup(-1); // build refineries only close to soup
         if (!senseBuilding(RobotType.REFINERY) && soup != null && soup.length != 0) tryBuild(RobotType.REFINERY, hqLoc);
-        else if (numDesignSchool < 2 && !senseBuilding(RobotType.DESIGN_SCHOOL) && !bc.readDesignSchoolCreation() && tryBuild(RobotType.DESIGN_SCHOOL, hqLoc)) {
+        // This was Alex's version
+				else if (numDesignSchool < 2 && !senseBuilding(RobotType.DESIGN_SCHOOL) && !bc.readDesignSchoolCreation() && tryBuild(RobotType.DESIGN_SCHOOL, hqLoc)) {
+        // I think this version should be put forth if I can work out the bugs //else if (numDesignSchool < 1 && !senseBuilding(RobotType.DESIGN_SCHOOL) && senseBuilding(RobotType.HQ) && tryBuild(RobotType.DESIGN_SCHOOL, hqLoc)) {
             numDesignSchool++;
             System.out.println("built a Design School");
         } else if (numFulfillmentCenter < 1 && !senseBuilding(RobotType.FULFILLMENT_CENTER) && !bc.readFCCreation() && tryBuild(RobotType.FULFILLMENT_CENTER, hqLoc)) {
@@ -172,7 +174,7 @@ public class Miner extends Unit {
     }
 
     public boolean walkTowards(MapLocation x) throws GameActionException {
-        System.out.println("Towards building!");
+        System.out.println("Towards something!!");
         // move towards soup...if stuck, get unstuck.
         if (!nav.goAround(x) && rc.canSenseLocation(x)) { // we ran into something, and we are nearby the refinery (e.g., we bumped into the refinery)
             nav.goTo(Util.randomDirection());

@@ -18,7 +18,7 @@ public class DesignSchool extends Building {
 
         numRounds++;
 
-        if (numLandscapers < 20) {
+        if (numLandscapers < 15) {
             if (tryBuild(RobotType.LANDSCAPER, Util.randomDirection())) {
                 System.out.println("build a landscaper");
                 numLandscapers++;
