@@ -23,7 +23,7 @@ public class MinerTest {
     Navigation navMock = mock(Navigation.class);
 
     @Mock
-    Broadcast bcMock = mock(Broadcast.class);
+		Broadcast bcMock = mock(Broadcast.class);
 
     @Mock
     RobotInfo rInfoMock = mock(RobotInfo.class); // daniel
@@ -36,6 +36,9 @@ public class MinerTest {
 
     @Mock
     Robot robotMock = mock(Robot.class); // daniel
+
+		@Mock
+		Robot robotMock = mock(Robot.class); // daniel
 
     @InjectMocks
     Miner minerMock = new Miner(rcMock);

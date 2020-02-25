@@ -34,7 +34,7 @@ public class Miner extends Unit {
 
     public boolean buildABuilding() throws GameActionException {
         // Build design school if miner hasn't made one, none are nearby, and we are by HQ  --- all to control production of DSs
-        if (numDesignSchool < 1 && bc.readDesignSchoolCreation()) {
+        if (numDesignSchool < 2 && bc.readDesignSchoolCreation()) {
             numDesignSchool++;
         }
         if (numFulfillmentCenter < 1 && bc.readFCCreation()) {
@@ -42,7 +42,7 @@ public class Miner extends Unit {
         }
         MapLocation[] soup = rc.senseNearbySoup(-1); // build refineries only close to soup
         if (!senseBuilding(RobotType.REFINERY) && soup != null && soup.length != 0) tryBuild(RobotType.REFINERY, hqLoc);
-        else if (numDesignSchool < 1 && !senseBuilding(RobotType.DESIGN_SCHOOL) && !bc.readDesignSchoolCreation() && tryBuild(RobotType.DESIGN_SCHOOL, hqLoc)) {
+        else if (numDesignSchool < 2 && !senseBuilding(RobotType.DESIGN_SCHOOL) && !bc.readDesignSchoolCreation() && tryBuild(RobotType.DESIGN_SCHOOL, hqLoc)) {
             numDesignSchool++;
             System.out.println("built a Design School");
         } else if (numFulfillmentCenter < 1 && !senseBuilding(RobotType.FULFILLMENT_CENTER) && !bc.readFCCreation() && tryBuild(RobotType.FULFILLMENT_CENTER, hqLoc)) {
