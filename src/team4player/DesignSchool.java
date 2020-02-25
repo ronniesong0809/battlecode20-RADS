@@ -18,11 +18,7 @@ public class DesignSchool extends Building {
 
         numRounds++;
 
-        if (numRounds % 20 == 0) {
-            bc.broadcastDesignSchoolCreation();
-        }
-
-        if (numLandscapers < 8) {
+        if (numLandscapers < 20) {
             if (tryBuild(RobotType.LANDSCAPER, Util.randomDirection())) {
                 System.out.println("build a landscaper");
                 numLandscapers++;
