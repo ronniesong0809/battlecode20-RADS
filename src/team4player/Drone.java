@@ -7,17 +7,16 @@ import java.util.List;
 
 public class Drone extends Unit {
     static int currState = 0;
-    static List<MapLocation> enemyHQlocs = null;
     static List<MapLocation> droneCircle = null;
     static int enemyLocationToCheck = 0;
     static boolean foundEnemyHQ = false;
     static MapLocation enemyHQ = null;
     static boolean initialized = false;
+    static boolean haveCow = false;
 
     public Drone(RobotController rc) {
         super(rc);
     }
-
     public void takeTurn() throws GameActionException {
         super.takeTurn();
 
@@ -26,44 +25,24 @@ public class Drone extends Unit {
             initialized = true;
         }
 
-        Team enemy = rc.getTeam().opponent();
-//        if (!rc.isCurrentlyHoldingUnit()) {
-//            // See if there are any enemy robots within capturing range
-//            RobotInfo[] robots = rc.senseNearbyRobots(GameConstants.DELIVERY_DRONE_PICKUP_RADIUS_SQUARED, enemy);
-//
-//            if (robots.length > 0) {
-//                // Pick up a first robot within range
-//                rc.pickUpUnit(robots[0].getID());
-//                System.out.println("I picked up " + robots[0].getID() + "!");
-//            }
-//        } else {
-        // No close robots, so search for robots within sight radius
-//            tryMove(randomDirection());
-//        }//TODO:
-
         // Here is where actions take place
         switch (currState) {
-//            case 0:
-//                // Go all the way north
-//                if (!go(Direction.NORTH)) {
-//                    currState++;
-//                }
-//                break;
-//            case 1:
-//                // Go all the way east
-//                if (!go(Direction.EAST)) {
-//                    currState++;
-//                }
-//                break;
             case 0:
                 // Build array of possible enemy HQ locations
-                composeEnemyHQLocations();
-                currState++;
+                findHQ();
+                findEnemyHQ();
+                if (enemyHQlocs != null) {
+                    currState++;
+                }
                 break;
             case 1:
                 // Find and go to enemy HQ
+                if (!haveCow && isCowAround()) {
+                    //Go find cow and pick it up
+                    currState = 3;
+                    break;
+                }
                 boolean stillMoving = goToHQLocations(enemyLocationToCheck);
-
                 if (!stillMoving) {
                     if (foundEnemyHQ) {
                         currState++;
@@ -71,18 +50,64 @@ public class Drone extends Unit {
                         enemyLocationToCheck++;
                     }
                 }
-
                 break;
             case 2:
-                // Circle enemy HQ
-                circleHQandPickUp();
+                // Drop cow
                 break;
+            case 3:
+                // Find cow and pick it up.
+                pickUpCow();
 
+                // if we have cow
+                if (haveCow) {
+                    currState = 1;
+                }
+                break;
             default:
                 break;
         }
     }
 
+    public boolean isCowAround() throws GameActionException {
+        RobotInfo[] robots = rc.senseNearbyRobots(rc.getCurrentSensorRadiusSquared());
+        for (RobotInfo e : robots) {
+            if (e.type == RobotType.COW) {
+                //Found cow
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean pickUpCow() throws GameActionException {
+    //find cow
+        MapLocation cowloc=null;
+        int cowid=-1;
+        RobotInfo[] robots = rc.senseNearbyRobots(rc.getCurrentSensorRadiusSquared());
+        for (RobotInfo e : robots) {
+            if (e.type == RobotType.COW) {
+                cowid=e.getID();
+                cowloc = new MapLocation(e.getLocation().x, e.getLocation().y);
+                break;
+            }
+        }
+
+        if(cowid>=0) {
+            if (rc.getLocation().distanceSquaredTo(cowloc) <= 2) {
+                //pick up cow
+                if (rc.canPickUpUnit(cowid)) {
+                    rc.pickUpUnit(cowid);
+                    haveCow = true;
+                    return true;
+                }
+            } else {
+                nav.goAround(cowloc);
+                return false;
+            }
+        }
+        return false;
+
+    }
     public boolean go(Direction dir) throws GameActionException {
         if (!rc.canSenseLocation(rc.getLocation().add(dir))) {
             return false;
@@ -91,31 +116,22 @@ public class Drone extends Unit {
         return true;
     }
 
-    public void composeEnemyHQLocations() {
-        enemyHQlocs = new ArrayList<MapLocation>();
-
-        MapLocation topCorner = new MapLocation(rc.getMapWidth() - 1, rc.getMapHeight() - 1);
-
-        enemyHQlocs.add(new MapLocation(topCorner.x - hqLoc.x, topCorner.y - hqLoc.y));
-        enemyHQlocs.add(new MapLocation(topCorner.x - hqLoc.x, hqLoc.y));
-        enemyHQlocs.add(new MapLocation(hqLoc.x, topCorner.y - hqLoc.y));
-    }
 
     public boolean goToHQLocations(int toCheck) throws GameActionException {
-
         // Go towards the location
         // Stop if you are < 25 distance squared.
         // Check if enemy HQ is there and return true if so.
         MapLocation enemyHQlocation = enemyHQlocs.get(toCheck);
-        if (rc.getLocation().distanceSquaredTo(enemyHQlocation) > 20) {
+        if (rc.getLocation().distanceSquaredTo(enemyHQlocation) > 15) {
             nav.droneMove(rc.getLocation().directionTo(enemyHQlocation));
             return true;
         } else {
             // Check if it is there
             RobotInfo hq = rc.senseRobotAtLocation(enemyHQlocation);
-            if (hq.getType() == RobotType.HQ && hq.getTeam() == rc.getTeam().opponent()) {
+            if (hq != null && hq.getType() == RobotType.HQ && hq.getTeam() == rc.getTeam().opponent()) {
                 foundEnemyHQ = true;
                 enemyHQ = enemyHQlocation;
+                System.out.println("Found enemy");
             }
             return false;
         }
@@ -124,7 +140,6 @@ public class Drone extends Unit {
     public boolean circleHQandPickUp() throws GameActionException {
         // Try to move in the direction of the enemy HQ
         // Cant so try moving left.
-
         // Find closest point on circle
         int closestSpot = closestCircleSpot();
         if (rc.getLocation().distanceSquaredTo(droneCircle.get(closestSpot)) == 0) {
@@ -216,3 +231,5 @@ public class Drone extends Unit {
         return toReturn;
     }
 }
+
+

@@ -1,11 +1,13 @@
 package team4player;
 
 import battlecode.common.*;
+import java.util.ArrayList;
 
 public class Unit extends Robot {
 
     MapLocation hqLoc;
     Navigation nav;
+    ArrayList<MapLocation> enemyHQlocs = new ArrayList<MapLocation>(3);
 
     public Unit(RobotController rc) {
         super(rc);
@@ -28,6 +30,22 @@ public class Unit extends Robot {
             if (hqLoc == null) {
                 hqLoc = Broadcast.getHqLocFromBlockchain();
             }
+        }
+        if(rc.getRoundNum()==3)
+            findEnemyHQ();
+    }
+    public void findEnemyHQ() throws GameActionException {
+
+        if (hqLoc != null) {
+            int hq_x = hqLoc.x;
+            int hq_y = hqLoc.y;
+            int map_x = rc.getMapWidth()-1;
+            int map_y = rc.getMapHeight()-1;
+            // 3 possible enemy location
+            enemyHQlocs.add(new MapLocation(map_x-hq_x,hq_y));
+            enemyHQlocs.add(new MapLocation(map_x-hq_x,map_y-hq_y));
+            enemyHQlocs.add(new MapLocation(hq_x,map_y-hq_y));
+            System.out.println(enemyHQlocs);
         }
     }
 
