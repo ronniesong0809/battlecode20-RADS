@@ -68,4 +68,12 @@ public class Unit extends Robot {
         }
         return false;
     }
+
+    public int hqLocx() {
+        return hqLoc.x;
+    }
+
+    public int hqLocy() {
+        return hqLoc.y;
+    }
 }
