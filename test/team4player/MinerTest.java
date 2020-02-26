@@ -6,6 +6,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
@@ -23,7 +24,7 @@ public class MinerTest {
     Navigation navMock = mock(Navigation.class);
 
     @Mock
-		Broadcast bcMock = mock(Broadcast.class);
+    Broadcast bcMock = mock(Broadcast.class);
 
     @Mock
     RobotInfo rInfoMock = mock(RobotInfo.class); // daniel
@@ -34,11 +35,8 @@ public class MinerTest {
     @Mock
     Unit unitMock = mock(Unit.class); // daniel
 
-    /*@Mock
-    Robot robotMock = mock(Robot.class); // daniel*/
-
-		@Mock
-		Robot robotMock = mock(Robot.class); // daniel
+    @Mock
+    Robot robotMock = mock(Robot.class); // daniel
 
     @InjectMocks
     Miner minerMock = new Miner(rcMock);
@@ -73,51 +71,14 @@ public class MinerTest {
 
     @Test
     public void buildABuilding() throws GameActionException {
-        when(bcMock.readDesignSchoolCreation()).thenReturn(true);
+        //when(bcMock.readDesignSchoolCreation()).thenReturn(true);
         when(bcMock.readFCCreation()).thenReturn(true);
         when(rcMock.senseNearbySoup(-1)).thenReturn(new MapLocation[]{new MapLocation(1, 1)});
         when(rcMock.senseNearbyRobots()).thenReturn(new RobotInfo[]{new RobotInfo(12, Team.A, RobotType.REFINERY, 0, false, 0, 0, 0, new MapLocation(5, 5))});
         //boolean result = minerMock.buildABuilding();
         //assertTrue(result);
-    } // Daniel -- HELP*/
+    } // Daniel -- HELP
     // Ronnie -- fixed
-    /*@Test
-    public void buildABuilding2() throws GameActionException {
-        unitMock.hqLoc=new MapLocation(5,5);
-        when(bcMock.readDesignSchoolCreation()).thenReturn(true);
-        when(bcMock.readFCCreation()).thenReturn(true);
-        when(rcMock.senseNearbySoup(-1)).thenReturn(new MapLocation[]{new MapLocation(1, 1)});
-        when(rcMock.senseNearbyRobots()).thenReturn(new RobotInfo[]{new RobotInfo(12, Team.A, RobotType.HQ, 0, false, 0, 0, 0, new MapLocation(5, 5))});
-        when(rcMock.getLocation()).thenReturn(new MapLocation(10,10));
-        boolean result = minerMock.buildABuilding();
-        assertTrue(result);
-    } // Daniel -- HELP*/
-    // Ronnie -- fixed
-    /*
-    @Test
-    public void buildABuilding() throws GameActionException {
-        minerMock.numDesignSchool = 0;
-        when(rcMock.senseNearbyRobots()).thenReturn(new RobotInfo[]{new RobotInfo(12, Team.A, RobotType.HQ, 0, false, 0, 0, 0, new MapLocation(5, 5))});
-        minerMock.hqLoc = new MapLocation(5,5);
-        when(bcMock.readDesignSchoolCreation()).thenReturn(true);
-        //assertTrue(minerMock.numDesignSchool >= 0);
-
-        when(bcMock.readFCCreation()).thenReturn(true);
-        when(rcMock.senseNearbySoup(-1)).thenReturn(new MapLocation[]{new MapLocation(1, 1)});
-
-        //when(rInfoMock.senseBuilding(
-        when(robotMock.tryBuild(RobotType.REFINERY, new MapLocation(5,5))).thenReturn(true);
-
-
-
-        //Sense building functions
-        //doReturn(new RobotInfo[]{new RobotInfo(12, Team.A, RobotType.HQ, 0, false, 0, 0, 0, new MapLocation(5, 5))}).when(rcMock).senseNearbyRobots();
-
-
-        //when(minerMock.senseBuilding(RobotType.REFINERY)).thenReturn(true);
-        boolean result = minerMock.buildABuilding();
-        //assertTrue(result);
-    } // Daniel -- HELP*/
 
     @Test
     public void changeDirectionTest() throws GameActionException {
@@ -146,7 +107,6 @@ public class MinerTest {
     public void senseBuildingTest() throws GameActionException {
         //Test 1 -- building nearby
         when(rcMock.senseNearbyRobots()).thenReturn(new RobotInfo[]{new RobotInfo(12, Team.A, RobotType.HQ, 0, false, 0, 0, 0, new MapLocation(5, 5))});
-
         minerMock.senseBuilding(RobotType.HQ);
         verify(rcMock).senseNearbyRobots();
     }
@@ -192,9 +152,15 @@ public class MinerTest {
     @Test
     public void tryMineTest() throws GameActionException {
         //utilMock.directions.length > 0.thenReturn(true);
+        //when(minerMock.getSuccessfulMine()).thenReturn(Direction.NORTH);
+        Direction successful = Direction.NORTH;
+        Miner spy = Mockito.spy(new Miner(rcMock));
+        doReturn(successful).when(spy).getSuccessfulMine();
         when(rcMock.isReady() && rcMock.canMineSoup(Direction.NORTH)).thenReturn(true);
-        //when(rcMock.canMineSoup(Direction.CENTER)).thenReturn(true);
-        //rcMock.mineSoup(Direction.NORTH);
+        when(rcMock.canMineSoup(Direction.CENTER)).thenReturn(true);
+        //when(minerMock.getSuccessfulMine()).thenReturn(Direction.NORTH);
+        //when(minerMock.getSuccessfulMine()).thenReturn(minerMock.lastSuccessfulMine);
+        rcMock.mineSoup(Direction.NORTH);
         boolean result = minerMock.tryMine();
         //RONNIE: I (Daniel) hacked the below code to return true.
         assertTrue(result == false);

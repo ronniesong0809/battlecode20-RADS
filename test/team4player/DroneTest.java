@@ -6,12 +6,12 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -24,14 +24,14 @@ public class DroneTest {
     @Mock
     RobotController rcMock = mock(RobotController.class);
 
-    @Mock
+    @InjectMocks
     Drone droneMock = mock(Drone.class);
 
     @Mock
-    Navigation navMock = mock(Navigation.class);
+    Navigation navMock;
 
     @Mock
-    Broadcast bcMock = mock(Broadcast.class);
+    Broadcast bcMock;
 
     @Mock
     RobotInfo rInfoMock = mock(RobotInfo.class); // daniel
@@ -42,9 +42,6 @@ public class DroneTest {
     @Mock
     Unit unitMock = mock(Unit.class); // daniel
 
-    /*@Mock
-    Robot robotMock = mock(Robot.class); // daniel*/
-
     @InjectMocks
     Miner minerMock = new Miner(rcMock);
 
@@ -52,10 +49,24 @@ public class DroneTest {
     public void setup() {
         when(rcMock.getTeam()).thenReturn(Team.A);
         when(rcMock.getType()).thenReturn(RobotType.HQ);
+        navMock = mock(Navigation.class);
+        bcMock = mock(Broadcast.class);
+    }
+    @Test
+    public void droneConstructor() throws GameActionException {
+        Drone drn = new Drone(rcMock);
     }
 
     @Test
     public void takeTurnTest() throws GameActionException {
+        /*Drone drn = new Drone(rcMock);
+        drn.initialized = false;
+        drn.enemyHQ = new MapLocation(1, 1);
+        drn.initializeCircle();
+        drn.takeTurn();*/
+        droneMock.initialized = false;
+        droneMock.enemyHQ = new MapLocation(1,1);
+        droneMock.takeTurn();
     }
 
     @Test
@@ -114,7 +125,10 @@ public class DroneTest {
     @Test
     public void initializeCircleTest() {
         //List droneCircle = new Mock
-        //droneMock.initializeCircle();
+        //when(droneMock.createDroneCircle()).thenReturn(true);
+        when(droneMock.returnXY(2)).thenReturn(1);
+        when(droneMock.returnXY(4)).thenReturn(1);
+        droneMock.initializeCircle();
         //droneMock.droneCircle = new ArrayList<MapLocation>();
         //verify(droneMock).droneCircle.add(new MapLocation(droneMock.enemyHQ.x-2, droneMock.enemyHQ.y));
         //assertTrue();
