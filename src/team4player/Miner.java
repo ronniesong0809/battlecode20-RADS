@@ -47,7 +47,10 @@ public class Miner extends Unit {
         // I think this version should be put forth if I can work out the bugs //else if (numDesignSchool < 1 && !senseBuilding(RobotType.DESIGN_SCHOOL) && senseBuilding(RobotType.HQ) && tryBuild(RobotType.DESIGN_SCHOOL, hqLoc)) {
             numDesignSchool++;
             System.out.println("built a Design School");
-        } else if (numFulfillmentCenter < 1 && !senseBuilding(RobotType.FULFILLMENT_CENTER) && !bc.readFCCreation() && tryBuild(RobotType.FULFILLMENT_CENTER, hqLoc)) {
+        } else if (!senseBuilding(RobotType.VAPORATOR)) {
+						tryBuild(RobotType.VAPORATOR, hqLoc);
+				}
+				else if (numFulfillmentCenter < 1 && !senseBuilding(RobotType.FULFILLMENT_CENTER) && !bc.readFCCreation() && tryBuild(RobotType.FULFILLMENT_CENTER, hqLoc)) {
             numFulfillmentCenter++;
         }
 				return true;

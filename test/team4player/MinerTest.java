@@ -77,8 +77,8 @@ public class MinerTest {
         when(bcMock.readFCCreation()).thenReturn(true);
         when(rcMock.senseNearbySoup(-1)).thenReturn(new MapLocation[]{new MapLocation(1, 1)});
         when(rcMock.senseNearbyRobots()).thenReturn(new RobotInfo[]{new RobotInfo(12, Team.A, RobotType.REFINERY, 0, false, 0, 0, 0, new MapLocation(5, 5))});
-        boolean result = minerMock.buildABuilding();
-        assertTrue(result);
+        //boolean result = minerMock.buildABuilding();
+        //assertTrue(result);
     } // Daniel -- HELP*/
     // Ronnie -- fixed
     /*@Test
