@@ -89,6 +89,21 @@ public class LandScaperTest {
     }
 
     @Test
+    public void tryDepositTest() throws GameActionException {
+        when(unitMock.hqLoc()).thenReturn(new MapLocation(5,5));
+        when(unitMock.hqLocy()).thenReturn(5);
+        when(unitMock.hqLocx()).thenReturn(5);
+        when(unitMock.hqLocy()).thenReturn(5);
+        when(rcMock.canDepositDirt(Direction.NORTH)).thenReturn(true);
+        when(rcMock.getLocation()).thenReturn(new MapLocation(5,5));
+
+        lpMock.tryDeposit(new MapLocation(4,7)); // SOUTHEAST
+        lpMock.tryDeposit(new MapLocation(4,3)); // NORTHEAST
+        lpMock.tryDeposit(new MapLocation(7,4)); // NORTHWEST
+        lpMock.tryDeposit(new MapLocation(7,6)); // SOUTHWEST
+    }
+
+    @Test
     public void createDigLocations() {
         when(unitMock.hqLocx()).thenReturn(5);
         when(unitMock.hqLocy()).thenReturn(5);

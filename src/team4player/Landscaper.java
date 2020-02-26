@@ -93,14 +93,14 @@ public class Landscaper extends Unit {
 
     public void tryDeposit(MapLocation spot) throws GameActionException {
 
-        if (spot.distanceSquaredTo(hqLoc) > 3) {
-            if (spot.x < hqLoc.x && spot.y > hqLoc.y) {
+        if (spot.distanceSquaredTo(unit.hqLoc()) > 3) {
+            if (spot.x < unit.hqLocx() && spot.y > unit.hqLocy()) {
                 spot = spot.add(Direction.SOUTHEAST);
-            } else if (spot.x < hqLoc.x && spot.y < hqLoc.y) {
+            } else if (spot.x < unit.hqLocx() && spot.y < unit.hqLocy()) {
                 spot = spot.add(Direction.NORTHEAST);
-            } else if (spot.x > hqLoc.x && spot.y < hqLoc.y) {
+            } else if (spot.x > unit.hqLocx() && spot.y < unit.hqLocy()) {
                 spot = spot.add(Direction.NORTHWEST);
-            } else if (spot.x > hqLoc.x && spot.y > hqLoc.y) {
+            } else if (spot.x > unit.hqLocx() && spot.y > unit.hqLocy()) {
                 spot = spot.add(Direction.SOUTHWEST);
             }
         }
