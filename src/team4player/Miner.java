@@ -8,6 +8,7 @@ public class Miner extends Unit {
     static int numDesignSchool = 0;
     static int numFulfillmentCenter = 0;
     static int numRefinery = 0;
+    static int numNetGuns=0;
     static MapLocation blockchainRefineryDestination = null; // blockchain refinery
     static MapLocation soupDestination = null; // TODO -- pursue one soup location at a time
     static MapLocation baseRefinery = null; // When a miner cannot sense a refinery or HQ, but a refinery has been built...go to this (since HQ is blocked in by landscapers)
@@ -16,7 +17,6 @@ public class Miner extends Unit {
     int diagonalDir = -1; // the diagonal direction a miner is heading if no soup location is known
     int[] diagonalArr = {1, 3, 5, 7}; // diagonal directions to move
     ArrayList<MapLocation> oldSoupLocations = new ArrayList<MapLocation>(); // don't go here anymore
-
     public Miner(RobotController rc) {
         super(rc);
     }
@@ -33,6 +33,7 @@ public class Miner extends Unit {
     }
 
     public boolean buildABuilding() throws GameActionException {
+        buildNetgun();
         // Build design school if miner hasn't made one, none are nearby, and we are by HQ  --- all to control production of DSs
         if (numDesignSchool < 2 && bc.readDesignSchoolCreation()) {
             numDesignSchool++;
@@ -247,4 +248,16 @@ public class Miner extends Unit {
         }*/
         return false;
     }
+    public boolean buildNetgun() throws GameActionException {
+        if (rc.isReady() && numNetGuns < 2 && rc.getTeamSoup() > RobotType.NET_GUN.cost) {
+               if(tryBuild(RobotType.NET_GUN, Util.randomDirection())) {
+                        System.out.println("created a net gun near Refinery");
+                        return true;
+                    }
+                }
+
+
+        return false;
+    }
+
 }

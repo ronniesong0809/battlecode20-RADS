@@ -6,7 +6,8 @@ import battlecode.common.RobotController;
 public class Refinery extends Building {
     public Refinery(RobotController rc) throws GameActionException {
         super(rc);
-        bc.sendRefineryLocToBlockchain(rc.getLocation()); // just post once when created
+        bc.sendRefineryLocToBlockchain(rc.getLocation());
+        // just post once when created
         //System.out.println(bc.sendRefineryLocToBlockchain(rc.getLocation()));
     }
 

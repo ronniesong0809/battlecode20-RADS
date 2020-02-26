@@ -43,6 +43,7 @@ public class HQ extends Building {
 //        }
 
         shootDrone();
+
     }
 
     public void initSurroundingWalls() {

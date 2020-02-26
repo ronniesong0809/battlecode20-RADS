@@ -23,4 +23,5 @@ public class Building extends Robot {
             }
         }
     }
+
 }
