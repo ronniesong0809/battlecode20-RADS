@@ -1,7 +1,7 @@
 # Battlecode20-RADS Scaffold
 
 [![Build Status](https://travis-ci.com/battlecode20-team4/battlecode20-scaffold.svg?branch=master)](https://travis-ci.com/battlecode20-team4/battlecode20-scaffold)
-[![Coverage Status](https://coveralls.io/repos/github/ronniesong0809/battlecode20-RADS/badge.svg?branch=master)](https://coveralls.io/github/ronniesong0809/battlecode20-RADS?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/ronniesong0809/battlecode20-RADS/badge.svg?)](https://coveralls.io/github/ronniesong0809/battlecode20-RADS?branch=master)
 [![License: AGPL 3.0](https://img.shields.io/badge/License-AGPL--3.0-yellow.svg)](https://github.com/battlecode20-team4/battlecode20-scaffold/blob/master/LICENSE)
 [![CodeFactor](https://www.codefactor.io/repository/github/ronniesong0809/battlecode20-rads/badge)](https://www.codefactor.io/repository/github/ronniesong0809/battlecode20-rads)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/2916fccd9804435d89f09b3dbb8c9120)](https://app.codacy.com/manual/ronsong/battlecode20-RADS?utm_source=github.com&utm_medium=referral&utm_content=ronniesong0809/battlecode20-RADS&utm_campaign=Badge_Grade_Dashboard)
