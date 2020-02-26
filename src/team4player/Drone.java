@@ -157,12 +157,24 @@ public class Drone extends Unit {
         return true;
     }
 
-    public void initializeCircle() {
-
+    //public ArrayList<MapLocation> createDroneCircle(){
+    public boolean createDroneCircle(){
         droneCircle = new ArrayList<MapLocation>();
+        return true;
+        //return new ArrayList<MapLocation>();
+    }
+    public int returnXY(int xy){
+        if (xy == 2){
+            return enemyHQ.x -2;
+        } else {
+            return enemyHQ.y + 4;
+        }
+    }
 
-        int block_x = enemyHQ.x - 2;
-        int block_y = enemyHQ.y + 4;
+    public void initializeCircle() {
+        createDroneCircle();
+        int block_x = returnXY(2);
+        int block_y = returnXY(4);
         for (int i = 0; i < 24; i++) {
             droneCircle.add(new MapLocation(block_x, block_y));
 

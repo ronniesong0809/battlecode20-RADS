@@ -68,4 +68,5 @@ public class NavigationTest {
         boolean result = navMock.droneMove(Direction.CENTER);
         assertEquals(true, result);
     }
+
 }
