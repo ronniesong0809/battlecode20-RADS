@@ -103,6 +103,15 @@ public class Broadcast {
         }
         return false;
     }
+    public boolean readNGCreation() throws GameActionException {
+        for (Transaction tx : rc.getBlock(rc.getRoundNum() - 1)) {
+            int[] mess = tx.getMessage();
+            if (mess[0] == teamSecret && mess[1] == 440044) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 
 }
