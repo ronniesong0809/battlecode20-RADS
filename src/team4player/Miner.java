@@ -5,34 +5,35 @@ import battlecode.common.*;
 import java.util.ArrayList;
 
 public class Miner extends Unit {
-	static int numDesignSchool = 0;
-	static int numFulfillmentCenter = 0;
-	static int numRefinery = 0;
-	static MapLocation blockchainRefineryDestination = null; // blockchain refinery
-	static MapLocation soupDestination = null; // TODO -- pursue one soup location at a time
-	static MapLocation baseRefinery = null; // When a miner cannot sense a refinery or HQ, but a refinery has been built...go to this (since HQ is blocked in by landscapers)
-	static Direction lastSuccessfulMine = null; // Direction where a miner had success mining last time..try this FIRST
 
-	int diagonalDir = -1; // the diagonal direction a miner is heading if no soup location is known
-	int[] diagonalArr = {1, 3, 5, 7}; // diagonal directions to move
-	ArrayList<MapLocation> oldSoupLocations = new ArrayList<MapLocation>(); // don't go here anymore
+    static int numDesignSchool = 0;
+    static int numFulfillmentCenter = 0;
+    static int numRefinery = 0;
+    static MapLocation blockchainRefineryDestination = null; // blockchain refinery
+    static MapLocation soupDestination = null; // TODO -- pursue one soup location at a time
+    static MapLocation baseRefinery = null; // When a miner cannot sense a refinery or HQ, but a refinery has been built...go to this (since HQ is blocked in by landscapers)
+		static Direction lastSuccessfulMine = null; // Direction where a miner had success mining last time..try this FIRST
 
-	public Miner(RobotController rc) {
-		super(rc);
-	}
+    int diagonalDir = -1; // the diagonal direction a miner is heading if no soup location is known
+    int[] diagonalArr = {1, 3, 5, 7}; // diagonal directions to move
+    ArrayList<MapLocation> oldSoupLocations = new ArrayList<MapLocation>(); // don't go here anymore
 
-	// Sense a building passes in
-	public boolean senseBuilding(RobotType type) {
-		RobotInfo[] nearbyRobots = rc.senseNearbyRobots();
-		for (RobotInfo r : nearbyRobots) {
-			if (r.type == type) {
-				return true;
-			}
-		}
-		return false;
-	}
+    public Miner(RobotController rc) {
+        super(rc);
+    }
 
-	public boolean buildABuilding() throws GameActionException {
+    // Sense a building passes in
+    public boolean senseBuilding(RobotType type) {
+        RobotInfo[] nearbyRobots = rc.senseNearbyRobots();
+        for (RobotInfo r : nearbyRobots) {
+            if (r.type == type) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean buildABuilding() throws GameActionException {
 		// Build design school if miner hasn't made one, none are nearby, and we are by HQ  --- all to control production of DSs
 		if (numDesignSchool < 2 && bc.readDesignSchoolCreation()) {
 			numDesignSchool++;
@@ -42,54 +43,18 @@ public class Miner extends Unit {
 		}
 		MapLocation[] soup = rc.senseNearbySoup(-1); // build refineries only close to soup
 		if (!senseBuilding(RobotType.REFINERY) && soup != null && soup.length != 0) tryBuild(RobotType.REFINERY, hqLoc);
-		// This was Alex's version
+			// This was Alex's version
 		else if (numDesignSchool < 2 && !senseBuilding(RobotType.DESIGN_SCHOOL) && !bc.readDesignSchoolCreation() && tryBuild(RobotType.DESIGN_SCHOOL, hqLoc)) {
 			// I think this version should be put forth if I can work out the bugs //else if (numDesignSchool < 1 && !senseBuilding(RobotType.DESIGN_SCHOOL) && senseBuilding(RobotType.HQ) && tryBuild(RobotType.DESIGN_SCHOOL, hqLoc)) {
 			numDesignSchool++;
 			System.out.println("built a Design School");
+		} else if (!senseBuilding(RobotType.VAPORATOR)) {
+			tryBuild(RobotType.VAPORATOR, hqLoc);
 		} else if (numFulfillmentCenter < 1 && !senseBuilding(RobotType.FULFILLMENT_CENTER) && !bc.readFCCreation() && tryBuild(RobotType.FULFILLMENT_CENTER, hqLoc)) {
 			numFulfillmentCenter++;
 		}
 		return true;
-		}
-
-		/*public boolean buildABuilding() throws GameActionException {
-		// Build design school if miner hasn't made one, none are nearby, and we are by HQ  --- all to control production of DSs
-		if (numDesignSchool < 2) {
-		numDesignSchool++;
-		}
-		if (numFulfillmentCenter < 1 && bc.readFCCreation()) {
-		numFulfillmentCenter++;
-		}
-		MapLocation[] soup = rc.senseNearbySoup(-1); // build refineries only close to soup
-		if (!senseBuilding(RobotType.REFINERY) && soup != null && soup.length != 0) tryBuild(RobotType.REFINERY, hqLoc);
-		// This was Alex's version
-		else if (numDesignSchool < 2 && !senseBuilding(RobotType.DESIGN_SCHOOL) && tryBuild(RobotType.DESIGN_SCHOOL, hqLoc)) {
-		// I think this version should be put forth if I can work out the bugs //else if (numDesignSchool < 1 && !senseBuilding(RobotType.DESIGN_SCHOOL) && senseBuilding(RobotType.HQ) && tryBuild(RobotType.DESIGN_SCHOOL, hqLoc)) {
-		numDesignSchool++;
-		System.out.println("built a Design School");
-		} else if (numFulfillmentCenter < 1 && !senseBuilding(RobotType.FULFILLMENT_CENTER) && !bc.readFCCreation() && tryBuild(RobotType.FULFILLMENT_CENTER, hqLoc)) {
-		//else if (numFulfillmentCenter < 1 && !senseBuilding(RobotType.FULFILLMENT_CENTER) && tryBuild(RobotType.FULFILLMENT_CENTER, hqLoc)) {
-		numFulfillmentCenter++;
-		}
-		return true;
-		}*/
-
-		//TODO -- move towards one specific soup location
-		/*public boolean checkForSoup() throws GameActionException {
-			MapLocation[] soup = rc.senseNearbySoup(-1);
-			if (soup != null && soup.length != 0) { // we found soup! Head towards it
-			if(blockchainRefineryDestination == null){
-			int randomLoc = (int) (Math.random() * soup.length + 0); // random soup to avoid crowds
-			soupDestination = soup[randomLoc];
-		//if (!walkTowardsSoup(soupDestination) && rc.canSenseLocation(soupDestination)){
-		//soupDestination = null;
-		//}
-		return true;
-			}
-			}
-			return false;
-			}*/
+	}
 
 		public boolean checkForSoup(MapLocation [] soup) throws GameActionException {
 			//MapLocation[] soup = rc.senseNearbySoup(-1);
