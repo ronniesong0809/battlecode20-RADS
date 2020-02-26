@@ -9,6 +9,7 @@ public class Miner extends Unit {
     static int numDesignSchool = 0;
     static int numFulfillmentCenter = 0;
     static int numRefinery = 0;
+    static int numNetGuns=0;
     static MapLocation blockchainRefineryDestination = null; // blockchain refinery
     static MapLocation soupDestination = null; // TODO -- pursue one soup location at a time
     static MapLocation baseRefinery = null; // When a miner cannot sense a refinery or HQ, but a refinery has been built...go to this (since HQ is blocked in by landscapers)
@@ -34,7 +35,7 @@ public class Miner extends Unit {
     }
 
     public boolean buildABuilding() throws GameActionException {
-		// Build design school if miner hasn't made one, none are nearby, and we are by HQ  --- all to control production of DSs
+    	// Build design school if miner hasn't made one, none are nearby, and we are by HQ  --- all to control production of DSs
 		if (numDesignSchool < 2 && bc.readDesignSchoolCreation()) {
 			numDesignSchool++;
 		}
@@ -52,6 +53,8 @@ public class Miner extends Unit {
 			tryBuild(RobotType.VAPORATOR, hqLoc);
 		} else if (numFulfillmentCenter < 1 && !senseBuilding(RobotType.FULFILLMENT_CENTER) && !bc.readFCCreation() && tryBuild(RobotType.FULFILLMENT_CENTER, hqLoc)) {
 			numFulfillmentCenter++;
+		}else if(numNetGuns<1 && !senseBuilding(RobotType.NET_GUN)&& !bc.readNGCreation()&& tryBuild(RobotType.NET_GUN,hqLoc)){
+			numNetGuns++;
 		}
 		return true;
 	}
@@ -236,4 +239,6 @@ public class Miner extends Unit {
 				if (localSoupLocations != null){ return true;}
 				return false;
 			}
+
 		}
+
