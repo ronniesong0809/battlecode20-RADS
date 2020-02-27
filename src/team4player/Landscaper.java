@@ -97,14 +97,14 @@ public class Landscaper extends Unit {
 
     public void tryDeposit(MapLocation spot) throws GameActionException {
 
-        if (spot.distanceSquaredTo(unit.hqLoc()) > 3) {
-            if (spot.x < unit.hqLocx() && spot.y > unit.hqLocy()) {
+        if (spot.distanceSquaredTo(hqLoc) > 3) {
+            if (spot.x < hqLoc.x && spot.y > hqLoc.y) {
                 spot = spot.add(Direction.SOUTHEAST);
-            } else if (spot.x < unit.hqLocx() && spot.y < unit.hqLocy()) {
+            } else if (spot.x < hqLoc.x && spot.y < hqLoc.y) {
                 spot = spot.add(Direction.NORTHEAST);
-            } else if (spot.x > unit.hqLocx() && spot.y < unit.hqLocy()) {
+            } else if (spot.x > hqLoc.x && spot.y < hqLoc.y) {
                 spot = spot.add(Direction.NORTHWEST);
-            } else if (spot.x > unit.hqLocx() && spot.y > unit.hqLocy()) {
+            } else if (spot.x > hqLoc.x && spot.y > hqLoc.y) {
                 spot = spot.add(Direction.SOUTHWEST);
             }
         }
@@ -148,10 +148,10 @@ public class Landscaper extends Unit {
 
     public void initializeWallLocationsAndLevels() {
         // Figure out digging pattern:
-        if (unit.hqLocx() % 2 == 0) {
+        if (hqLoc.x % 2 == 0) {
             digX = 1;
         }
-        if (unit.hqLocy() % 2 == 0) {
+        if (hqLoc.y % 2 == 0) {
             digY = 1;
         }
 
@@ -159,8 +159,8 @@ public class Landscaper extends Unit {
         wallLevels = new ArrayList<Integer>();
 
         // Adding locations around the HQ
-        int block_x = unit.hqLocx() - 1;
-        int block_y = unit.hqLocy() + 1;
+        int block_x = hqLoc.x - 1;
+        int block_y = hqLoc.y + 1;
         for (int i = 0; i < 8; i++) {
             wallLocs.add(new MapLocation(block_x, block_y));
 
@@ -186,8 +186,8 @@ public class Landscaper extends Unit {
             }
         }
 
-        block_x = unit.hqLocx() - 2;
-        block_y = unit.hqLocy() + 2;
+        block_x = hqLoc.x - 2;
+        block_y = hqLoc.y + 2;
         for (int i = 0; i < 12; i++) {
             wallLocs.add(new MapLocation(block_x, block_y));
 
@@ -244,8 +244,8 @@ public class Landscaper extends Unit {
         digSpots = new ArrayList<MapLocation>();
 
         // Adding locations around the HQ
-        int block_x = unit.hqLocx() - 3;
-        int block_y = unit.hqLocy() + 3;
+        int block_x = hqLoc.x - 3;
+        int block_y = hqLoc.y + 3;
         for (int i = 0; i < 24; i++) {
             digSpots.add(new MapLocation(block_x, block_y));
 
