@@ -16,6 +16,8 @@ public class Landscaper extends Unit {
     static int personality = 0;
     static boolean initialized = false;
     static boolean dig_initialized = false;
+    static int roundNum = 0;
+    static int outsideSpot = 0;
 
     public Landscaper(RobotController rc) {
         super(rc);
@@ -23,6 +25,8 @@ public class Landscaper extends Unit {
 
     public void takeTurn() throws GameActionException {
         super.takeTurn();
+
+        roundNum++;
 
         if (hqLoc == null) {
             findHQ();
@@ -101,6 +105,37 @@ public class Landscaper extends Unit {
                 spot = spot.add(Direction.NORTHWEST);
             } else if (spot.x > hqLoc.x && spot.y > hqLoc.y) {
                 spot = spot.add(Direction.SOUTHWEST);
+            }
+        }
+
+        int wallspot = wallLocs.indexOf(spot);
+        if (wallspot < 8 && roundNum > 300) {
+            // Check surrounding wall spots to see if they are lower for deposit.
+
+            int leftIndex = wallspot+1;
+            int rightIndex = wallspot-1;
+
+            if (wallspot == 7) {
+                // check location 6 and 0
+                // 50% chance to check either 6 or 0
+                leftIndex = 0;
+                rightIndex = 6;
+            }
+            else if (wallspot == 0) {
+                // check locations 1 and 7
+                leftIndex = 1;
+                rightIndex = 7;
+            }
+
+            if (Math.random() < 0.5) {
+                if (rc.senseElevation(wallLocs.get(leftIndex)) < rc.senseElevation(rc.getLocation())) {
+                    spot = wallLocs.get(leftIndex);
+                }
+            }
+            else {
+                if (rc.senseElevation(wallLocs.get(rightIndex)) < rc.senseElevation(rc.getLocation())) {
+                    spot = wallLocs.get(rightIndex);
+                }
             }
         }
 
