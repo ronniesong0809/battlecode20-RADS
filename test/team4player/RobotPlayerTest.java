@@ -52,8 +52,12 @@ public class RobotPlayerTest {
         assertEquals(rcMock.getRoundNum(), 50);
     }
 
-//    @Test
-//    public void runTest () throws GameActionException{
-//        rpMock.run(rcMock);
-//    }
+    @Test
+    public void runTest () throws GameActionException{
+//        try {
+//            rpMock.run(rcMock);
+//        } catch (Exception ex){
+//
+//        }
+    }
 }

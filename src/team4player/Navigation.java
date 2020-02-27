@@ -89,24 +89,4 @@ public class Navigation {
         }
         return false;
     }
-
-    boolean circleMove(Direction dir) throws GameActionException {
-        Direction[] toTry =
-                {
-                        dir,
-                        dir.rotateLeft(),
-                        dir.rotateLeft().rotateLeft(),
-                        dir.rotateLeft().rotateLeft().rotateLeft(),
-                        dir.rotateRight(),
-                        dir.rotateRight().rotateRight()
-                };
-
-        for (Direction d : toTry) {
-            if (rc.canMove(dir)) {
-                rc.move(d);
-                return true;
-            }
-        }
-        return false;
-    }
 }
