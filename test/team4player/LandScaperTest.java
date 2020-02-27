@@ -96,11 +96,16 @@ public class LandScaperTest {
         when(unitMock.hqLocy()).thenReturn(5);
         when(rcMock.canDepositDirt(Direction.NORTH)).thenReturn(true);
         when(rcMock.getLocation()).thenReturn(new MapLocation(5,5));
+        lpMock.initializeWallLocationsAndLevels();
 
         lpMock.tryDeposit(new MapLocation(4,7)); // SOUTHEAST
         lpMock.tryDeposit(new MapLocation(4,3)); // NORTHEAST
         lpMock.tryDeposit(new MapLocation(7,4)); // NORTHWEST
         lpMock.tryDeposit(new MapLocation(7,6)); // SOUTHWEST
+        for (int i = 0; i<301; i++){
+            takeTurnTest();
+        }
+        lpMock.tryDeposit(new MapLocation(8,7)); // SOUTHWEST
     }
 
     @Test
