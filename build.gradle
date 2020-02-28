@@ -356,7 +356,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath "gradle.plugin.org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.10.0"
+        classpath "gradle.plugin.org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.10.1"
     }
 }
 
