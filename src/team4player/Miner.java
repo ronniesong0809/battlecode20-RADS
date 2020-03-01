@@ -6,10 +6,25 @@ import java.util.ArrayList;
 
 public class Miner extends Unit {
 
-    static int numDesignSchool = 0;
+		// Decides a switch statement for the buildABuilding function
+		public int decideX(){
+				int ret = -99;
+				//if (!senseBuilding(RobotType.VAPORATOR)) {ret=-1;}
+				MapLocation[] soup = rc.senseNearbySoup(-1);
+				if(soup != null && soup.length != 0 && !senseBuilding(RobotType.REFINERY)){ret=0;}
+				//if (!senseBuilding(RobotType.REFINERY)) {ret=0;}
+				else if (numDesignSchool < 1){ret=1;}
+				else if (numFulfillmentCenter < 1){ret=2;}
+				else if (numNetGuns < 1){ret=3;}
+				return ret;
+		}
+
+		// These are variables used to indicate what buildings to build
+		static int numDesignSchool = 0;
     static int numFulfillmentCenter = 0;
-    static int numRefinery = 0;
     static int numNetGuns=0;
+
+		// These are destinations used for mining and travelling.
     static MapLocation blockchainRefineryDestination = null; // blockchain refinery
     static MapLocation soupDestination = null; // TODO -- pursue one soup location at a time
     static MapLocation baseRefinery = null; // When a miner cannot sense a refinery or HQ, but a refinery has been built...go to this (since HQ is blocked in by landscapers)
@@ -34,13 +49,15 @@ public class Miner extends Unit {
         return false;
     }
 
-    public boolean buildABuilding() throws GameActionException {
+    /*public boolean buildABuilding() throws GameActionException {
     	// Build design school if miner hasn't made one, none are nearby, and we are by HQ  --- all to control production of DSs
 		if (numDesignSchool < 1 && bc.readDesignSchoolCreation()) {
 			numDesignSchool++;
 		}
-		if (numFulfillmentCenter < 1 && bc.readFCCreation()) {
-			numFulfillmentCenter++;
+		if ((numFulfillmentCenter < 1 && bc.readFCCreation()) || // Another robot created a center
+				(numFulfillmentCenter < 1 && !senseBuilding(RobotType.FULFILLMENT_CENTER) && !bc.readFCCreation() && tryBuild(RobotType.FULFILLMENT_CENTER, hqLoc))) // This robot created a center
+		{
+				numFulfillmentCenter++;
 		}
 		MapLocation[] soup = rc.senseNearbySoup(-1); // build refineries only close to soup
 		if (!senseBuilding(RobotType.REFINERY) && soup != null && soup.length != 0) tryBuild(RobotType.REFINERY, hqLoc);
@@ -51,14 +68,48 @@ public class Miner extends Unit {
 				bc.broadcastDesignSchoolCreation();
 			numDesignSchool++;
 			System.out.println("built a Design School");
-		} else if (!senseBuilding(RobotType.VAPORATOR)) {
+		}
+		else if (!senseBuilding(RobotType.VAPORATOR)) {
 			tryBuild(RobotType.VAPORATOR, hqLoc);
 		}else if(numNetGuns<1 && !senseBuilding(RobotType.NET_GUN)&& !bc.readNGCreation()&& tryBuild(RobotType.NET_GUN,hqLoc)){
 			numNetGuns++;
-		} else if (numFulfillmentCenter < 1 && !senseBuilding(RobotType.FULFILLMENT_CENTER) && !bc.readFCCreation() && tryBuild(RobotType.FULFILLMENT_CENTER, hqLoc)) {
-			numFulfillmentCenter++;
 		}
+		return true;
+	}*/
 
+
+    public boolean buildABuilding() throws GameActionException {
+			int x = decideX();
+				switch (x){ // case statements fall through if one building fails.
+					case -1: // Build a vaporator //TODO see if this actually is helpful...
+		 					//if (!senseBuilding(RobotType.VAPORATOR)) { // TODO -- add this to below condition?
+						if(tryBuild(RobotType.VAPORATOR, hqLoc)){break;}
+					case 0: // Build a refinery (only close to soup)
+						tryBuild(RobotType.REFINERY, hqLoc); break;
+					case 1: // No Design Schools yet?
+						if (bc.readDesignSchoolCreation()) {
+							numDesignSchool++;
+						} else if (numDesignSchool < 1 && !senseBuilding(RobotType.DESIGN_SCHOOL) && !bc.readDesignSchoolCreation() && tryBuild(RobotType.DESIGN_SCHOOL, hqLoc)) {
+								bc.broadcastDesignSchoolCreation();
+								numDesignSchool++;
+								System.out.println("built a Design School");
+								break;
+						}
+					case 2: // No fulfillment centers yet?
+						if (bc.readFCCreation()) {
+							numFulfillmentCenter++;
+						} else if (!senseBuilding(RobotType.FULFILLMENT_CENTER) && !bc.readFCCreation() && tryBuild(RobotType.FULFILLMENT_CENTER, hqLoc)) {
+							numFulfillmentCenter++;
+							break;
+						}
+					case 3: // No Netguns yet?
+						if(numNetGuns<1 && !senseBuilding(RobotType.NET_GUN)
+								&& !bc.readNGCreation()&& tryBuild(RobotType.NET_GUN,hqLoc)){
+								numNetGuns++;
+								break;
+						}
+					default:break;
+				}
 		return true;
 	}
 
@@ -105,6 +156,11 @@ public class Miner extends Unit {
 
 		public void takeTurn() throws GameActionException {
 			super.takeTurn();
+			if (baseRefinery == null){
+				System.out.println("BR is null");
+			} else{
+				System.out.println("BR " + baseRefinery);
+			}
 			int x = 0;
 			MapLocation[] soup = null;
 			/* THE FOLLOWING IS IN ORDER OF PREFERENCE OF A MINER's BEHAVIOR*/
@@ -121,7 +177,8 @@ public class Miner extends Unit {
 			// we aren't travelling to a soup/refinery location, look for one
 			if (blockchainRefineryDestination == null){
 				blockchainRefineryDestination = blockchainSoup();
-				baseRefinery = blockchainRefineryDestination; // there is a closer refinery to make our base
+				MapLocation ret = blockchainRefineryDestination; // there is a closer refinery to make our base
+				if (ret != null) {baseRefinery = ret;}
 			}
 
 			//We may currently be pursuing a refinery (after before else if, or on a previous turn)

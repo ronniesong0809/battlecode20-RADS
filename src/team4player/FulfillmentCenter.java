@@ -8,8 +8,9 @@ public class FulfillmentCenter extends Building {
     static int numRounds = 0;
     public int numDrones = 0;
 
-    public FulfillmentCenter(RobotController rc) {
+    public FulfillmentCenter(RobotController rc) throws GameActionException {
         super(rc);
+				bc.broadcastFCCreation();
     }
 
     public void takeTurn() throws GameActionException {
