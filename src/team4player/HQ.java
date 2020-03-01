@@ -12,7 +12,7 @@ public class HQ extends Building {
     static boolean sentWallComplete = false;
     static int round = 0;
 
-    public HQ(RobotController rc) throws GameActionException {
+    public HQ(RobotController rc) {
         super(rc);
 
     }
