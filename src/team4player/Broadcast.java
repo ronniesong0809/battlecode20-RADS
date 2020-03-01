@@ -11,6 +11,7 @@ public class Broadcast {
     static final int hqTeamSecret = 11;
     static final int teamSecret = 4444444;
     static final int teamSecret2 = 63;
+    static final int DSSecret = 42;
     static final String[] messageType = {"HQ loc", "design school created", "soup location"};
     private static RobotController rc;
 
@@ -83,16 +84,36 @@ public class Broadcast {
         }
         return msgs;
     }
+
+    public static int broadcastDesignSchoolCreation() throws GameActionException {
+        int packedMessage = 0;
+        int[] message = new int[7];
+        packedMessage = (packedMessage << 6) + 1;
+        packedMessage = (packedMessage << 6) + 1;
+        packedMessage = (packedMessage << 6) + DSSecret;
+        //System.out.println("SENDING: " + packedMessage);
+        message[0] = packedMessage;
+
+        if (rc.canSubmitTransaction(message, 4)) {
+            rc.submitTransaction(message, 4);
+            return message[0];
+        }
+        return 0;
+    }
+
     // This is used...but in a weird way (To prevent fulfillment centers from being created too many times
     public boolean readDesignSchoolCreation() throws GameActionException {
-        for (Transaction tx : rc.getBlock(rc.getRoundNum() - 1)) {
-            int[] mess = tx.getMessage();
-            if (mess[0] == teamSecret && mess[1] == 220022) {
-                return true;
+        for (int i = 1; i < rc.getRoundNum(); i++) {
+            for (Transaction tx : rc.getBlock(i)) {
+                int[] mess = tx.getMessage();
+                int secret = mess[0] & 0b111111;
+                if (secret == DSSecret) {
+									return true;
+                }
             }
         }
-        return false;
-    }
+				return false;
+		}
 
 		public boolean readFCCreation() throws GameActionException {
         for (Transaction tx : rc.getBlock(rc.getRoundNum() - 1)) {

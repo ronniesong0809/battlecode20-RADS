@@ -35,17 +35,9 @@ public class RefineryTest {
     Refinery refMock = mock(Refinery.class);
 
     @Test
-    public void RefineryTest() throws GameActionException {
-        //A cheap way to get a test to pass
-        try {
-            ref = new Refinery(rcMock);
-        } catch (Exception ex){
-
-        }
-        assertTrue(true);
-    }
-    @Test
     public void takeTurnTest() throws GameActionException {
-        //assertTrue(true);
+        when(rcMock.isReady()).thenReturn(true);
+        refMock.takeTurn();
+        // assertTrue(true);
     }
 }

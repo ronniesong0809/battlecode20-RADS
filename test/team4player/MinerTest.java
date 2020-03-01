@@ -37,6 +37,8 @@ public class MinerTest {
 
     @Mock
     Robot robotMock = mock(Robot.class); // daniel
+    @Mock
+    Landscaper lpMock = new Landscaper(rcMock);
 
     @InjectMocks
     Miner minerMock = new Miner(rcMock);
@@ -50,12 +52,11 @@ public class MinerTest {
     @Test
     public void takeTurnTest1() throws GameActionException {
         //Test 1 -- declarations/if statements and then default branch of switch statement
-        unitMock.hqLoc = null;
+        lpMock.findHQ();
         when(rcMock.senseNearbyRobots()).thenReturn(new RobotInfo[]{new RobotInfo(12, Team.A, RobotType.HQ, 0, false, 0, 0, 0, new MapLocation(5, 5))});
         minerMock.takeTurn();
         //Test 2 -- x=1, case 1
         when(rcMock.getSoupCarrying()).thenReturn(1);
-
     }
 
     @Test
@@ -71,10 +72,13 @@ public class MinerTest {
 
     @Test
     public void buildABuilding() throws GameActionException {
-        //when(bcMock.readDesignSchoolCreation()).thenReturn(true);
+        LandScaperTest one = new LandScaperTest();
+        one.setup();
+        when(bcMock.readDesignSchoolCreation()).thenReturn(true);
         when(bcMock.readFCCreation()).thenReturn(true);
         when(rcMock.senseNearbySoup(-1)).thenReturn(new MapLocation[]{new MapLocation(1, 1)});
         when(rcMock.senseNearbyRobots()).thenReturn(new RobotInfo[]{new RobotInfo(12, Team.A, RobotType.REFINERY, 0, false, 0, 0, 0, new MapLocation(5, 5))});
+        when(rcMock.getLocation()).thenReturn(new MapLocation(1, 1));
         //boolean result = minerMock.buildABuilding();
         //assertTrue(result);
     } // Daniel -- HELP
