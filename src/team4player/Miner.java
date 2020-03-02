@@ -11,6 +11,7 @@ public class Miner extends Unit {
 		static int numDesignSchool = 0;
     static int numFulfillmentCenter = 0;
     static int numNetGuns=0;
+    static int numVaporators=0;
 
 		//***These are destination variables used for mining and travelling.***/
     static MapLocation blockchainRefineryDestination = null; // blockchain refinery
@@ -68,11 +69,8 @@ public class Miner extends Unit {
 		// Decides a switch statement for the buildABuilding function
 		public int decideX(MapLocation [] soup){
 				int ret = -99;
-				System.out.println(!senseBuilding(RobotType.VAPORATOR));
-				if (!senseBuilding(RobotType.VAPORATOR)) {ret=-1;}
-				//if (!senseBuilding(RobotType.VAPORATOR)) {ret=-1;}
-				else if(soup != null && soup.length != 0 && !senseBuilding(RobotType.REFINERY)){ret=0;}
-				//if (!senseBuilding(RobotType.REFINERY)) {ret=0;}
+				if(soup != null && soup.length != 0 && !senseBuilding(RobotType.REFINERY)){ret=0;}
+				else if (!senseBuilding(RobotType.VAPORATOR)) {ret=-1;}
 				else if (numDesignSchool < 1){ret=1;}
 				else if (numFulfillmentCenter < 1){ret=2;}
 				else if (numNetGuns < 1){ret=3;}
