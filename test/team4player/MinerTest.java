@@ -145,15 +145,6 @@ public class MinerTest {
     }
 
     @Test
-    public void walkTowardsBuildingTest() throws GameActionException {
-        when(rcMock.senseNearbyRobots()).thenReturn(new RobotInfo[]{new RobotInfo(12, Team.A, RobotType.HQ, 0, false, 0, 0, 0, new MapLocation(5, 5))});
-        when(unitMock.findRefinery()).thenReturn(rInfoMock.location);
-        //minerMock.baseRefinery = null;
-        boolean result = minerMock.walkTowardsBuilding();
-        assertTrue(result);
-    } // daniel
-
-    @Test
     public void tryMineTest() throws GameActionException {
         //utilMock.directions.length > 0.thenReturn(true);
         //when(minerMock.getSuccessfulMine()).thenReturn(Direction.NORTH);
