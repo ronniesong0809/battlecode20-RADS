@@ -171,23 +171,26 @@ public class Miner extends Unit {
 			}
 
 			// refine soup
-			if (rc.getSoupCarrying() >= 70){
+			else if (rc.getSoupCarrying() >= 70){
 				x = 1;
 			}
 
-			else{
+			// find nearby soup
+			else if(true){
 				soup = rc.senseNearbySoup(-1);
 				if (soup != null && soup.length != 0) {x=3;}// we found soup! Head towards it
 			}
 
+			// Look for soup on the blockchain
 			// we aren't travelling to a soup/refinery location, look for one
-			if (blockchainRefineryDestination == null){
+			else{
 				MapLocation blockchainRefineryDestination = blockchainSoup();
 				if (blockchainRefineryDestination != null) {baseRefinery = blockchainRefineryDestination;} // there is a closer refinery to make our base
+				x = 2;
 			}
 
 			//We may currently be pursuing a refinery (after before else if, or on a previous turn)
-			if (blockchainRefineryDestination != null && x==0){x = 2;}
+			//if (blockchainRefineryDestination != null && x==0){x = 2;}
 
 			switch (x) {
 				case -1: // return to a previous soup area after refining soup.
