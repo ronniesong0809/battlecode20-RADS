@@ -97,13 +97,13 @@ public class Miner extends Unit {
 								System.out.println("built a Design School");
 								break;
 						}
-					/*case 2: // No fulfillment centers yet?
+					case 2: // No fulfillment centers yet?
 						if (bc.readFCCreation()) {
 							numFulfillmentCenter++;
 						} else if (!senseBuilding(RobotType.FULFILLMENT_CENTER) && !bc.readFCCreation() && tryBuild(RobotType.FULFILLMENT_CENTER, hqLoc)) {
 							numFulfillmentCenter++;
 							break;
-						}*/
+						}
 					case 3: // No Netguns yet?
 						if(numNetGuns<1 && !senseBuilding(RobotType.NET_GUN)
 								&& !bc.readNGCreation()&& tryBuild(RobotType.NET_GUN,hqLoc)){
