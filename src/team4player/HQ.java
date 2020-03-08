@@ -25,6 +25,9 @@ public class HQ extends Building {
             initSurroundingWalls();
         }
 
+	if (round % 10 == 0){
+	  sendHQLocToEnemy(rc.getLocation(), 0); // 0 is what a drone sends, 1 what a miner sends.
+	}
         if (round % 100 == 0) {
             bc.sendHqLocToBlockchain(rc.getLocation());
         }
@@ -91,5 +94,10 @@ public class HQ extends Building {
             }
         }
         return true;
+    }
+
+
+    void sendHQLocToEnemy(MapLocation loc, int terrestrial){
+        bc.sendMessage(1, (loc.x << 6) | loc.y | (terrestrial << 12));
     }
 }
