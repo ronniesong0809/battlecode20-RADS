@@ -19,6 +19,7 @@ public class Landscaper extends Unit {
     static boolean dig_initialized = false;
     static int roundNum = 0;
     static int outsideSpot = 0;
+    static int hqElevation = -1;
 
     public Landscaper(RobotController rc) {
         super(rc);
@@ -32,6 +33,11 @@ public class Landscaper extends Unit {
         if (hqLoc == null) {
             findHQ();
         }
+
+        if (hqLoc != null && hqElevation < 0 && rc.getCurrentSensorRadiusSquared() >= rc.getLocation().distanceSquaredTo(hqLoc)) {
+            hqElevation = rc.senseElevation(hqLoc);
+        }
+
         // Initialize the map locations to build on
         if (wallLocs == null && hqLoc != null) {
             initializeWallLocationsAndLevels();
@@ -80,8 +86,14 @@ public class Landscaper extends Unit {
         return false;
     }
 
-    Direction findDigSpot() {
+    Direction findDigSpot() throws GameActionException{
         Direction dir = null;
+
+        if (wallLocs.indexOf(wallSpot) < 8 && rc.getLocation().distanceSquaredTo(hqLoc) < 3) {
+            if (rc.senseElevation(hqLoc) > hqElevation) {
+                return rc.getLocation().directionTo(hqLoc);
+            }
+        }
 
         // Use new dig spot locations list to find the closest possible dig spot
         for (MapLocation d : digSpots) {
@@ -110,7 +122,7 @@ public class Landscaper extends Unit {
         }
 
         int wallspot = wallLocs.indexOf(spot);
-        if (wallspot < 8 && roundNum > 300) {
+        if (wallspot < 8 && roundNum > 250) {
             // Check surrounding wall spots to see if they are lower for deposit.
 
             int leftIndex = wallspot+1;
@@ -128,7 +140,10 @@ public class Landscaper extends Unit {
                 rightIndex = 7;
             }
 
-            if (Math.random() < 0.5) {
+            int elevation_left = rc.senseElevation(wallLocs.get(leftIndex));
+            int elevation_right = rc.senseElevation(wallLocs.get(rightIndex));
+
+            if (elevation_left < elevation_right) {
                 if (rc.senseElevation(wallLocs.get(leftIndex)) < rc.senseElevation(rc.getLocation())) {
                     spot = wallLocs.get(leftIndex);
                 }
@@ -138,6 +153,8 @@ public class Landscaper extends Unit {
                     spot = wallLocs.get(rightIndex);
                 }
             }
+
+
         }
 
         if (rc.canDepositDirt(rc.getLocation().directionTo(spot))) {

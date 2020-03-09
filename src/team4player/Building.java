@@ -16,9 +16,11 @@ public class Building extends Robot {
         RobotInfo[] enemiesInRange = rc.senseNearbyRobots(GameConstants.NET_GUN_SHOOT_RADIUS_SQUARED, enemy);
         for (RobotInfo e : enemiesInRange) {
             if (e.type == RobotType.DELIVERY_DRONE) {
-                if (rc.canShootUnit(e.ID)) {
-                    rc.shootUnit(e.ID);
-                    System.out.println("I shoot'ed enemy! " + e.type);
+                if (e.getHeldUnitID() > 0) {
+                    if (rc.canShootUnit(e.ID)) {
+                        rc.shootUnit(e.ID);
+                        System.out.println("I shoot'ed enemy! " + e.type);
+                    }
                 }
             }
         }
