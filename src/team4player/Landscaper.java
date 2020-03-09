@@ -89,10 +89,8 @@ public class Landscaper extends Unit {
     Direction findDigSpot() throws GameActionException{
         Direction dir = null;
 
-        if (wallLocs.indexOf(wallSpot) < 8 && rc.getLocation().distanceSquaredTo(hqLoc) < 3) {
-            if (rc.senseElevation(hqLoc) > hqElevation) {
+        if (wallLocs.indexOf(wallSpot) < 8 && rc.getLocation().distanceSquaredTo(hqLoc) < 3 && rc.senseElevation(hqLoc) > hqElevation) {
                 return rc.getLocation().directionTo(hqLoc);
-            }
         }
 
         // Use new dig spot locations list to find the closest possible dig spot
