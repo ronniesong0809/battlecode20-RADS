@@ -66,7 +66,7 @@ public class LandScaperTest {
     }
 
     @Test
-    public void findDigSpotTest() {
+    public void findDigSpotTest() throws GameActionException {
         createDigLocations();
         when(rcMock.getLocation()).thenReturn(new MapLocation(8, 8));
         when(rcMock.canDigDirt(Direction.NORTH)).thenReturn(true);
@@ -76,7 +76,7 @@ public class LandScaperTest {
     }
 
     @Test
-    public void findDigSpotTest2() {
+    public void findDigSpotTest2() throws GameActionException {
         createDigLocations();
         when(rcMock.getLocation()).thenReturn(new MapLocation(8, 8));
         when(rcMock.canDigDirt(Direction.WEST)).thenReturn(true);
